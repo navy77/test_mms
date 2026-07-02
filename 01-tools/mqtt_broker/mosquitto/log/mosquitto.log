@@ -20,3 +20,111 @@ To fix this, use `chmod 0700 /mosquitto/config/acl`.
 1782978254: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1782978545: mosquitto version 2.1.2 terminating
 1782978545: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783006196: mosquitto version 2.1.2 starting
+1783006196: Config loaded from /mosquitto/config/mosquitto.conf.
+1783006196: Bridge support available.
+1783006196: Persistence support available.
+1783006196: TLS support available.
+1783006196: TLS-PSK support available.
+1783006196: Websockets support available.
+1783006196: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783006196: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783006196: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783006196: Plugin builtin-security has registered to receive 'acl-check' events.
+1783006196: Opening ipv4 listen socket on port 1883.
+1783006196: mosquitto version 2.1.2 running
+1783006459: New connection from 172.18.0.1:60472 on port 1883.
+1783006459: New client connected from 172.18.0.1:60472 as agent-mqtt-redis (p5, c1, k60).
+1783006468: Client agent-mqtt-redis [172.18.0.1:60472] disconnected: connection closed by client.
+1783006567: New connection from 172.18.0.1:58370 on port 1883.
+1783006567: New client connected from 172.18.0.1:58370 as mqtt-explorer (p4, c1, k60).
+1783006570: New connection from 172.18.0.1:58374 on port 1883.
+1783006570: New client connected from 172.18.0.1:58374 as mqtt_publisher (p4, c1, k60).
+1783006575: Client mqtt_publisher [172.18.0.1:58374] disconnected: connection closed by client.
+1783006606: Client mqtt-explorer [172.18.0.1:58370] disconnected.
+1783006607: New connection from 172.18.0.1:56702 on port 1883.
+1783006607: New client connected from 172.18.0.1:56702 as mqtt-explorer (p4, c1, k60).
+1783006635: New connection from 172.18.0.1:43760 on port 1883.
+1783006635: New client connected from 172.18.0.1:43760 as agent-mqtt-redis (p5, c1, k60).
+1783006684: New connection from 172.18.0.1:56704 on port 1883.
+1783006684: New client connected from 172.18.0.1:56704 as mqtt_publisher (p4, c1, k60).
+1783006688: Client mqtt_publisher [172.18.0.1:56704] disconnected: connection closed by client.
+1783006720: New connection from 172.18.0.1:48758 on port 1883.
+1783006720: New client connected from 172.18.0.1:48758 as mqtt_publisher (p4, c1, k60).
+1783006753: Client mqtt_publisher [172.18.0.1:48758] disconnected: connection closed by client.
+1783006808: mosquitto version 2.1.2 terminating
+1783006808: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783006824: mosquitto version 2.1.2 starting
+1783006824: Config loaded from /mosquitto/config/mosquitto.conf.
+1783006824: Bridge support available.
+1783006824: Persistence support available.
+1783006824: TLS support available.
+1783006824: TLS-PSK support available.
+1783006824: Websockets support available.
+1783006824: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783006824: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783006824: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783006824: Plugin builtin-security has registered to receive 'acl-check' events.
+1783006824: Opening ipv4 listen socket on port 1883.
+1783006824: mosquitto version 2.1.2 running
+1783006830: New connection from 172.18.0.1:33842 on port 1883.
+1783006830: New client connected from 172.18.0.1:33842 as agent-mqtt-redis (p5, c0, k60).
+1783006845: New connection from 172.18.0.1:47968 on port 1883.
+1783006845: New client connected from 172.18.0.1:47968 as mqtt_publisher (p4, c1, k60).
+1783006848: Client mqtt_publisher [172.18.0.1:47968] disconnected: connection closed by client.
+1783006868: New connection from 172.18.0.1:44504 on port 1883.
+1783006868: New client connected from 172.18.0.1:44504 as mqtt-explorer (p4, c1, k60).
+1783006916: Client agent-mqtt-redis [172.18.0.1:33842] disconnected.
+1783006919: New connection from 172.18.0.1:40922 on port 1883.
+1783006919: New client connected from 172.18.0.1:40922 as agent-mqtt-redis (p5, c1, k60).
+1783006955: New connection from 172.18.0.1:54668 on port 1883.
+1783006955: New client connected from 172.18.0.1:54668 as mqtt_publisher (p4, c1, k60).
+1783006959: Client mqtt_publisher [172.18.0.1:54668] disconnected: connection closed by client.
+1783007084: Client agent-mqtt-redis [172.18.0.1:40922] disconnected.
+1783007094: New connection from 172.18.0.1:57836 on port 1883.
+1783007094: New client connected from 172.18.0.1:57836 as agent-mqtt-redis (p5, c1, k60).
+1783007100: New connection from 172.18.0.1:57848 on port 1883.
+1783007100: New client connected from 172.18.0.1:57848 as mqtt_publisher (p4, c1, k60).
+1783007104: Client mqtt_publisher [172.18.0.1:57848] disconnected: connection closed by client.
+1783007133: Client agent-mqtt-redis [172.18.0.1:57836] disconnected.
+1783007465: New connection from 172.18.0.1:58860 on port 1883.
+1783007465: New client connected from 172.18.0.1:58860 as agent-mqtt-redis (p5, c1, k60).
+1783007482: New connection from 172.18.0.1:53936 on port 1883.
+1783007482: New client connected from 172.18.0.1:53936 as mqtt_publisher (p4, c1, k60).
+1783007486: Client mqtt_publisher [172.18.0.1:53936] disconnected: connection closed by client.
+1783007531: Client agent-mqtt-redis [172.18.0.1:58860] disconnected: connection closed by client.
+1783008124: New connection from 172.18.0.1:54428 on port 1883.
+1783008124: New client connected from 172.18.0.1:54428 as agent-mqtt-redis (p5, c1, k60).
+1783008132: New connection from 172.18.0.1:54442 on port 1883.
+1783008132: New client connected from 172.18.0.1:54442 as mqtt_publisher (p4, c1, k60).
+1783008136: Client mqtt_publisher [172.18.0.1:54442] disconnected: connection closed by client.
+1783008199: Client agent-mqtt-redis [172.18.0.1:54428] disconnected.
+1783008625: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783008702: New connection from 172.18.0.1:46686 on port 1883.
+1783008702: New client connected from 172.18.0.1:46686 as agent-mqtt-redis (p5, c1, k60).
+1783008718: New connection from 172.18.0.1:56848 on port 1883.
+1783008718: New client connected from 172.18.0.1:56848 as mqtt_publisher (p4, c1, k60).
+1783008722: Client mqtt_publisher [172.18.0.1:56848] disconnected: connection closed by client.
+1783008780: Client agent-mqtt-redis [172.18.0.1:46686] disconnected.
+1783008890: New connection from 172.18.0.1:34318 on port 1883.
+1783008890: New client connected from 172.18.0.1:34318 as mqtt_publisher (p4, c1, k60).
+1783008894: Client mqtt_publisher [172.18.0.1:34318] disconnected: connection closed by client.
+1783008917: New connection from 172.18.0.1:51010 on port 1883.
+1783008917: New client connected from 172.18.0.1:51010 as agent-mqtt-redis (p5, c1, k60).
+1783008922: New connection from 172.18.0.1:51018 on port 1883.
+1783008922: New client connected from 172.18.0.1:51018 as mqtt_publisher (p4, c1, k60).
+1783008926: Client mqtt_publisher [172.18.0.1:51018] disconnected: connection closed by client.
+1783009148: New connection from 172.18.0.1:49678 on port 1883.
+1783009148: New client connected from 172.18.0.1:49678 as mqtt_publisher (p4, c1, k60).
+1783009153: Client mqtt_publisher [172.18.0.1:49678] disconnected: connection closed by client.
+1783009413: New connection from 172.18.0.1:48188 on port 1883.
+1783009413: New client connected from 172.18.0.1:48188 as mqtt_publisher (p4, c1, k60).
+1783009418: Client mqtt_publisher [172.18.0.1:48188] disconnected: connection closed by client.

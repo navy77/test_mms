@@ -1,0 +1,15 @@
+services:
+  agent-redis-kafka:
+    build: .
+    container_name: agent-redis-kafka
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./log:/app/log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true

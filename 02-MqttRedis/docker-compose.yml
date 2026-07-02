@@ -1,0 +1,15 @@
+services:
+  agent-mqtt-redis:
+    build: .
+    container_name: agent-mqtt-redis
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./log:/app/log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true
