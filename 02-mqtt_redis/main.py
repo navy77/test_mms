@@ -33,6 +33,7 @@ class MQTTRedisBridge:
 
         self.queue = Queue(maxsize = 500000)
         self.redis_queue_key = os.getenv("REDIS_QUEUE_KEY", "mqtt_queue")
+        self.redis_queue_max_len = int(os.getenv("REDIS_QUEUE_MAX_LEN", 500000))
         # Start the queue processing thread
         Thread(target=self.process_queue,daemon=True).start()
 
@@ -76,8 +77,11 @@ class MQTTRedisBridge:
                     "timestamp": datetime.now().isoformat()
                 }
 
-                # Push the JSON serialized message to the central Redis queue
-                self.redis_client.rpush(self.redis_queue_key, json.dumps(message_data))
+                # Push the JSON serialized message to the central Redis queue and trim
+                pipe = self.redis_client.pipeline()
+                pipe.rpush(self.redis_queue_key, json.dumps(message_data))
+                pipe.ltrim(self.redis_queue_key, -self.redis_queue_max_len, -1)
+                pipe.execute()
             except Exception as e:
                 logging.error(f"Error processing queue: {e}")
             finally:
