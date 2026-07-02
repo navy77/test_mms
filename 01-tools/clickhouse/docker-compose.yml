@@ -1,0 +1,26 @@
+services:
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.6
+    container_name: clickhouse
+    mem_limit: 4g
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: maibok
+    ports:
+      - 8123:8123
+      - 19001:9000
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/logs/clickhouse-server
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    networks:
+      - mms-network
+volumes:
+  clickhouse_data:
+  clickhouse_logs:
+  
+networks:
+  mms-network:
+    external: true

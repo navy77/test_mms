@@ -1,0 +1,22 @@
+1782965648: mosquitto version 2.1.2 starting
+1782965648: Config loaded from /mosquitto/config/mosquitto.conf.
+1782965648: Bridge support available.
+1782965648: Persistence support available.
+1782965648: TLS support available.
+1782965648: TLS-PSK support available.
+1782965648: Websockets support available.
+1782965648: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1782965648: Plugin builtin-security has registered to receive 'acl-check' events.
+1782965648: Opening ipv4 listen socket on port 1883.
+1782965648: mosquitto version 2.1.2 running
+1782967448: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782969249: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782971050: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782972851: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782974652: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782976453: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782978254: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1782978545: mosquitto version 2.1.2 terminating
+1782978545: Saving in-memory database to /mosquitto/data//mosquitto.db.

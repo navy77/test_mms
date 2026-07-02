@@ -1,0 +1,11 @@
+# Read access
+topic read data/#
+topic read status/#
+topic read alarm/#
+topic read mqtt/#
+
+# Write access
+topic write data/#
+topic write status/#
+topic write alarm/#
+topic write mqtt/#
