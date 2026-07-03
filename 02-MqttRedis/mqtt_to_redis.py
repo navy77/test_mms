@@ -22,7 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger("MqttToRedis")
 
 class MqttToRedis:
-    def __init__(self, mqtt_host, redis_host, mqtt_port=1883, redis_port=6379, redis_queue_key="raw_data_queue", redis_queue_max_len=500000, topics=None):
+    def __init__(self, mqtt_host, redis_host, mqtt_port=1883, redis_port=6379, redis_queue_key="raw_data_queue", redis_queue_max_len=1000000, topics=None):
         self.mqtt_host = mqtt_host
         self.mqtt_port = mqtt_port
         self.redis_host = redis_host
@@ -43,7 +43,7 @@ class MqttToRedis:
         self.mqtt_client.on_disconnect = self.on_disconnect
         
         # Internal buffer queue to prevent blocking the event loop when executing synchronous Redis commands
-        self.queue = Queue(maxsize=500000)
+        self.queue = Queue(maxsize=1000000)
         Thread(target=self.process_queue, daemon=True).start()
 
     def on_connect(self, client, flags, rc, properties):
@@ -73,11 +73,14 @@ class MqttToRedis:
                 try:
                     payload_str = payload.decode('utf-8')
                 except Exception:
-                    payload_str = str(payload)
+                    payload_str = str(payload) 
 
                 # Prepare the payload with metadata
                 message_data = {
                     "topic": topic,
+                    "div": topic.split("/")[1],
+                    "process": topic.split("/")[2],
+                    "device": topic.split("/")[3],
                     "payload": payload_str,
                     "timestamp": datetime.now().isoformat()
                 }
@@ -86,6 +89,13 @@ class MqttToRedis:
                 pipe = self.redis_client.pipeline()
                 pipe.rpush(self.redis_queue_key, json.dumps(message_data))
                 pipe.ltrim(self.redis_queue_key, -self.redis_queue_max_len, -1)
+
+                # Real-time data (overwrite existing value for this specific topic)
+                first_part = topic.split('/')[0] if '/' in topic else topic
+                if first_part in ['data', 'status', 'alarm', 'mqtt']:
+                    rt_key = f"rt_{first_part}"
+                    pipe.hset(rt_key, topic, json.dumps(message_data))
+
                 pipe.execute()
             except Exception as e:
                 logger.error(f"Error processing and pushing queue: {e}")
@@ -106,14 +116,14 @@ class MqttToRedis:
 
 async def main():
     dotenv.load_dotenv()
-    mqtt_host = os.getenv("MQTT_BROKER", "127.0.0.1")
+    mqtt_host = os.getenv("MQTT_BROKER", "mosquitto")
     mqtt_port = int(os.getenv("MQTT_PORT", 1883))
-    redis_host = os.getenv("REDIS_HOST", "127.0.0.1")
+    redis_host = os.getenv("REDIS_HOST", "redis")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
     
     # Read the queue key, falling back to what's defined in dotenv or raw_data_queue
     redis_queue_key = os.getenv("REDIS_QUEUE_KEY", "raw_data_queue")
-    redis_queue_max_len = int(os.getenv("REDIS_QUEUE_MAX_LEN", 500000))
+    redis_queue_max_len = int(os.getenv("REDIS_QUEUE_MAX_LEN", 1000000))
     
     sub_topics = os.getenv("MQTT_SUB_TOPIC")
     if sub_topics:

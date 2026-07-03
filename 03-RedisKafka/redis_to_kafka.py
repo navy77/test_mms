@@ -88,12 +88,14 @@ class RedisToKafka:
                 # Parse category and process name from MQTT topic safely
                 # Example topic: data/div/process/demo1 -> category: data, process: demo1
                 parts = [p.strip().strip("'\"") for p in topic.split('/') if p.strip()]
-                if len(parts) >= 2:
+                if len(parts) ==  4:
                     category = parts[0]     # e.g., 'data', 'status', 'alarm', 'mqtt'
-                    process_name = parts[-1] # e.g., 'demo1'
+                    process = parts[2] # e.g., 'process'
+                    device = parts[3] # e.g., 'demo1'
                 else:
                     category = "default"
-                    process_name = "unknown"
+                    process = "unknown"
+                    device = "unknown"
 
                 # Define target Kafka topic name: use override if specified, otherwise fall back to category name
                 target_topic = self.kafka_topic if self.kafka_topic else category
@@ -104,7 +106,8 @@ class RedisToKafka:
                 # Prepare the Kafka payload containing metadata
                 kafka_payload = json.dumps({
                     "topic": topic,
-                    "process_name": process_name,
+                    "process": process,
+                    "device": device,
                     "payload": payload,
                     "timestamp": timestamp
                 })
@@ -120,6 +123,9 @@ class RedisToKafka:
                 # Poll to trigger delivery callbacks periodically
                 self.producer.poll(0)
 
+            except redis.exceptions.TimeoutError:
+                # Normal timeout when there is no data in the queue
+                continue
             except Exception as e:
                 logger.error(f"Error in pipeline loop: {e}")
                 time.sleep(1)
@@ -132,10 +138,10 @@ def main():
     logger.info(f"Loaded environment variables from: {env_path}")
     
     # Clean connection variables to strip any quotes inside .env
-    redis_host = os.getenv("REDIS_HOST", "127.0.0.1").strip().strip("'\"")
+    redis_host = os.getenv("REDIS_HOST", "redis").strip().strip("'\"")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
     redis_queue_key = os.getenv("REDIS_QUEUE_KEY", "mqtt_queue").strip().strip("'\"")
-    kafka_brokers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "127.0.0.1:9092").strip().strip("'\"")
+    kafka_brokers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092").strip().strip("'\"")
     
     # Load optional single topic override name from environment
     kafka_topic = os.getenv("KAFKA_TOPIC", "").strip().strip("'\"")

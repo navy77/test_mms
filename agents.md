@@ -16,9 +16,10 @@
 โปรเจกต์นี้แบ่งสัดส่วนการพัฒนาและ Deploy ออกเป็น 4 ส่วนหลัก:
 * **`01-tools/`** : บริหารจัดการโครงสร้างพื้นฐาน (Docker Compose สำหรับ MQTT, Redis, Kafka, ClickHouse, Postgres)
 * **`02-MqttRedis/`** : สารบรรณ Agent ที่ทำหน้าที่ดึงข้อมูลจาก MQTT มาใส่ใน Redis
-* **`03-RedisKafka/`** : สารบรรณ Agent ที่ทำหน้าที่ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka และดันเข้า ClickHouse
-* **`04-ScriptStorage/`** : สารบรรณของ Python Aggregation Script ที่จะประมวลผลข้อมูลส่งไป PostgreSQL
-
+* **`03-RedisKafka/`** : สารบรรณ Agent ที่ทำหน้าที่ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka 
+* **`04-KafkaClickHouse/`** : สารบรรณ Agent ที่ทำหน้าที่ดึงข้อมูลจาก Kafka และบันทึกลง ClickHouse
+* **`05-ScriptStorage/`** : สารบรรณของ Python Aggregation Script ที่จะประมวลผลข้อมูลส่งไป PostgreSQL
+* **`06-DeviceChecker/`** : สารบรรณของตรวจสอบสถานะอุปกรณ์ว่า online หรือ offline และบันทึกลง Clickhouse
 ---
 
 ## 🛠️ Agents Detail & Code Specification (Python Class Style)
@@ -28,7 +29,7 @@
 ### 1. MqttToRedisAgent (`02-MqttRedis`)
 * **หน้าที่:** ทำหน้าที่เป็น Subscriber คอยฟังข้อมูลจาก MQTT Broker จากนั้นบันทึกข้อมูลลง Redis ในลักษณะ In-Memory Buffer อย่างรวดเร็ว เพื่อไม่ให้เกิดคอขวด (Bottleneck) 
 ที่ MQTT โดยจะอ่านไฟลล์ .env เกี่ยวกับ brokers,port
-example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,mqtt/div/process/##
+example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 
 * **Docker Service:** `agent-mqtt-redis`
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
@@ -53,7 +54,7 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,m
 ### 2. RedisToKafkaAgent (`03-RedisKafka`)
 * **หน้าที่:** ทำหน้าที่ Pop ข้อมูลออกจาก Redis Queue อย่างรวดเร็ว แล้วทำการ Publish ข้อมูลกระจายส่งต่อไปยัง Apache Kafka Topic ที่กำหนด เพื่อรองรับการทำ Scalability
 โดยจะอ่านไฟลล์ .env เกี่ยวกับ brokers,port
-example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,mqtt/div/process/##
+example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 บันทึก 1 partition ต่อ process
 * **Docker Service:** `agent-redis-kafka`
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
@@ -73,7 +74,12 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,m
 
 *หมายเหตุ: ในส่วน `03-RedisKafka` จะมีกระบวนการดึงข้อมูลจาก Kafka เข้าไปจัดเก็บที่ **ClickHouse DB** เพื่อทำเป็นที่เก็บข้อมูลประวัติขนาดใหญ่ (Historical Data)*
 
-### 3. DataAggregatorAgent (`04-ScriptStorage`)
+
+### 3. KafkaToClickhouseAgent (`04-KafkaClickhouse`)
+* **หน้าที่:** ทำหน้าที่ Pop ข้อมูลออกจาก Kafka Topic อย่างรวดเร็ว แล้วทำการบันทึกข้อมูลลง ClickHouse DB
+โดยใช้ Benthos
+
+### 4. DataAggregatorAgent (`05-ScriptStorage`)
 * **หน้าที่:** ดึงข้อมูลดิบจาก ClickHouse (หรือดึงผ่าน Stream จาก Kafka) เพื่อนำมาคำนวณและประมวลผลลัพธ์เชิงสถิติ (เช่น การหาค่าเฉลี่ยรายนาที/รายชั่วโมง) จากนั้นจึงบันทึกผลลัพธ์สุดท้าย (Aggregated Data) ลงใน **PostgreSQL** เพื่อนำไปใช้งานบนแดชบอร์ดหรือเว็บแอปพลิเคชันต่อไป
 * **Docker Service:** `agent-python-aggregator`
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
@@ -96,8 +102,32 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,m
             # ตั้งเวลาให้รันทุกๆ X นาที
             pass
     ```
-
 ---
+
+### 5. DeviceChecker (`06-DeviceChecker`)
+* **หน้าที่:** ดึงข้อมูลจาก Redis hash 'rt_mqtt' ที่เก็บข้อมูลล่าสุดของแต่ละอุปกรณ์ จากนั้นตรวจสอบว่าข้อมูลล่าสุดของแต่ละอุปกรณ์คือช่วงเวลาเท่าไหร่ ถ้าเกิน X second ให้ส่ง MQTT offline เข้า topic status/div/##
+* **Docker Service:** `agent-python-devicechecker`
+* **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
+    ```python
+    import clickhouse_connect
+
+    class DeviceChecker:
+        def __init__(self, ch_host, pg_host):
+
+        def check_device(self):
+            # 1. Query ข้อมูลล่าสุดจาก redis 'rt_mqtt' hash
+            # 2. ตรวจสอบ timestamp เทียบกับ now ต้องไม่เกิน x second 
+            # 3. ถ้าเกิน(offline) ส่ง mqtt topic ใน .env ว่า {"status":offline} 
+            # 4 บันทึกลง clickhouse table device_tb โดยแตาละรอบให้ดึงข้อมมูลจาก device_register_tb มาอ้างอิง เช่น
+            # device process status broker modbus mac_id status,
+            #  ข้อมูลดึงมาจาก redis = {"topic": "mqtt/mic/demo1/no_854", "process": "demo1", "device": "no_854", "payload": "{\"broker\": 1, \"modbus\": 1, \"mac_id\": \"mac-2\"}", "timestamp": "2026-07-03T14:56:49.417961"}
+
+            
+        def run_schedule(self):
+            # ตั้งเวลาให้รันทุกๆ X นาที
+            pass
+    ```
+
 
 ## 🚀 Performance Tuning for 1,000 msg/sec
 เพื่อให้ระบบสามารถรันบน Docker ได้โดยไม่เกิดสภาวะข้อมูลค้างค้าง (Backpressure) ควรตั้งค่าดังนี้:

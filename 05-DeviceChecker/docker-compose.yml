@@ -1,0 +1,15 @@
+services:
+  agent-python-devicechecker:
+    build: .
+    container_name: agent-python-devicechecker
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./log:/app/log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true

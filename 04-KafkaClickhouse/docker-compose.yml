@@ -1,0 +1,16 @@
+services:
+  benthos:
+    image: jeffail/benthos:latest
+    container_name: benthos
+    ports:
+      - 4195:4195
+    restart: always
+    volumes:
+      - ./benthos.yaml:/benthos.yaml
+    command: -c /benthos.yaml
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true

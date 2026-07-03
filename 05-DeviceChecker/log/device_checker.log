@@ -1,0 +1,455 @@
+2026-07-03 16:18:54,274 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:18:54,274 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:18:54,274 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:18:54,284 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:18:54,285 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:18:54,285 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:18:54,317 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:18:58,199 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:19:28,200 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:19:28,228 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:19:28,248 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:19:33,927 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:23:47,867 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:23:47,867 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:23:47,867 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:23:47,877 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:23:47,877 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:23:47,877 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:23:47,911 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:23:47,917 [INFO] DeviceChecker: Device demo1/no_1 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_1
+2026-07-03 16:23:47,917 [INFO] DeviceChecker: Device demo1/no_2 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_2
+2026-07-03 16:23:47,918 [INFO] DeviceChecker: Device demo1/no_3 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_3
+2026-07-03 16:23:47,918 [INFO] DeviceChecker: Device demo1/no_4 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_4
+2026-07-03 16:23:47,919 [INFO] DeviceChecker: Device demo1/no_5 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_5
+2026-07-03 16:23:47,920 [INFO] DeviceChecker: Device demo1/no_6 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_6
+2026-07-03 16:23:47,920 [INFO] DeviceChecker: Device demo1/no_7 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_7
+2026-07-03 16:23:47,920 [INFO] DeviceChecker: Device demo1/no_8 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_8
+2026-07-03 16:23:47,921 [INFO] DeviceChecker: Device demo1/no_9 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_9
+2026-07-03 16:23:47,921 [INFO] DeviceChecker: Device demo1/no_10 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_10
+2026-07-03 16:23:47,922 [INFO] DeviceChecker: Device demo1/no_11 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_11
+2026-07-03 16:23:47,922 [INFO] DeviceChecker: Device demo1/no_12 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_12
+2026-07-03 16:23:47,923 [INFO] DeviceChecker: Device demo1/no_13 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_13
+2026-07-03 16:23:47,924 [INFO] DeviceChecker: Device demo1/no_14 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_14
+2026-07-03 16:23:47,924 [INFO] DeviceChecker: Device demo1/no_15 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_15
+2026-07-03 16:23:47,924 [INFO] DeviceChecker: Device demo1/no_16 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_16
+2026-07-03 16:23:47,925 [INFO] DeviceChecker: Device demo1/no_17 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_17
+2026-07-03 16:23:47,926 [INFO] DeviceChecker: Device demo1/no_18 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_18
+2026-07-03 16:23:47,927 [INFO] DeviceChecker: Device demo1/no_19 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_19
+2026-07-03 16:23:47,927 [INFO] DeviceChecker: Device demo1/no_20 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_20
+2026-07-03 16:23:47,927 [INFO] DeviceChecker: Device demo1/no_21 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_21
+2026-07-03 16:23:47,928 [INFO] DeviceChecker: Device demo1/no_22 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_22
+2026-07-03 16:23:47,928 [INFO] DeviceChecker: Device demo1/no_23 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_23
+2026-07-03 16:23:47,929 [INFO] DeviceChecker: Device demo1/no_24 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_24
+2026-07-03 16:23:47,930 [INFO] DeviceChecker: Device demo1/no_25 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_25
+2026-07-03 16:23:47,931 [INFO] DeviceChecker: Device demo1/no_26 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_26
+2026-07-03 16:23:47,932 [INFO] DeviceChecker: Device demo1/no_27 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_27
+2026-07-03 16:23:47,933 [INFO] DeviceChecker: Device demo1/no_28 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_28
+2026-07-03 16:23:47,933 [INFO] DeviceChecker: Device demo1/no_29 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_29
+2026-07-03 16:23:47,934 [INFO] DeviceChecker: Device demo1/no_30 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_30
+2026-07-03 16:23:47,934 [INFO] DeviceChecker: Device demo1/no_31 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_31
+2026-07-03 16:23:47,934 [INFO] DeviceChecker: Device demo1/no_32 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_32
+2026-07-03 16:23:47,934 [INFO] DeviceChecker: Device demo1/no_33 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_33
+2026-07-03 16:23:47,936 [INFO] DeviceChecker: Device demo1/no_34 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_34
+2026-07-03 16:23:47,937 [INFO] DeviceChecker: Device demo1/no_35 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_35
+2026-07-03 16:23:47,937 [INFO] DeviceChecker: Device demo1/no_36 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_36
+2026-07-03 16:23:47,938 [INFO] DeviceChecker: Device demo1/no_37 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_37
+2026-07-03 16:23:47,938 [INFO] DeviceChecker: Device demo1/no_38 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_38
+2026-07-03 16:23:47,939 [INFO] DeviceChecker: Device demo1/no_39 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_39
+2026-07-03 16:23:47,940 [INFO] DeviceChecker: Device demo1/no_40 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_40
+2026-07-03 16:23:47,940 [INFO] DeviceChecker: Device demo1/no_41 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_41
+2026-07-03 16:23:47,940 [INFO] DeviceChecker: Device demo1/no_42 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_42
+2026-07-03 16:23:47,941 [INFO] DeviceChecker: Device demo1/no_43 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_43
+2026-07-03 16:23:47,941 [INFO] DeviceChecker: Device demo1/no_44 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_44
+2026-07-03 16:23:47,942 [INFO] DeviceChecker: Device demo1/no_45 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_45
+2026-07-03 16:23:47,942 [INFO] DeviceChecker: Device demo1/no_46 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_46
+2026-07-03 16:23:47,943 [INFO] DeviceChecker: Device demo1/no_47 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_47
+2026-07-03 16:23:47,944 [INFO] DeviceChecker: Device demo1/no_48 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_48
+2026-07-03 16:23:47,945 [INFO] DeviceChecker: Device demo1/no_49 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_49
+2026-07-03 16:23:47,945 [INFO] DeviceChecker: Device demo1/no_50 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_50
+2026-07-03 16:23:48,299 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:24:18,301 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:24:18,317 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:24:18,325 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:24:48,326 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:24:48,355 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:24:48,365 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:25:18,366 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:25:18,384 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:25:18,393 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:25:48,394 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:25:48,416 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:25:48,427 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:26:18,428 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:26:18,456 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:26:18,464 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:26:48,465 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:26:48,492 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:26:48,504 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:27:18,505 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:27:18,527 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:27:18,543 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:27:48,544 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:27:48,572 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:27:48,581 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:28:18,582 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:28:18,604 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:28:18,617 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:28:48,617 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:28:48,645 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:28:48,656 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:29:18,656 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:29:18,685 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:29:18,695 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:29:48,696 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:29:48,721 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:29:48,731 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:30:18,732 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:30:18,750 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:30:18,759 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:30:48,760 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:30:48,784 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:30:48,794 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:31:18,795 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:31:18,821 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:31:18,832 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:31:48,833 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:31:48,857 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:31:48,865 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:32:18,865 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:32:18,889 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:32:18,902 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:32:48,904 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:32:48,928 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:32:48,937 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:33:18,938 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:33:18,966 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:33:18,977 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:33:48,978 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:33:48,999 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:33:49,012 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:33:50,018 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:43:45,849 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:43:45,849 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:43:45,850 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:43:45,852 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:43:45,853 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:43:45,853 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:43:45,871 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:43:45,877 [ERROR] DeviceChecker: Unhandled error in check loop: not enough values to unpack (expected 3, got 2)
+2026-07-03 16:44:03,070 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:48:16,052 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:48:16,068 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:48:16,068 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:48:16,086 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:48:16,087 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:48:16,087 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:48:16,108 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:48:16,114 [ERROR] DeviceChecker: Unhandled error in check loop: not enough values to unpack (expected 3, got 2)
+2026-07-03 16:48:28,270 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:49:30,096 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:49:30,096 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:49:30,096 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:49:30,096 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:49:30,100 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:49:30,100 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:49:30,119 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:49:30,126 [INFO] DeviceChecker: Device demo1/no_1 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_1
+2026-07-03 16:49:30,126 [INFO] DeviceChecker: Device demo1/no_2 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_2
+2026-07-03 16:49:30,127 [INFO] DeviceChecker: Device demo1/no_3 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_3
+2026-07-03 16:49:30,127 [INFO] DeviceChecker: Device demo1/no_4 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_4
+2026-07-03 16:49:30,127 [INFO] DeviceChecker: Device demo1/no_5 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_5
+2026-07-03 16:49:30,128 [INFO] DeviceChecker: Device demo1/no_6 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_6
+2026-07-03 16:49:30,128 [INFO] DeviceChecker: Device demo1/no_7 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_7
+2026-07-03 16:49:30,128 [INFO] DeviceChecker: Device demo1/no_8 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_8
+2026-07-03 16:49:30,129 [INFO] DeviceChecker: Device demo1/no_9 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_9
+2026-07-03 16:49:30,129 [INFO] DeviceChecker: Device demo1/no_10 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_10
+2026-07-03 16:49:30,129 [INFO] DeviceChecker: Device demo1/no_11 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_11
+2026-07-03 16:49:30,130 [INFO] DeviceChecker: Device demo1/no_12 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_12
+2026-07-03 16:49:30,132 [INFO] DeviceChecker: Device demo1/no_13 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_13
+2026-07-03 16:49:30,133 [INFO] DeviceChecker: Device demo1/no_14 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_14
+2026-07-03 16:49:30,134 [INFO] DeviceChecker: Device demo1/no_15 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_15
+2026-07-03 16:49:30,135 [INFO] DeviceChecker: Device demo1/no_16 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_16
+2026-07-03 16:49:30,136 [INFO] DeviceChecker: Device demo1/no_17 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_17
+2026-07-03 16:49:30,137 [INFO] DeviceChecker: Device demo1/no_18 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_18
+2026-07-03 16:49:30,137 [INFO] DeviceChecker: Device demo1/no_19 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_19
+2026-07-03 16:49:30,138 [INFO] DeviceChecker: Device demo1/no_20 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_20
+2026-07-03 16:49:30,138 [INFO] DeviceChecker: Device demo1/no_21 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_21
+2026-07-03 16:49:30,139 [INFO] DeviceChecker: Device demo1/no_22 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_22
+2026-07-03 16:49:30,140 [INFO] DeviceChecker: Device demo1/no_23 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_23
+2026-07-03 16:49:30,141 [INFO] DeviceChecker: Device demo1/no_24 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_24
+2026-07-03 16:49:30,142 [INFO] DeviceChecker: Device demo1/no_25 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_25
+2026-07-03 16:49:30,142 [INFO] DeviceChecker: Device demo1/no_26 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_26
+2026-07-03 16:49:30,142 [INFO] DeviceChecker: Device demo1/no_27 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_27
+2026-07-03 16:49:30,143 [INFO] DeviceChecker: Device demo1/no_28 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_28
+2026-07-03 16:49:30,144 [INFO] DeviceChecker: Device demo1/no_29 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_29
+2026-07-03 16:49:30,144 [INFO] DeviceChecker: Device demo1/no_30 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_30
+2026-07-03 16:49:30,144 [INFO] DeviceChecker: Device demo1/no_31 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_31
+2026-07-03 16:49:30,145 [INFO] DeviceChecker: Device demo1/no_32 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_32
+2026-07-03 16:49:30,145 [INFO] DeviceChecker: Device demo1/no_33 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_33
+2026-07-03 16:49:30,146 [INFO] DeviceChecker: Device demo1/no_34 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_34
+2026-07-03 16:49:30,146 [INFO] DeviceChecker: Device demo1/no_35 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_35
+2026-07-03 16:49:30,148 [INFO] DeviceChecker: Device demo1/no_36 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_36
+2026-07-03 16:49:30,149 [INFO] DeviceChecker: Device demo1/no_37 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_37
+2026-07-03 16:49:30,150 [INFO] DeviceChecker: Device demo1/no_38 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_38
+2026-07-03 16:49:30,151 [INFO] DeviceChecker: Device demo1/no_39 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_39
+2026-07-03 16:49:30,151 [INFO] DeviceChecker: Device demo1/no_40 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_40
+2026-07-03 16:49:30,152 [INFO] DeviceChecker: Device demo1/no_41 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_41
+2026-07-03 16:49:30,152 [INFO] DeviceChecker: Device demo1/no_42 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_42
+2026-07-03 16:49:30,154 [INFO] DeviceChecker: Device demo1/no_43 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_43
+2026-07-03 16:49:30,155 [INFO] DeviceChecker: Device demo1/no_44 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_44
+2026-07-03 16:49:30,156 [INFO] DeviceChecker: Device demo1/no_45 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_45
+2026-07-03 16:49:30,157 [INFO] DeviceChecker: Device demo1/no_46 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_46
+2026-07-03 16:49:30,158 [INFO] DeviceChecker: Device demo1/no_47 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_47
+2026-07-03 16:49:30,159 [INFO] DeviceChecker: Device demo1/no_48 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_48
+2026-07-03 16:49:30,159 [INFO] DeviceChecker: Device demo1/no_49 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_49
+2026-07-03 16:49:30,160 [INFO] DeviceChecker: Device demo1/no_50 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_50
+2026-07-03 16:49:30,532 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:50:00,533 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:50:00,552 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:50:00,563 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:50:07,709 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:52:24,085 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:52:24,086 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:52:24,088 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:52:24,089 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:52:24,089 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:52:24,089 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:52:24,106 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:52:24,119 [INFO] DeviceChecker: Device demo1/no_1 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_1
+2026-07-03 16:52:24,120 [INFO] DeviceChecker: Device demo1/no_2 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_2
+2026-07-03 16:52:24,120 [INFO] DeviceChecker: Device demo1/no_3 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_3
+2026-07-03 16:52:24,121 [INFO] DeviceChecker: Device demo1/no_4 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_4
+2026-07-03 16:52:24,123 [INFO] DeviceChecker: Device demo1/no_5 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_5
+2026-07-03 16:52:24,123 [INFO] DeviceChecker: Device demo1/no_6 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_6
+2026-07-03 16:52:24,127 [INFO] DeviceChecker: Device demo1/no_7 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_7
+2026-07-03 16:52:24,128 [INFO] DeviceChecker: Device demo1/no_8 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_8
+2026-07-03 16:52:24,128 [INFO] DeviceChecker: Device demo1/no_9 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_9
+2026-07-03 16:52:24,128 [INFO] DeviceChecker: Device demo1/no_10 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_10
+2026-07-03 16:52:24,129 [INFO] DeviceChecker: Device demo1/no_11 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_11
+2026-07-03 16:52:24,130 [INFO] DeviceChecker: Device demo1/no_12 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_12
+2026-07-03 16:52:24,130 [INFO] DeviceChecker: Device demo1/no_13 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_13
+2026-07-03 16:52:24,130 [INFO] DeviceChecker: Device demo1/no_14 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_14
+2026-07-03 16:52:24,131 [INFO] DeviceChecker: Device demo1/no_15 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_15
+2026-07-03 16:52:24,131 [INFO] DeviceChecker: Device demo1/no_16 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_16
+2026-07-03 16:52:24,133 [INFO] DeviceChecker: Device demo1/no_17 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_17
+2026-07-03 16:52:24,133 [INFO] DeviceChecker: Device demo1/no_18 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_18
+2026-07-03 16:52:24,134 [INFO] DeviceChecker: Device demo1/no_19 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_19
+2026-07-03 16:52:24,135 [INFO] DeviceChecker: Device demo1/no_20 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_20
+2026-07-03 16:52:24,136 [INFO] DeviceChecker: Device demo1/no_21 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_21
+2026-07-03 16:52:24,136 [INFO] DeviceChecker: Device demo1/no_22 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_22
+2026-07-03 16:52:24,138 [INFO] DeviceChecker: Device demo1/no_23 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_23
+2026-07-03 16:52:24,139 [INFO] DeviceChecker: Device demo1/no_24 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_24
+2026-07-03 16:52:24,139 [INFO] DeviceChecker: Device demo1/no_25 is OFFLINE (diff > 300s). Published to MQTT topic: status/mic/demo1/no_25
+2026-07-03 16:52:24,141 [INFO] DeviceChecker: Device demo1/no_26 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_26
+2026-07-03 16:52:24,141 [INFO] DeviceChecker: Device demo1/no_27 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_27
+2026-07-03 16:52:24,143 [INFO] DeviceChecker: Device demo1/no_28 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_28
+2026-07-03 16:52:24,143 [INFO] DeviceChecker: Device demo1/no_29 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_29
+2026-07-03 16:52:24,144 [INFO] DeviceChecker: Device demo1/no_30 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_30
+2026-07-03 16:52:24,146 [INFO] DeviceChecker: Device demo1/no_31 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_31
+2026-07-03 16:52:24,147 [INFO] DeviceChecker: Device demo1/no_32 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_32
+2026-07-03 16:52:24,148 [INFO] DeviceChecker: Device demo1/no_33 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_33
+2026-07-03 16:52:24,148 [INFO] DeviceChecker: Device demo1/no_34 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_34
+2026-07-03 16:52:24,149 [INFO] DeviceChecker: Device demo1/no_35 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_35
+2026-07-03 16:52:24,150 [INFO] DeviceChecker: Device demo1/no_36 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_36
+2026-07-03 16:52:24,150 [INFO] DeviceChecker: Device demo1/no_37 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_37
+2026-07-03 16:52:24,151 [INFO] DeviceChecker: Device demo1/no_38 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_38
+2026-07-03 16:52:24,151 [INFO] DeviceChecker: Device demo1/no_39 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_39
+2026-07-03 16:52:24,152 [INFO] DeviceChecker: Device demo1/no_40 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_40
+2026-07-03 16:52:24,152 [INFO] DeviceChecker: Device demo1/no_41 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_41
+2026-07-03 16:52:24,152 [INFO] DeviceChecker: Device demo1/no_42 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_42
+2026-07-03 16:52:24,153 [INFO] DeviceChecker: Device demo1/no_43 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_43
+2026-07-03 16:52:24,153 [INFO] DeviceChecker: Device demo1/no_44 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_44
+2026-07-03 16:52:24,154 [INFO] DeviceChecker: Device demo1/no_45 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_45
+2026-07-03 16:52:24,155 [INFO] DeviceChecker: Device demo1/no_46 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_46
+2026-07-03 16:52:24,155 [INFO] DeviceChecker: Device demo1/no_47 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_47
+2026-07-03 16:52:24,156 [INFO] DeviceChecker: Device demo1/no_48 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_48
+2026-07-03 16:52:24,156 [INFO] DeviceChecker: Device demo1/no_49 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_49
+2026-07-03 16:52:24,157 [INFO] DeviceChecker: Device demo1/no_50 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_50
+2026-07-03 16:52:24,491 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:52:54,492 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:52:54,516 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:52:54,519 [INFO] DeviceChecker: Device demo1/no_1 is back ONLINE.
+2026-07-03 16:52:54,520 [INFO] DeviceChecker: Device demo1/no_2 is back ONLINE.
+2026-07-03 16:52:54,521 [INFO] DeviceChecker: Device demo1/no_3 is back ONLINE.
+2026-07-03 16:52:54,521 [INFO] DeviceChecker: Device demo1/no_4 is back ONLINE.
+2026-07-03 16:52:54,521 [INFO] DeviceChecker: Device demo1/no_5 is back ONLINE.
+2026-07-03 16:52:54,521 [INFO] DeviceChecker: Device demo1/no_6 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_7 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_8 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_9 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_10 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_11 is back ONLINE.
+2026-07-03 16:52:54,522 [INFO] DeviceChecker: Device demo1/no_12 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_13 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_14 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_15 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_16 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_17 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_18 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_19 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_20 is back ONLINE.
+2026-07-03 16:52:54,523 [INFO] DeviceChecker: Device demo1/no_21 is back ONLINE.
+2026-07-03 16:52:54,524 [INFO] DeviceChecker: Device demo1/no_22 is back ONLINE.
+2026-07-03 16:52:54,524 [INFO] DeviceChecker: Device demo1/no_23 is back ONLINE.
+2026-07-03 16:52:54,524 [INFO] DeviceChecker: Device demo1/no_24 is back ONLINE.
+2026-07-03 16:52:54,524 [INFO] DeviceChecker: Device demo1/no_25 is back ONLINE.
+2026-07-03 16:52:54,533 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:53:24,534 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:53:24,561 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:53:24,572 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:53:54,573 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:53:54,606 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:53:54,618 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:54:24,619 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:54:24,634 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:54:24,636 [INFO] DeviceChecker: Device demo1/no_26 is back ONLINE.
+2026-07-03 16:54:24,636 [INFO] DeviceChecker: Device demo1/no_27 is back ONLINE.
+2026-07-03 16:54:24,636 [INFO] DeviceChecker: Device demo1/no_28 is back ONLINE.
+2026-07-03 16:54:24,636 [INFO] DeviceChecker: Device demo1/no_29 is back ONLINE.
+2026-07-03 16:54:24,636 [INFO] DeviceChecker: Device demo1/no_30 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_31 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_32 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_33 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_34 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_35 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_36 is back ONLINE.
+2026-07-03 16:54:24,637 [INFO] DeviceChecker: Device demo1/no_37 is back ONLINE.
+2026-07-03 16:54:24,638 [INFO] DeviceChecker: Device demo1/no_38 is back ONLINE.
+2026-07-03 16:54:24,638 [INFO] DeviceChecker: Device demo1/no_39 is back ONLINE.
+2026-07-03 16:54:24,638 [INFO] DeviceChecker: Device demo1/no_40 is back ONLINE.
+2026-07-03 16:54:24,639 [INFO] DeviceChecker: Device demo1/no_41 is back ONLINE.
+2026-07-03 16:54:24,639 [INFO] DeviceChecker: Device demo1/no_42 is back ONLINE.
+2026-07-03 16:54:24,639 [INFO] DeviceChecker: Device demo1/no_43 is back ONLINE.
+2026-07-03 16:54:24,640 [INFO] DeviceChecker: Device demo1/no_44 is back ONLINE.
+2026-07-03 16:54:24,640 [INFO] DeviceChecker: Device demo1/no_45 is back ONLINE.
+2026-07-03 16:54:24,641 [INFO] DeviceChecker: Device demo1/no_46 is back ONLINE.
+2026-07-03 16:54:24,641 [INFO] DeviceChecker: Device demo1/no_47 is back ONLINE.
+2026-07-03 16:54:24,641 [INFO] DeviceChecker: Device demo1/no_48 is back ONLINE.
+2026-07-03 16:54:24,642 [INFO] DeviceChecker: Device demo1/no_49 is back ONLINE.
+2026-07-03 16:54:24,642 [INFO] DeviceChecker: Device demo1/no_50 is back ONLINE.
+2026-07-03 16:54:24,651 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:54:54,652 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:54:54,679 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:54:54,691 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:55:24,692 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:55:24,716 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:55:24,728 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:55:45,512 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 16:58:21,184 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 16:58:21,184 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 16:58:21,184 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:58:21,206 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 16:58:21,206 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 16:58:21,206 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:58:21,245 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:58:21,263 [INFO] DeviceChecker: Device demo1/no_1 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_1
+2026-07-03 16:58:21,297 [INFO] DeviceChecker: Device demo1/no_2 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_2
+2026-07-03 16:58:21,297 [INFO] DeviceChecker: Device demo1/no_3 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_3
+2026-07-03 16:58:21,298 [INFO] DeviceChecker: Device demo1/no_4 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_4
+2026-07-03 16:58:21,299 [INFO] DeviceChecker: Device demo1/no_5 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_5
+2026-07-03 16:58:21,301 [INFO] DeviceChecker: Device demo1/no_6 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_6
+2026-07-03 16:58:21,302 [INFO] DeviceChecker: Device demo1/no_7 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_7
+2026-07-03 16:58:21,303 [INFO] DeviceChecker: Device demo1/no_8 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_8
+2026-07-03 16:58:21,303 [INFO] DeviceChecker: Device demo1/no_9 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_9
+2026-07-03 16:58:21,304 [INFO] DeviceChecker: Device demo1/no_10 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_10
+2026-07-03 16:58:21,305 [INFO] DeviceChecker: Device demo1/no_11 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_11
+2026-07-03 16:58:21,307 [INFO] DeviceChecker: Device demo1/no_12 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_12
+2026-07-03 16:58:21,307 [INFO] DeviceChecker: Device demo1/no_13 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_13
+2026-07-03 16:58:21,308 [INFO] DeviceChecker: Device demo1/no_14 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_14
+2026-07-03 16:58:21,309 [INFO] DeviceChecker: Device demo1/no_15 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_15
+2026-07-03 16:58:21,309 [INFO] DeviceChecker: Device demo1/no_16 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_16
+2026-07-03 16:58:21,309 [INFO] DeviceChecker: Device demo1/no_17 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_17
+2026-07-03 16:58:21,310 [INFO] DeviceChecker: Device demo1/no_18 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_18
+2026-07-03 16:58:21,311 [INFO] DeviceChecker: Device demo1/no_19 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_19
+2026-07-03 16:58:21,312 [INFO] DeviceChecker: Device demo1/no_20 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_20
+2026-07-03 16:58:21,312 [INFO] DeviceChecker: Device demo1/no_21 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_21
+2026-07-03 16:58:21,313 [INFO] DeviceChecker: Device demo1/no_22 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_22
+2026-07-03 16:58:21,314 [INFO] DeviceChecker: Device demo1/no_23 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_23
+2026-07-03 16:58:21,315 [INFO] DeviceChecker: Device demo1/no_24 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_24
+2026-07-03 16:58:21,316 [INFO] DeviceChecker: Device demo1/no_25 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_25
+2026-07-03 16:58:21,316 [INFO] DeviceChecker: Device demo1/no_26 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_26
+2026-07-03 16:58:21,317 [INFO] DeviceChecker: Device demo1/no_27 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_27
+2026-07-03 16:58:21,318 [INFO] DeviceChecker: Device demo1/no_28 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_28
+2026-07-03 16:58:21,319 [INFO] DeviceChecker: Device demo1/no_29 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_29
+2026-07-03 16:58:21,320 [INFO] DeviceChecker: Device demo1/no_30 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_30
+2026-07-03 16:58:21,320 [INFO] DeviceChecker: Device demo1/no_31 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_31
+2026-07-03 16:58:21,321 [INFO] DeviceChecker: Device demo1/no_32 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_32
+2026-07-03 16:58:21,322 [INFO] DeviceChecker: Device demo1/no_33 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_33
+2026-07-03 16:58:21,323 [INFO] DeviceChecker: Device demo1/no_34 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_34
+2026-07-03 16:58:21,323 [INFO] DeviceChecker: Device demo1/no_35 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_35
+2026-07-03 16:58:21,324 [INFO] DeviceChecker: Device demo1/no_36 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_36
+2026-07-03 16:58:21,325 [INFO] DeviceChecker: Device demo1/no_37 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_37
+2026-07-03 16:58:21,325 [INFO] DeviceChecker: Device demo1/no_38 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_38
+2026-07-03 16:58:21,326 [INFO] DeviceChecker: Device demo1/no_39 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_39
+2026-07-03 16:58:21,326 [INFO] DeviceChecker: Device demo1/no_40 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_40
+2026-07-03 16:58:21,326 [INFO] DeviceChecker: Device demo1/no_41 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_41
+2026-07-03 16:58:21,327 [INFO] DeviceChecker: Device demo1/no_42 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_42
+2026-07-03 16:58:21,328 [INFO] DeviceChecker: Device demo1/no_43 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_43
+2026-07-03 16:58:21,328 [INFO] DeviceChecker: Device demo1/no_44 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_44
+2026-07-03 16:58:21,329 [INFO] DeviceChecker: Device demo1/no_45 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_45
+2026-07-03 16:58:21,329 [INFO] DeviceChecker: Device demo1/no_46 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_46
+2026-07-03 16:58:21,329 [INFO] DeviceChecker: Device demo1/no_47 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_47
+2026-07-03 16:58:21,330 [INFO] DeviceChecker: Device demo1/no_48 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_48
+2026-07-03 16:58:21,331 [INFO] DeviceChecker: Device demo1/no_49 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_49
+2026-07-03 16:58:21,331 [INFO] DeviceChecker: Device demo1/no_50 is OFFLINE (diff > 300s). Published to MQTT topic: status/div/demo1/no_50
+2026-07-03 16:58:21,747 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:58:51,747 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 16:58:51,770 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 16:58:51,782 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 16:59:20,381 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt
+2026-07-03 17:02:59,086 [INFO] DeviceChecker: Loaded environment variables from: D:\test_mms\05-DeviceChecker\.env
+2026-07-03 17:02:59,086 [INFO] DeviceChecker: Connecting to Redis at 192.168.0.191:6379...
+2026-07-03 17:02:59,086 [INFO] DeviceChecker: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 17:02:59,104 [INFO] DeviceChecker: Connected to MQTT Broker and started background loop
+2026-07-03 17:02:59,104 [INFO] DeviceChecker: Scheduler loop started...
+2026-07-03 17:02:59,104 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:02:59,131 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:02:59,543 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:03:29,544 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:03:29,575 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:03:29,589 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:03:59,590 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:03:59,633 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:03:59,644 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:04:29,645 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:04:29,671 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:04:29,673 [INFO] DeviceChecker: Device demo1/no_1 is back ONLINE.
+2026-07-03 17:04:29,673 [INFO] DeviceChecker: Device demo1/no_2 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_3 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_4 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_5 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_6 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_7 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_8 is back ONLINE.
+2026-07-03 17:04:29,674 [INFO] DeviceChecker: Device demo1/no_9 is back ONLINE.
+2026-07-03 17:04:29,675 [INFO] DeviceChecker: Device demo1/no_10 is back ONLINE.
+2026-07-03 17:04:29,675 [INFO] DeviceChecker: Device demo1/no_11 is back ONLINE.
+2026-07-03 17:04:29,675 [INFO] DeviceChecker: Device demo1/no_12 is back ONLINE.
+2026-07-03 17:04:29,675 [INFO] DeviceChecker: Device demo1/no_13 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_14 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_15 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_16 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_17 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_18 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_19 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_20 is back ONLINE.
+2026-07-03 17:04:29,676 [INFO] DeviceChecker: Device demo1/no_21 is back ONLINE.
+2026-07-03 17:04:29,677 [INFO] DeviceChecker: Device demo1/no_22 is back ONLINE.
+2026-07-03 17:04:29,677 [INFO] DeviceChecker: Device demo1/no_23 is back ONLINE.
+2026-07-03 17:04:29,677 [INFO] DeviceChecker: Device demo1/no_24 is back ONLINE.
+2026-07-03 17:04:29,677 [INFO] DeviceChecker: Device demo1/no_25 is back ONLINE.
+2026-07-03 17:04:29,685 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:04:59,686 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:04:59,714 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:04:59,725 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:05:29,726 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:05:29,751 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:05:29,773 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:05:59,774 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:05:59,791 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:05:59,801 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:06:29,803 [INFO] DeviceChecker: Starting device check round...
+2026-07-03 17:06:29,830 [INFO] DeviceChecker: Retrieved 50 master devices from ClickHouse device_register_tb
+2026-07-03 17:06:29,841 [INFO] DeviceChecker: Successfully inserted 50 records to ClickHouse device_tb
+2026-07-03 17:06:34,394 [INFO] DeviceChecker: Device Checker stopped by keyboard interrupt

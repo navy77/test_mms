@@ -1,155 +1,216 @@
-2026-07-02 22:37:15,519 [INFO] MqttToRedisAgent: Started Redis queue writer thread
-2026-07-02 22:37:15,519 [INFO] MqttToRedisAgent: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 22:37:15,520 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 22:37:15,522 [INFO] MqttToRedisAgent: Connected to MQTT Broker
-2026-07-02 22:37:15,523 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 22:37:15,523 [INFO] MqttToRedisAgent: Subscribed to topic: data/#
-2026-07-02 22:37:15,523 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 22:37:15,524 [INFO] MqttToRedisAgent: Subscribed to topic: status/#
-2026-07-02 22:37:15,524 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 22:37:15,524 [INFO] MqttToRedisAgent: Subscribed to topic: alarm/#
-2026-07-02 22:37:15,524 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 22:37:15,524 [INFO] MqttToRedisAgent: Subscribed to topic: mqtt/#
-2026-07-02 22:37:15,524 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 22:37:15,525 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 22:37:15,566 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 22:37:15,567 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 22:40:08,437 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 22:40:08,438 [INFO] MqttToRedisAgent: Disconnected from MQTT Broker
-2026-07-02 22:40:08,438 [WARNING] gmqtt.mqtt.protocol: [TRYING WRITE TO CLOSED SOCKET]
-2026-07-02 22:40:20,928 [WARNING] gmqtt.client: [CAN'T RECONNECT] 1
-2026-07-02 22:40:20,929 [WARNING] gmqtt.mqtt.protocol: [TRYING WRITE TO CLOSED SOCKET]
-2026-07-02 22:40:30,936 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 22:40:30,939 [INFO] MqttToRedisAgent: Connected to MQTT Broker
-2026-07-02 22:40:30,939 [INFO] gmqtt.mqtt.package: [SEND SUB] 5 [b'data/#']
-2026-07-02 22:40:30,939 [INFO] MqttToRedisAgent: Subscribed to topic: data/#
-2026-07-02 22:40:30,939 [INFO] gmqtt.mqtt.package: [SEND SUB] 6 [b'status/#']
-2026-07-02 22:40:30,939 [INFO] MqttToRedisAgent: Subscribed to topic: status/#
-2026-07-02 22:40:30,940 [INFO] gmqtt.mqtt.package: [SEND SUB] 7 [b'alarm/#']
-2026-07-02 22:40:30,940 [INFO] MqttToRedisAgent: Subscribed to topic: alarm/#
-2026-07-02 22:40:30,940 [INFO] gmqtt.mqtt.package: [SEND SUB] 8 [b'mqtt/#']
-2026-07-02 22:40:30,941 [INFO] MqttToRedisAgent: Subscribed to topic: mqtt/#
-2026-07-02 22:40:30,941 [INFO] gmqtt.client: [SUBACK] 5 (0,)
-2026-07-02 22:40:30,941 [INFO] gmqtt.client: [SUBACK] 6 (0,)
-2026-07-02 22:40:30,982 [INFO] gmqtt.client: [SUBACK] 7 (0,)
-2026-07-02 22:40:30,983 [INFO] gmqtt.client: [SUBACK] 8 (0,)
-2026-07-02 22:41:56,121 [INFO] MqttToRedisAgent: Shutdown signal received
-2026-07-02 22:41:56,121 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 22:41:56,122 [INFO] MqttToRedisAgent: Disconnected from MQTT Broker
-2026-07-02 22:41:56,122 [INFO] MqttToRedisAgent: Disconnected from MQTT Broker cleanly
-2026-07-02 22:41:59,786 [INFO] MqttToRedisAgent: Started Redis queue writer thread
-2026-07-02 22:41:59,786 [INFO] MqttToRedisAgent: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 22:41:59,786 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 22:41:59,789 [INFO] MqttToRedisAgent: Connected to MQTT Broker
-2026-07-02 22:41:59,789 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 22:41:59,789 [INFO] MqttToRedisAgent: Subscribed to topic: data/#
-2026-07-02 22:41:59,789 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 22:41:59,789 [INFO] MqttToRedisAgent: Subscribed to topic: status/#
-2026-07-02 22:41:59,790 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 22:41:59,790 [INFO] MqttToRedisAgent: Subscribed to topic: alarm/#
-2026-07-02 22:41:59,790 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 22:41:59,790 [INFO] MqttToRedisAgent: Subscribed to topic: mqtt/#
-2026-07-02 22:41:59,790 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 22:41:59,791 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 22:41:59,839 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 22:41:59,839 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 22:44:44,264 [INFO] MqttToRedisAgent: Shutdown signal received
-2026-07-02 22:44:44,266 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 22:44:44,266 [INFO] MqttToRedisAgent: Disconnected from MQTT Broker
-2026-07-02 22:44:44,266 [INFO] MqttToRedisAgent: Disconnected from MQTT Broker cleanly
-2026-07-02 22:44:54,556 [INFO] MqttToRedis: Started Redis queue writer thread
-2026-07-02 22:44:54,556 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 22:44:54,557 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 22:44:54,559 [INFO] MqttToRedis: Connected to MQTT Broker
-2026-07-02 22:44:54,559 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 22:44:54,560 [INFO] MqttToRedis: Subscribed to topic: data/#
-2026-07-02 22:44:54,560 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 22:44:54,560 [INFO] MqttToRedis: Subscribed to topic: status/#
-2026-07-02 22:44:54,560 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 22:44:54,560 [INFO] MqttToRedis: Subscribed to topic: alarm/#
-2026-07-02 22:44:54,560 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 22:44:54,560 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
-2026-07-02 22:44:54,561 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 22:44:54,562 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 22:44:54,603 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 22:44:54,603 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 22:45:33,798 [INFO] MqttToRedis: Shutdown signal received
-2026-07-02 22:45:33,799 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 22:45:33,799 [INFO] MqttToRedis: Disconnected from MQTT Broker
-2026-07-02 22:45:33,799 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
-2026-07-02 15:51:05,794 [INFO] MqttToRedis: Started Redis queue writer thread
-2026-07-02 15:51:05,794 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 15:51:05,798 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 15:51:05,801 [INFO] MqttToRedis: Connected to MQTT Broker
-2026-07-02 15:51:05,802 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 15:51:05,803 [INFO] MqttToRedis: Subscribed to topic: data/#
-2026-07-02 15:51:05,803 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 15:51:05,804 [INFO] MqttToRedis: Subscribed to topic: status/#
-2026-07-02 15:51:05,804 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 15:51:05,805 [INFO] MqttToRedis: Subscribed to topic: alarm/#
-2026-07-02 15:51:05,805 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 15:51:05,806 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
-2026-07-02 15:51:05,807 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 15:51:05,808 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 15:51:05,808 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 15:51:05,809 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 23:02:04,780 [INFO] MqttToRedis: Started Redis queue writer thread
-2026-07-02 23:02:04,780 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 23:02:04,782 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 23:02:04,785 [INFO] MqttToRedis: Connected to MQTT Broker
-2026-07-02 23:02:04,785 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 23:02:04,785 [INFO] MqttToRedis: Subscribed to topic: data/#
-2026-07-02 23:02:04,785 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 23:02:04,785 [INFO] MqttToRedis: Subscribed to topic: status/#
-2026-07-02 23:02:04,785 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 23:02:04,786 [INFO] MqttToRedis: Subscribed to topic: alarm/#
-2026-07-02 23:02:04,786 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 23:02:04,786 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
-2026-07-02 23:02:04,786 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 23:02:04,787 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 23:02:04,829 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 23:02:04,829 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 23:03:19,025 [INFO] MqttToRedis: Shutdown signal received
-2026-07-02 23:03:19,026 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 23:03:19,026 [INFO] MqttToRedis: Disconnected from MQTT Broker
-2026-07-02 23:03:19,027 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
-2026-07-02 23:11:42,680 [INFO] MqttToRedis: Started Redis queue writer thread
-2026-07-02 23:11:42,680 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 23:11:42,681 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 23:11:42,683 [INFO] MqttToRedis: Connected to MQTT Broker
-2026-07-02 23:11:42,683 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 23:11:42,684 [INFO] MqttToRedis: Subscribed to topic: data/#
-2026-07-02 23:11:42,684 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 23:11:42,684 [INFO] MqttToRedis: Subscribed to topic: status/#
-2026-07-02 23:11:42,684 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 23:11:42,684 [INFO] MqttToRedis: Subscribed to topic: alarm/#
-2026-07-02 23:11:42,684 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 23:11:42,684 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
-2026-07-02 23:11:42,685 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 23:11:42,686 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 23:11:42,730 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 23:11:42,731 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 23:13:00,237 [INFO] MqttToRedis: Shutdown signal received
-2026-07-02 23:13:00,237 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 23:13:00,237 [INFO] MqttToRedis: Disconnected from MQTT Broker
-2026-07-02 23:13:00,238 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
-2026-07-02 23:15:17,607 [INFO] MqttToRedis: Started Redis queue writer thread
-2026-07-02 23:15:17,607 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.1.30:1883...
-2026-07-02 23:15:17,609 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
-2026-07-02 23:15:17,611 [INFO] MqttToRedis: Connected to MQTT Broker
-2026-07-02 23:15:17,612 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
-2026-07-02 23:15:17,612 [INFO] MqttToRedis: Subscribed to topic: data/#
-2026-07-02 23:15:17,612 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
-2026-07-02 23:15:17,612 [INFO] MqttToRedis: Subscribed to topic: status/#
-2026-07-02 23:15:17,612 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
-2026-07-02 23:15:17,612 [INFO] MqttToRedis: Subscribed to topic: alarm/#
-2026-07-02 23:15:17,612 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
-2026-07-02 23:15:17,613 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
-2026-07-02 23:15:17,613 [INFO] gmqtt.client: [SUBACK] 1 (0,)
-2026-07-02 23:15:17,614 [INFO] gmqtt.client: [SUBACK] 2 (0,)
-2026-07-02 23:15:17,658 [INFO] gmqtt.client: [SUBACK] 3 (0,)
-2026-07-02 23:15:17,659 [INFO] gmqtt.client: [SUBACK] 4 (0,)
-2026-07-02 23:25:42,687 [INFO] MqttToRedis: Shutdown signal received
-2026-07-02 23:25:42,688 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
-2026-07-02 23:25:42,688 [INFO] MqttToRedis: Disconnected from MQTT Broker
-2026-07-02 23:25:42,688 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 09:08:04,488 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 09:08:04,488 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 09:08:04,491 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 09:08:04,494 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 09:08:04,494 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 09:08:04,494 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 09:08:04,494 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 09:08:04,494 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 09:08:04,495 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 09:08:04,495 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 09:08:04,495 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 09:08:04,495 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 09:08:04,496 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 09:08:04,496 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 09:08:04,537 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 09:08:04,537 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 11:02:46,536 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 11:02:46,552 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 11:02:46,553 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 11:02:46,554 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 11:09:24,274 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 11:09:24,274 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 11:09:24,275 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 11:09:24,277 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 11:09:24,277 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 11:09:24,278 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 11:09:24,278 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 11:09:24,278 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 11:09:24,278 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 11:09:24,278 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 11:09:24,278 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 11:09:24,278 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 11:09:24,279 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 11:09:24,280 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 11:09:24,326 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 11:09:24,327 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 11:10:31,953 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 11:10:31,955 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 11:10:31,955 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 11:10:31,955 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 11:22:11,433 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 11:22:11,433 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 11:22:11,434 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 11:22:11,479 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 11:22:11,479 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 11:22:11,479 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 11:22:11,479 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 11:22:11,480 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 11:22:11,480 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 11:22:11,480 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 11:22:11,480 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 11:22:11,480 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 11:22:11,480 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 11:22:11,481 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 11:22:11,525 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 11:22:11,525 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 11:24:54,361 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 11:24:54,363 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 11:24:54,364 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 11:24:54,364 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 11:26:40,476 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 11:26:40,476 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 11:26:40,477 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 11:26:40,480 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 11:26:40,480 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 11:26:40,481 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 11:26:40,481 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 11:26:40,481 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 11:26:40,481 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 11:26:40,481 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 11:26:40,481 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 11:26:40,481 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 11:26:40,482 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 11:26:40,482 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 11:26:40,523 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 11:26:40,524 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 11:59:39,375 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 11:59:39,377 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 11:59:39,379 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 11:59:39,380 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 12:05:05,588 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 12:05:05,588 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 12:05:05,588 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 12:05:05,601 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 12:05:05,601 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 12:05:05,601 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 12:05:05,602 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 12:05:05,602 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 12:05:05,602 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 12:05:05,602 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 12:05:05,602 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 12:05:05,602 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 12:05:05,602 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 12:05:05,603 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 12:05:05,647 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 12:05:05,647 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 12:05:18,847 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 12:05:18,850 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 12:05:18,851 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 12:05:18,851 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 12:05:47,070 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 12:05:47,070 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 12:05:47,070 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 12:05:47,078 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 12:05:47,078 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 12:05:47,078 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 12:05:47,079 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 12:05:47,079 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 12:05:47,079 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 12:05:47,079 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 12:05:47,079 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 12:05:47,079 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 12:05:47,079 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 12:05:47,080 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 12:05:47,124 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 12:05:47,124 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 12:08:31,772 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 12:08:31,773 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 12:08:31,773 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 12:08:31,774 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 12:11:33,198 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 12:11:33,198 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 12:11:33,199 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 12:11:33,202 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 12:11:33,202 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 12:11:33,203 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 12:11:33,203 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 12:11:33,203 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 12:11:33,203 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 12:11:33,203 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 12:11:33,203 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 12:11:33,204 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 12:11:33,204 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 12:11:33,205 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 12:11:33,246 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 12:11:33,247 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 12:11:52,924 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 12:11:52,925 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 12:11:52,925 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 12:11:52,925 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 12:12:21,057 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 12:12:21,057 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 12:12:21,058 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 12:12:21,061 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 12:12:21,061 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 12:12:21,061 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 12:12:21,061 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 12:12:21,061 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 12:12:21,061 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 12:12:21,061 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 12:12:21,062 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 12:12:21,062 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 12:12:21,062 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 12:12:21,063 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 12:12:21,104 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 12:12:21,104 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 12:12:40,118 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 12:12:40,119 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 12:12:40,120 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 12:12:40,121 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 12:19:15,313 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 12:19:15,314 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 12:19:15,314 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 12:19:15,316 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 12:19:15,316 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 12:19:15,316 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 12:19:15,317 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 12:19:15,317 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 12:19:15,317 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 12:19:15,317 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 12:19:15,317 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 12:19:15,317 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 12:19:15,318 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 12:19:15,318 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 12:19:15,360 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 12:19:15,360 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 12:22:34,641 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 12:22:34,642 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 12:22:34,643 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 12:22:34,643 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 13:49:16,346 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 13:49:16,346 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 13:49:16,351 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 13:49:16,353 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 13:49:16,353 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 13:49:16,354 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 13:49:16,354 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 13:49:16,354 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 13:49:16,354 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 13:49:16,354 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 13:49:16,354 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 13:49:16,354 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 13:49:16,355 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 13:49:16,355 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 13:49:16,398 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 13:49:16,399 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-03 16:38:32,888 [INFO] MqttToRedis: Shutdown signal received
+2026-07-03 16:38:32,892 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-03 16:38:32,894 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-03 16:38:32,895 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly
+2026-07-03 16:39:24,564 [INFO] MqttToRedis: Started Redis queue writer thread
+2026-07-03 16:39:24,564 [INFO] MqttToRedis: Connecting to MQTT Broker at 192.168.0.191:1883...
+2026-07-03 16:39:24,566 [INFO] gmqtt.mqtt.protocol: [CONNECTION MADE]
+2026-07-03 16:39:24,568 [INFO] MqttToRedis: Connected to MQTT Broker
+2026-07-03 16:39:24,569 [INFO] gmqtt.mqtt.package: [SEND SUB] 1 [b'data/#']
+2026-07-03 16:39:24,569 [INFO] MqttToRedis: Subscribed to topic: data/#
+2026-07-03 16:39:24,569 [INFO] gmqtt.mqtt.package: [SEND SUB] 2 [b'status/#']
+2026-07-03 16:39:24,569 [INFO] MqttToRedis: Subscribed to topic: status/#
+2026-07-03 16:39:24,569 [INFO] gmqtt.mqtt.package: [SEND SUB] 3 [b'alarm/#']
+2026-07-03 16:39:24,569 [INFO] MqttToRedis: Subscribed to topic: alarm/#
+2026-07-03 16:39:24,570 [INFO] gmqtt.mqtt.package: [SEND SUB] 4 [b'mqtt/#']
+2026-07-03 16:39:24,570 [INFO] MqttToRedis: Subscribed to topic: mqtt/#
+2026-07-03 16:39:24,571 [INFO] gmqtt.client: [SUBACK] 1 (0,)
+2026-07-03 16:39:24,571 [INFO] gmqtt.client: [SUBACK] 2 (0,)
+2026-07-03 16:39:24,615 [INFO] gmqtt.client: [SUBACK] 3 (0,)
+2026-07-03 16:39:24,616 [INFO] gmqtt.client: [SUBACK] 4 (0,)

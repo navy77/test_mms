@@ -1,0 +1,83 @@
+input:
+  label: kafka_input
+  kafka:
+    addresses: ["kafka:9092"]
+    topics: ["data","status", "alarm"]
+    consumer_group: "benthos_clickhouse_group"
+    start_from_oldest: true
+    batching:
+      period: 2s
+      byte_size: 5000000
+
+output:
+  switch:
+    cases:
+      - check: meta("kafka_topic") == "status"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: status_tb
+            columns:
+              - process
+              - device
+              - status
+            args_mapping: |
+              root = [ 
+              process,
+              device,
+              this.payload.parse_json().status
+              ]
+            batching:
+              count: 1000
+              period: 2s
+
+      - check: meta("kafka_topic") == "alarm"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: alarm_tb
+            columns:
+              - process
+              - device
+              - status
+            args_mapping: |
+              root = [ 
+              process,
+              device,
+              this.payload.parse_json().status
+               ]
+            batching:
+              count: 1000
+              period: 2s
+
+      - check: meta("kafka_topic") == "data"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: data_tb
+            columns:
+              - process
+              - device
+              - data1
+              - data2
+              - data3
+              - data4
+              - data5
+            args_mapping: |
+              root = [ 
+              process,
+              device,
+              this.payload.parse_json().data1,
+              this.payload.parse_json().data2,
+              this.payload.parse_json().data3,
+              this.payload.parse_json().data4,
+              this.payload.parse_json().data5
+              ]
+            batching:
+              count: 1000
+              period: 2s
+
+    
