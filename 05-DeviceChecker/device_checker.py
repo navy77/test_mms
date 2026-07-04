@@ -25,12 +25,13 @@ logging.basicConfig(
 logger = logging.getLogger("DeviceChecker")
 
 class DeviceChecker:
-    def __init__(self, redis_host, redis_port, redis_key, mqtt_broker, mqtt_port, ch_host, ch_port, ch_user, ch_pass, ch_db, check_period):
+    def __init__(self, redis_host, redis_port, redis_key, mqtt_broker, mqtt_port, mqtt_status_topic, ch_host, ch_port, ch_user, ch_pass, ch_db, check_period):
         self.redis_host = redis_host
         self.redis_port = redis_port
         self.redis_key = redis_key
         self.mqtt_broker = mqtt_broker
         self.mqtt_port = mqtt_port
+        self.mqtt_status_topic = mqtt_status_topic
         self.ch_host = ch_host
         self.ch_port = ch_port
         self.ch_user = ch_user
@@ -148,13 +149,19 @@ class DeviceChecker:
 
             # 4. If status is offline and transitioned from online/none, publish to MQTT
             prev_status = self.last_status.get((proc, dev))
-            if status == "offline" and prev_status != "offline" and redis_entry is not None:
-                # Topic: status/div/process/device
-                topic = f"status/{div}/{proc}/{dev}"
+            if status == "offline" and prev_status != "offline":
+                # Construct topic from self.mqtt_status_topic
+                if "#" in self.mqtt_status_topic:
+                    topic = self.mqtt_status_topic.replace("#", f"{proc}/{dev}")
+                else:
+                    topic = f"{self.mqtt_status_topic}/{proc}/{dev}"
                 payload = json.dumps({"status": "offline"})
                 try:
                     self.mqtt_client.publish(topic, payload, qos=1, retain=True)
-                    logger.info(f"Device {proc}/{dev} is OFFLINE (diff > {self.check_period}s). Published to MQTT topic: {topic}")
+                    if redis_entry is not None:
+                        logger.info(f"Device {proc}/{dev} is OFFLINE (diff > {self.check_period}s). Published to MQTT topic: {topic}")
+                    else:
+                        logger.info(f"Device {proc}/{dev} is OFFLINE (never seen in Redis). Published to MQTT topic: {topic}")
                 except Exception as e:
                     logger.error(f"Error publishing to MQTT topic {topic}: {e}")
             elif status == "online" and prev_status == "offline":
@@ -199,6 +206,7 @@ def main():
     # Read config from environment variables
     mqtt_broker = os.getenv("MQTT_BROKER", "127.0.0.1").strip().strip("'\"")
     mqtt_port = int(os.getenv("MQTT_PORT", 1883))
+    mqtt_status_topic = os.getenv("MQTT_STATUS_TOPIC", "status/mic/#").strip().strip("'\"")
     
     redis_host = os.getenv("REDIS_HOST", "127.0.0.1").strip().strip("'\"")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
@@ -218,6 +226,7 @@ def main():
         redis_key=redis_queue_key,
         mqtt_broker=mqtt_broker,
         mqtt_port=mqtt_port,
+        mqtt_status_topic=mqtt_status_topic,
         ch_host=ch_host,
         ch_port=ch_port,
         ch_user=ch_user,

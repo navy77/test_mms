@@ -7,7 +7,8 @@ services:
     restart: always
     volumes:
       - ./benthos.yaml:/benthos.yaml
-    command: -c /benthos.yaml
+      - ./log:/app/log
+    entrypoint: ["sh", "-c", "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"]
     networks:
       - mms-network
 

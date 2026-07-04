@@ -24,13 +24,13 @@ output:
               - status
             args_mapping: |
               root = [ 
-              process,
-              device,
-              this.payload.parse_json().status
+                this.process,
+                this.device,
+                this.payload.parse_json().catch({"status": this.payload}).status
               ]
             batching:
-              count: 1000
-              period: 2s
+              count: 10000
+              period: 60s
 
       - check: meta("kafka_topic") == "alarm"
         output:
@@ -44,13 +44,13 @@ output:
               - status
             args_mapping: |
               root = [ 
-              process,
-              device,
-              this.payload.parse_json().status
-               ]
+                this.process,
+                this.device,
+                this.payload.parse_json().catch({"status": this.payload}).status
+              ]
             batching:
-              count: 1000
-              period: 2s
+              count: 10000
+              period: 60s
 
       - check: meta("kafka_topic") == "data"
         output:
@@ -68,16 +68,14 @@ output:
               - data5
             args_mapping: |
               root = [ 
-              process,
-              device,
-              this.payload.parse_json().data1,
-              this.payload.parse_json().data2,
-              this.payload.parse_json().data3,
-              this.payload.parse_json().data4,
-              this.payload.parse_json().data5
+                this.process,
+                this.device,
+                this.payload.parse_json().catch({}).data1.number().catch(0.0),
+                this.payload.parse_json().catch({}).data2.number().catch(0.0),
+                this.payload.parse_json().catch({}).data3.number().catch(0.0),
+                this.payload.parse_json().catch({}).data4.number().catch(0.0),
+                this.payload.parse_json().catch({}).data5.number().catch(0.0)
               ]
             batching:
-              count: 1000
-              period: 2s
-
-    
+              count: 10000
+              period: 60s
