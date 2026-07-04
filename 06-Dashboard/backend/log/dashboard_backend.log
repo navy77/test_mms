@@ -1,0 +1,9 @@
+# MMS Dashboard Backend Log Initialized
+2026-07-04 16:51:17,326 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8000
+2026-07-04 16:51:47,208 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8000
+2026-07-04 16:52:06,215 [INFO] DashboardBackend.RegisterRouter: Deleting user: mic
+2026-07-04 16:52:20,018 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-04 16:56:38,161 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8000
+2026-07-04 16:57:32,826 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8000
+2026-07-04 16:58:43,930 [INFO] DashboardBackend.RegisterRouter: Creating user: mic
+2026-07-04 16:59:03,382 [INFO] DashboardBackend.RegisterRouter: Creating user: mic

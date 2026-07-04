@@ -14,3 +14,7 @@
 2026-07-04 15:33:50,050 [INFO] gmqtt.client: [SUBACK] 2 (0,)
 2026-07-04 15:33:50,092 [INFO] gmqtt.client: [SUBACK] 3 (0,)
 2026-07-04 15:33:50,092 [INFO] gmqtt.client: [SUBACK] 4 (0,)
+2026-07-04 16:38:24,911 [INFO] MqttToRedis: Shutdown signal received
+2026-07-04 16:38:24,917 [INFO] gmqtt.mqtt.protocol: [CONN CLOSE NORMALLY]
+2026-07-04 16:38:24,917 [INFO] MqttToRedis: Disconnected from MQTT Broker
+2026-07-04 16:38:24,919 [INFO] MqttToRedis: Disconnected from MQTT Broker cleanly

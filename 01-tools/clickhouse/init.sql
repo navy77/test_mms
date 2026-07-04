@@ -43,6 +43,7 @@ ORDER BY created_at;
 
 
 -- Register table
+
 CREATE TABLE IF NOT EXISTS device_register_tb(
     last_update DateTime('Asia/Bangkok') DEFAULT now(),
     process String,
@@ -62,6 +63,15 @@ CREATE TABLE IF NOT EXISTS columns_register_tb(
 PARTITION BY toYYYYMM(last_update)
 ORDER BY last_update;
 
+CREATE TABLE IF NOT EXISTS user_register_tb(
+    last_update DateTime('Asia/Bangkok') DEFAULT now(),
+    user String,
+    password String,
+    role String
+
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(last_update)
+ORDER BY last_update;
 
 -- dummy
 
@@ -83,3 +93,7 @@ VALUES ('demo1', 'process', 'String'),
 INSERT INTO "default"."device_register_tb" (process, device) 
 SELECT 'demo1' AS process, concat('no_', toString(number + 1)) 
 AS device FROM numbers(50);
+
+INSERT INTO "default"."user_register_tb" (user, password, role) 
+VALUES ('admin', 'admin', 'admin'),
+('user', 'user', 'user');
