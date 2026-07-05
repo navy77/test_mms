@@ -1,12 +1,18 @@
 services:
-  agent-redis-kafka:
-    build: .
-    container_name: agent-redis-kafka
+  redis-kafka:
+    image: jeffail/benthos:latest
+    container_name: redis-kafka
+    ports:
+      - 4196:4195
     restart: always
+    environment:
+      - TZ=Asia/Bangkok
     env_file:
       - .env
     volumes:
+      - ./benthos.yaml:/benthos.yaml
       - ./log:/app/log
+    entrypoint: ["sh", "-c", "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"]
     networks:
       - mms-network
 

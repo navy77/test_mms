@@ -1,0 +1,19 @@
+services:
+  agent-api-rest:
+    build: .
+    container_name: agent-api-rest
+    ports:
+      - "8002:8002"
+    restart: always
+    environment:
+      - TZ=Asia/Bangkok
+    env_file:
+      - .env
+    volumes:
+      - ./log:/app/log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true

@@ -20,7 +20,8 @@
 * **`04-KafkaClickHouse/`** : สารบรรณ Agent ที่ทำหน้าที่ดึงข้อมูลจาก Kafka และบันทึกลง ClickHouse
 * **`05-DeviceChecker/`** : สารบรรณของตรวจสอบสถานะอุปกรณ์ว่า online หรือ offline และบันทึกลง Clickhouse
 * **`06-Dashboard/`** : สารบรรณ สร้าง frontend ,backend ของ web dashboard เพื่อใช้ input clickhouse user_register_tb,device_register_tb,columns_register_tb
-* **`07-ScriptStorage/`** : สารบรรณของ Python Aggregation Script ที่จะประมวลผลข้อมูลส่งไป PostgreSQL
+* **`07-API/`** : สารบรรณของ API Service ที่แบ่งแยกการทำงานเป็น Server-Sent Events (SSE) ดึงข้อมูลจาก Redis และ REST API ดึงข้อมูลจาก ClickHouse
+* **`08-ScriptStorage/`** : สารบรรณของ Python Aggregation Script ที่จะประมวลผลข้อมูลส่งไป PostgreSQL
 ---
 
 ## 🛠️ Agents Detail & Code Specification (Python Class Style)
@@ -33,26 +34,53 @@
 ### 2. MqttToRedisAgent (`02-MqttRedis`)
 * **หน้าที่:** ทำหน้าที่เป็น Subscriber คอยฟังข้อมูลจาก MQTT Broker จากนั้นบันทึกข้อมูลลง Redis ในลักษณะ In-Memory Buffer อย่างรวดเร็ว เพื่อไม่ให้เกิดคอขวด (Bottleneck) 
 ที่ MQTT โดยจะอ่านไฟลล์ .env เกี่ยวกับ brokers,port
-example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
+example topic : data/div/process/##,status/div/process/##,alarm/div/process/##,mqtt/div/process/##
 
-* **Docker Service:** `agent-mqtt-redis`
-* **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
-    ```python
-    import gmqtt # แนะนำ gmqtt สำหรับ async
-    import redis
+* **Docker Service:** `mqtt-redis`
+* **Benthos Configuration:**
+    ```yaml
+    input:
+      batched:
+        child:
+          mqtt:
+            urls: ["tcp://${MQTT_BROKER:localhost}:${MQTT_PORT:1883}"]
+            topics: ["data/#", "status/#", "alarm/#", "mqtt/#"]
+            client_id: "agent-mqtt-redis-benthos"
+        policy:
+          count: 5000
+          period: 1s
 
-    class MqttToRedisAgent:
-        def __init__(self, mqtt_host, redis_host):
-            self.mqtt_client = None
-            self.redis_client = redis.Redis(host=redis_host, port=6379)
+    pipeline:
+      processors:
+        - mapping: |
+            root.topic = meta("mqtt_topic")
+            root.div = meta("mqtt_topic").split("/").index(1).catch("")
+            root.process = meta("mqtt_topic").split("/").index(2).catch("")
+            root.device = meta("mqtt_topic").split("/").index(3).catch("")
+            root.payload = content().string()
+            root.timestamp = now()
 
-        def on_message(self, client, topic, payload, qos, properties):
-            # บันทึกข้อมูลลง Redis (แนะนำใช้ List หรือ Stream สำหรับ Queue)
-            self.redis_client.rpush("raw_data_queue", payload)
+    output:
+      broker:
+        pattern: fan_out
+        outputs:
+          # Branch 1: Push JSON serialized message to Redis Queue (RPUSH)
+          - redis_list:
+              url: "redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
+              key: "${REDIS_QUEUE_KEY:mqtt_queue}"
 
-        def start(self):
-            # เชื่อมต่อและเริ่มทำงาน
-            pass
+          # Branch 2: Update real-time tracking Redis Hash (HSET)
+          - drop: {}
+            processors:
+              - redis:
+                  url: "redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
+                  command: hset
+                  args_mapping: |
+                    root = [
+                      "rt_" + meta("mqtt_topic").split("/").index(0).catch("mqtt"),
+                      meta("mqtt_topic"),
+                      content().string()
+                    ]
     ```
 
 ### 3. RedisToKafkaAgent (`03-RedisKafka`)
@@ -60,28 +88,123 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 โดยจะอ่านไฟลล์ .env เกี่ยวกับ brokers,port
 example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 บันทึก 1 partition ต่อ process
-* **Docker Service:** `agent-redis-kafka`
-* **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
-    ```python
-    import time
-    from confluent_kafka import Producer # แนะนำ confluent_kafka 
-    import redis
+* **Docker Service:** `redis-kafka`
+* **Benthos Configuration:**
+    ```yaml
+    input:
+      redis_list:
+        url: "redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
+        key: "${REDIS_QUEUE_KEY:mqtt_queue}"
 
-    class RedisToKafkaAgent:
-        def __init__(self, redis_host, kafka_brokers):
-            self.redis_client = redis.Redis(host=redis_host)
-            self.producer = KafkaProducer(bootstrap_servers=kafka_brokers)
+    pipeline:
+      processors:
+        - mapping: |
+            let topic = json("topic").catch("")
+            let category = $topic.split("/").index(0).catch("default")
+            
+            let partition = match $category {
+              "data" => 0,
+              "status" => 1,
+              "alarm" => 2,
+              "mqtt" => 3,
+              _ => 0
+            }
+            
+            meta kafka_topic = $category
+            meta kafka_partition = $partition.string()
+            
+            root.topic = $topic
+            root.process = json("process").catch("")
+            root.device = json("device").catch("")
+            root.payload = json("payload").catch("")
+            root.timestamp = json("timestamp").catch(now())
 
-        def process_pipeline(self):
-
+    output:
+      kafka:
+        addresses: [ "${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}" ]
+        topic: "${! meta(\"kafka_topic\") }"
+        partitioner: manual
+        partition: "${! meta(\"kafka_partition\") }"
+        batching:
+          count: 1000
+          period: 20ms
     ```
-
-*หมายเหตุ: ในส่วน `03-RedisKafka` จะมีกระบวนการดึงข้อมูลจาก Kafka เข้าไปจัดเก็บที่ **ClickHouse DB** เพื่อทำเป็นที่เก็บข้อมูลประวัติขนาดใหญ่ (Historical Data)*
 
 
 ### 4. KafkaToClickhouseAgent (`04-KafkaClickhouse`)
 * **หน้าที่:** ทำหน้าที่ Pop ข้อมูลออกจาก Kafka Topic อย่างรวดเร็ว แล้วทำการบันทึกข้อมูลลง ClickHouse DB
-โดยใช้ Benthos
+โดยจะอ่านข้อมูลจาก topics `data`, `status`, `alarm` และบันทึกลงตารางที่เกี่ยวข้องแบบ Batch
+* **Docker Service:** `kafka-clickhouse`
+* **Benthos Configuration:**
+    ```yaml
+    input:
+      kafka:
+        addresses: ["kafka:9092"]
+        topics: ["data", "status", "alarm"]
+        consumer_group: "benthos_clickhouse_group"
+        start_from_oldest: true
+        batching:
+          period: 2s
+          byte_size: 5000000
+
+    output:
+      switch:
+        cases:
+          - check: meta("kafka_topic") == "status"
+            output:
+              sql_insert:
+                driver: clickhouse
+                dsn: clickhouse://default:maibok@clickhouse:9000/default
+                table: status_tb
+                columns: [- process, - device, - status]
+                args_mapping: |
+                  root = [ 
+                    this.process,
+                    this.device,
+                    this.payload.parse_json().catch({"status": this.payload}).status
+                  ]
+                batching:
+                  count: 10000
+                  period: 10s
+
+          - check: meta("kafka_topic") == "alarm"
+            output:
+              sql_insert:
+                driver: clickhouse
+                dsn: clickhouse://default:maibok@clickhouse:9000/default
+                table: alarm_tb
+                columns: [- process, - device, - status]
+                args_mapping: |
+                  root = [ 
+                    this.process,
+                    this.device,
+                    this.payload.parse_json().catch({"status": this.payload}).status
+                  ]
+                batching:
+                  count: 10000
+                  period: 10s
+
+          - check: meta("kafka_topic") == "data"
+            output:
+              sql_insert:
+                driver: clickhouse
+                dsn: clickhouse://default:maibok@clickhouse:9000/default
+                table: data_tb
+                columns: [- process, - device, - data1, - data2, - data3, - data4, - data5]
+                args_mapping: |
+                  root = [ 
+                    this.process,
+                    this.device,
+                    this.payload.parse_json().catch({}).data1.number().catch(0.0),
+                    this.payload.parse_json().catch({}).data2.number().catch(0.0),
+                    this.payload.parse_json().catch({}).data3.number().catch(0.0),
+                    this.payload.parse_json().catch({}).data4.number().catch(0.0),
+                    this.payload.parse_json().catch({}).data5.number().catch(0.0)
+                  ]
+                batching:
+                  count: 10000
+                  period: 10s
+    ```
 
 ### 5. DeviceChecker (`05-DeviceChecker`)
 * **หน้าที่:** ดึงข้อมูลจาก Redis hash 'rt_mqtt' ที่เก็บข้อมูลล่าสุดของแต่ละอุปกรณ์ จากนั้นตรวจสอบว่าข้อมูลล่าสุดของแต่ละอุปกรณ์คือช่วงเวลาเท่าไหร่ ถ้าเกิน X second ให้ส่ง MQTT offline เข้า topic status/div/##
@@ -116,7 +239,111 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
 
 
-### 7. DataAggregatorAgent (`07-ScriptStorage`)
+### 7. APIService (`07-API`)
+* **หน้าที่:** ให้บริการ API สำหรับระบบเพื่อนำข้อมูลไปแสดงผลแบบ Real-time และเรียกดูประวัติ โดยแบ่งออกเป็น:
+  1. **Server-Sent Events (SSE):** เชื่อมต่อกับ **Redis** เพื่อสร้าง Stream ข้อมูลแบบ Real-time ดึงข้อมูลสถานะหรือข้อมูลดิบล่าสุดส่งไปให้ Client (Frontend) ทันทีที่มีการเปลี่ยนแปลง
+  2. **REST API:** เชื่อมต่อกับ **ClickHouse** เพื่อค้นหาและดึงข้อมูลประวัติย้อนหลัง (Historical Data) ตามช่วงเวลาและพารามิเตอร์ที่ต้องการ
+* **โครงสร้างต้นแบบโฟลเดอร์ (FastAPI Folder Structure):**
+    ```text
+    07-API/
+    ├── main.py
+    ├── database.py
+    ├── models.py
+    └── routers/
+        ├── __init__.py
+        ├── history.py
+        └── stream.py
+    ```
+
+* **รายละเอียดไฟล์ต้นแบบแต่ละส่วน:**
+
+  * **`database.py` (จัดการการเชื่อมต่อฐานข้อมูล)**
+    ```python
+    import os
+    import redis
+    import clickhouse_connect
+
+    redis_host = os.getenv("REDIS_HOST", "redis")
+    ch_host = os.getenv("CLICKHOUSE_HOST", "clickhouse")
+    ch_user = os.getenv("CLICKHOUSE_USER", "default")
+    ch_pass = os.getenv("CLICKHOUSE_PASSWORD", "maibok")
+    ch_db = os.getenv("CLICKHOUSE_DATABASE", "default")
+
+    # เชื่อมต่อ Redis และ ClickHouse
+    redis_client = redis.Redis(host=redis_host, port=6379, decode_responses=True)
+    ch_client = clickhouse_connect.get_client(
+        host=ch_host, 
+        port=8123,
+        username=ch_user,
+        password=ch_pass,
+        database=ch_db
+    )
+    ```
+
+  * **`models.py` (โมเดลโครงสร้างข้อมูล / Schema)**
+    ```python
+    from pydantic import BaseModel
+    from typing import List, Any
+
+    class HistoryResponse(BaseModel):
+        device: str
+        data: List[Any]
+    ```
+
+  * **`routers/history.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse)**
+    ```python
+    from fastapi import APIRouter, HTTPException
+    from database import ch_client
+    from models import HistoryResponse
+
+    router = APIRouter(prefix="/api/v1", tags=["History"])
+
+    @router.get("/history", response_model=HistoryResponse)
+    def get_history(device_id: str, limit: int = 100):
+        try:
+            query = f"SELECT * FROM data_tb WHERE device = '{device_id}' ORDER BY timestamp DESC LIMIT {limit}"
+            result = ch_client.query(query)
+            return HistoryResponse(device=device_id, data=result.result_rows)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    ```
+
+  * **`routers/stream.py` (SSE API: ดึงข้อมูล Real-time จาก Redis)**
+    ```python
+    import asyncio
+    from fastapi import APIRouter
+    from fastapi.responses import StreamingResponse
+    from database import redis_client
+
+    router = APIRouter(prefix="/api/v1", tags=["Stream"])
+
+    @router.get("/stream")
+    async def stream_realtime(channel: str):
+        async def event_generator():
+            pubsub = redis_client.pubsub()
+            pubsub.subscribe(channel)
+            while True:
+                message = pubsub.get_message(ignore_subscribe_messages=True)
+                if message:
+                    yield f"data: {message['data']}\n\n"
+                await asyncio.sleep(0.1)
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+    ```
+
+  * **`main.py` (จุดเริ่มทำงานของระบบ)**
+    ```python
+    from fastapi import FastAPI
+    from routers import history, stream
+
+    app = FastAPI(title="MMS Data API Service")
+
+    # นำ Router มารวมเข้าด้วยกัน
+    app.include_router(history.router)
+    app.include_router(stream.router)
+    ```
+
+
+### 8. DataAggregatorAgent (`08-ScriptStorage`)
 * **หน้าที่:** ดึงข้อมูลดิบจาก ClickHouse (หรือดึงผ่าน Stream จาก Kafka) เพื่อนำมาคำนวณและประมวลผลลัพธ์เชิงสถิติ (เช่น การหาค่าเฉลี่ยรายนาที/รายชั่วโมง) จากนั้นจึงบันทึกผลลัพธ์สุดท้าย (Aggregated Data) ลงใน **PostgreSQL** เพื่อนำไปใช้งานบนแดชบอร์ดหรือเว็บแอปพลิเคชันต่อไป
 * **Docker Service:** `agent-python-aggregator`
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
@@ -148,3 +375,8 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 2.  **Kafka:** กำหนด `batch.size` และ `linger.ms` ใน Producer Class เพื่อให้ส่งข้อมูลเป็นชุด (Batch) แทนการส่งทีละข้อความ
 3.  **ClickHouse:** เน้นการทำ Batch Insert (อย่างน้อย 10,000 แถวต่อครั้ง หรือทุกๆ 1-2 นาที) ห้ามเขียนข้อมูลแบบทีละบรรทัดเด็ดขาด
 4.  **Docker Network:** ตรวจสอบให้อยู่ใน Bridge Network เดียวกันทั้งหมดใน `01-tools` เพื่อลด Network Latency
+5. **Benthos** จะเข้ามาทำหน้าที่เป็นตัวกลางในการรับข้อมูลจาก Kafka และบันทึกลง ClickHouse โดยตรง ทำให้ไม่ต้องเขียน Python Script แยกต่างหากสำหรับ Agent ตัวนี้
+6. **DeviceChecker** การปรับเปลี่ยนนี้ช่วยให้ Agent สามารถจัดการสถานะ Online/Offline ของอุปกรณ์ได้แม่นยำยิ่งขึ้น ด้วยการตรวจจับข้อมูลที่ผิดปกติ (เช่น Timestamp ขาดหาย) และส่งสถานะ Offline กลับไปยัง MQTT พร้อมทั้งบันทึกลงฐานข้อมูล ClickHouse เพื่อการวิเคราะห์ย้อนหลัง
+7. **DataAggregatorAgent** การปรับเปลี่ยนนี้จะทำให้ Agent สามารถคำนวณค่าทางสถิติจากข้อมูลดิบใน ClickHouse (เช่น ค่าเฉลี่ย, ผลรวม, จำนวนครั้ง) และบันทึกผลลัพธ์ลงใน **PostgreSQL** ซึ่งมักจะถูกใช้เป็นฐานข้อมูลหลักสำหรับแอปพลิเคชันเว็บหรือแดชบอร์ด
+8. **log** ทุก process จะเก็บ log ไว้ที่ `/var/log/apps/` folder ในแต่ละ process เพื่อให้สามารถตรวจสอบ log ได้ง่าย และใช้ TZ=Asia/Bangkok
+9. **time zone** ทุก process จะใช้ TZ=Asia/Bangkok และ clickhouse ใช้ UTC+7

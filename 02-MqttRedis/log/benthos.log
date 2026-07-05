@@ -1,0 +1,19 @@
+time="2026-07-04T23:08:06+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-04T23:08:06+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-04T23:08:06+07:00" level=info msg="Input type mqtt is now active" @service=benthos label="" path=root.input.batched.child
+time="2026-07-04T23:08:06+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-04T23:08:06+07:00" level=info msg="Output type drop is now active" @service=benthos label="" path=root.output.broker.outputs.1
+time="2026-07-04T23:08:06+07:00" level=info msg="Output type redis_list is now active" @service=benthos label="" path=root.output.broker.outputs.0
+time="2026-07-04T23:09:57+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-04T23:09:57+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-04T23:09:57+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-04T23:09:57+07:00" level=info msg="Output type drop is now active" @service=benthos label="" path=root.output.broker.outputs.1
+time="2026-07-04T23:09:57+07:00" level=info msg="Input type mqtt is now active" @service=benthos label="" path=root.input.batched.child
+time="2026-07-04T23:09:57+07:00" level=info msg="Output type redis_list is now active" @service=benthos label="" path=root.output.broker.outputs.0
+time="2026-07-05T19:58:40+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:40+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:40+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-05T19:58:40+07:00" level=info msg="Output type drop is now active" @service=benthos label="" path=root.output.broker.outputs.1
+time="2026-07-05T19:58:42+07:00" level=error msg="Failed to connect to mqtt: network Error : dial tcp 192.168.1.30:1883: connect: connection refused" @service=benthos label="" path=root.input.batched.child
+time="2026-07-05T19:58:45+07:00" level=info msg="Input type mqtt is now active" @service=benthos label="" path=root.input.batched.child
+time="2026-07-05T19:58:45+07:00" level=info msg="Output type redis_list is now active" @service=benthos label="" path=root.output.broker.outputs.0

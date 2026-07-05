@@ -1,10 +1,14 @@
 services:
-  benthos:
+  kafka-clickhouse:
     image: jeffail/benthos:latest
-    container_name: benthos
+    container_name: kafka-clickhouse
     ports:
-      - 4195:4195
+      - 4197:4195
     restart: always
+    environment:
+      - TZ=Asia/Bangkok
+    env_file:
+      - .env
     volumes:
       - ./benthos.yaml:/benthos.yaml
       - ./log:/app/log

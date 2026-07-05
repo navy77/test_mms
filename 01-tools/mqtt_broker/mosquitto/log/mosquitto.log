@@ -128,3 +128,121 @@ To fix this, use `chmod 0700 /mosquitto/config/acl`.
 1783009413: New connection from 172.18.0.1:48188 on port 1883.
 1783009413: New client connected from 172.18.0.1:48188 as mqtt_publisher (p4, c1, k60).
 1783009418: Client mqtt_publisher [172.18.0.1:48188] disconnected: connection closed by client.
+1783180458: mosquitto version 2.1.2 starting
+1783180458: Config loaded from /mosquitto/config/mosquitto.conf.
+1783180458: Bridge support available.
+1783180458: Persistence support available.
+1783180458: TLS support available.
+1783180458: TLS-PSK support available.
+1783180458: Websockets support available.
+1783180458: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783180458: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783180458: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783180458: Plugin builtin-security has registered to receive 'acl-check' events.
+1783180458: Opening ipv4 listen socket on port 1883.
+1783180458: mosquitto version 2.1.2 running
+1783180459: New connection from 172.18.0.1:49544 on port 1883.
+1783180459: New client connected from 172.18.0.1:49544 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783180580: Client agent-mqtt-redis-benthos [172.18.0.1:49544] disconnected: connection closed by client.
+1783180581: New connection from 172.18.0.1:58378 on port 1883.
+1783180581: New client connected from 172.18.0.1:58378 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783180790: Client agent-mqtt-redis-benthos [172.18.0.1:58378] disconnected: connection closed by client.
+1783180790: New connection from 172.18.0.1:45024 on port 1883.
+1783180790: New client connected from 172.18.0.1:45024 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783180859: New connection from 172.18.0.1:40474 on port 1883.
+1783180859: New client connected from 172.18.0.1:40474 as mqtt_publisher (p4, c1, k60).
+1783180860: Client mqtt_publisher [172.18.0.1:40474] disconnected: connection closed by client.
+1783180947: New connection from 172.18.0.1:34536 on port 1883.
+1783180947: New client connected from 172.18.0.1:34536 as mqtt_publisher (p4, c1, k60).
+1783180948: Client mqtt_publisher [172.18.0.1:34536] disconnected: connection closed by client.
+1783180987: New connection from 172.18.0.1:35394 on port 1883.
+1783180987: New client connected from 172.18.0.1:35394 as mqtt_publisher (p4, c1, k60).
+1783180988: Client mqtt_publisher [172.18.0.1:35394] disconnected: connection closed by client.
+1783181071: mosquitto version 2.1.2 terminating
+1783181071: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783181096: mosquitto version 2.1.2 starting
+1783181096: Config loaded from /mosquitto/config/mosquitto.conf.
+1783181096: Bridge support available.
+1783181096: Persistence support available.
+1783181096: TLS support available.
+1783181096: TLS-PSK support available.
+1783181096: Websockets support available.
+1783181096: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783181096: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783181096: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783181096: Plugin builtin-security has registered to receive 'acl-check' events.
+1783181096: Opening ipv4 listen socket on port 1883.
+1783181096: mosquitto version 2.1.2 running
+1783181097: New connection from 172.18.0.1:45378 on port 1883.
+1783181097: New client connected from 172.18.0.1:45378 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783181143: Client agent-mqtt-redis-benthos [172.18.0.1:45378] disconnected: connection closed by client.
+1783181258: mosquitto version 2.1.2 terminating
+1783181258: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783181259: mosquitto version 2.1.2 starting
+1783181259: Config loaded from /mosquitto/config/mosquitto.conf.
+1783181259: Bridge support available.
+1783181259: Persistence support available.
+1783181259: TLS support available.
+1783181259: TLS-PSK support available.
+1783181259: Websockets support available.
+1783181259: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783181259: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783181259: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783181259: Plugin builtin-security has registered to receive 'acl-check' events.
+1783181259: Opening ipv4 listen socket on port 1883.
+1783181259: mosquitto version 2.1.2 running
+1783181286: New connection from 172.18.0.1:54288 on port 1883.
+1783181286: New client connected from 172.18.0.1:54288 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783181392: Client agent-mqtt-redis-benthos [172.18.0.1:54288] disconnected: connection closed by client.
+1783181397: New connection from 172.18.0.1:38964 on port 1883.
+1783181397: New client connected from 172.18.0.1:38964 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783182324: New connection from 172.18.0.1:60168 on port 1883.
+1783182324: New client connected from 172.18.0.1:60168 as mqtt_publisher (p4, c1, k60).
+1783182325: Client mqtt_publisher [172.18.0.1:60168] disconnected: connection closed by client.
+1783183059: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783184860: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783186661: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783187962: Client agent-mqtt-redis-benthos [172.18.0.1:38964] disconnected: connection closed by client.
+1783256320: mosquitto version 2.1.2 starting
+1783256320: Config loaded from /mosquitto/config/mosquitto.conf.
+1783256320: Bridge support available.
+1783256320: Persistence support available.
+1783256320: TLS support available.
+1783256320: TLS-PSK support available.
+1783256320: Websockets support available.
+1783256320: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783256320: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783256320: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783256320: Plugin builtin-security has registered to receive 'acl-check' events.
+1783256320: Opening ipv4 listen socket on port 1883.
+1783256320: mosquitto version 2.1.2 running
+1783256325: New connection from 172.18.0.1:54494 on port 1883.
+1783256325: New client connected from 172.18.0.1:54494 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783258120: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783259921: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783260713: New connection from 172.18.0.1:37464 on port 1883.
+1783260713: New client connected from 172.18.0.1:37464 as mqtt-explorer (p4, c1, k60).
+1783260728: New connection from 172.18.0.1:33068 on port 1883.
+1783260728: New client connected from 172.18.0.1:33068 as mqtt_publisher (p4, c1, k60).
+1783260730: Client mqtt_publisher [172.18.0.1:33068] disconnected.
+1783261625: Client mqtt-explorer [172.18.0.1:37464] disconnected.
+1783261722: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783263523: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783265324: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783267125: Saving in-memory database to /mosquitto/data//mosquitto.db.

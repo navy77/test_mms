@@ -11,9 +11,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY redis_to_kafka.py .
+COPY . .
 
-# Create the log directory
+# Create the log directory inside the container
 RUN mkdir -p /app/log
 
-CMD ["python", "redis_to_kafka.py"]
+# Run app
+CMD ["python", "main.py"]

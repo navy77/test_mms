@@ -1,0 +1,232 @@
+time="2026-07-04T23:24:16+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-04T23:24:16+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-04T23:24:16+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-04T23:24:16+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-04T23:24:16+07:00" level=info msg="Output type kafka is now active" @service=benthos label="" path=root.output
+time="2026-07-05T00:41:40+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:41:50+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:42:00+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:44:22+07:00" level=error msg="Failed to read message: EOF" @service=benthos label="" path=root.input
+time="2026-07-05T00:44:33+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:44:42+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:44:53+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:04+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:14+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:25+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:35+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:46+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:45:56+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:07+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:17+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:28+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:38+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:49+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:46:59+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:10+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:20+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:26+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:27+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:27+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:29+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:30+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:31+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:31+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:32+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:33+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:34+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:35+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:36+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:37+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:38+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:39+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:41+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:42+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:43+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:44+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:45+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:47+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:48+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:49+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:50+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:52+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:53+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:54+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:55+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:56+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:58+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:47:59+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:00+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:01+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:02+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:02+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:03+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:04+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:05+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:06+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:06+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:07+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:08+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:09+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:10+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:11+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:12+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:13+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:15+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:16+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:17+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:18+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:19+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:20+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:21+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:22+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:23+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:24+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:25+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:26+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:27+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:29+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:30+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:31+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:32+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:33+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:34+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:35+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:36+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:38+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:39+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:40+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:41+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:42+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:43+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:44+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:45+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:46+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:47+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:48+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:48+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:49+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:50+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:50+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:52+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:53+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:53+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:54+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:55+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:56+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:57+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:58+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:48:59+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:00+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:01+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:02+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:03+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:04+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:05+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:07+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:08+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:09+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:10+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:11+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:12+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:13+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:14+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:15+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:16+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:17+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:17+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:19+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:20+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:20+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:21+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:22+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:23+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:24+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:25+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:26+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:27+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:28+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:30+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:30+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:31+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:33+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:34+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:35+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:36+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:37+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:38+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:39+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:40+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:41+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:41+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:43+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:43+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:44+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:45+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:46+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:47+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:48+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:48+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:49+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:50+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:51+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:52+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:52+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:53+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:54+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:55+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:56+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:57+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:58+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:58+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:49:59+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:00+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:01+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:02+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:03+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:04+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:05+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:06+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:07+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:08+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:08+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:09+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:10+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:11+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:13+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:14+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:15+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:16+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:17+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:19+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:20+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:21+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:23+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:24+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:25+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:26+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T00:50:27+07:00" level=error msg="Failed to read message: dial tcp 192.168.1.30:6379: connect: connection refused" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:40+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:40+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:45+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:45+07:00" level=error msg="Service closing due to: failed to init output <no label> path root.output: kafka: client has run out of available brokers to talk to: EOF" @service=benthos
+time="2026-07-05T19:58:46+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:46+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:46+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:46+07:00" level=error msg="Service closing due to: failed to init output <no label> path root.output: kafka: client has run out of available brokers to talk to: EOF" @service=benthos
+time="2026-07-05T19:58:47+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:47+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:47+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:48+07:00" level=error msg="Service closing due to: failed to init output <no label> path root.output: kafka: client has run out of available brokers to talk to: EOF" @service=benthos
+time="2026-07-05T19:58:48+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:48+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:48+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:49+07:00" level=error msg="Service closing due to: failed to init output <no label> path root.output: kafka: client has run out of available brokers to talk to: EOF" @service=benthos
+time="2026-07-05T19:58:50+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:50+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:50+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:51+07:00" level=error msg="Service closing due to: failed to init output <no label> path root.output: kafka: client has run out of available brokers to talk to: EOF" @service=benthos
+time="2026-07-05T19:58:53+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:53+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:53+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-05T19:58:54+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-05T19:58:54+07:00" level=info msg="Output type kafka is now active" @service=benthos label="" path=root.output

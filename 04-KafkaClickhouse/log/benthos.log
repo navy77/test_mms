@@ -1,0 +1,33 @@
+time="2026-07-04T23:24:16+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-04T23:24:16+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-04T23:24:16+07:00" level=info msg="Input type redis_list is now active" @service=benthos label="" path=root.input
+time="2026-07-04T23:24:16+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-04T23:24:16+07:00" level=info msg="Output type kafka is now active" @service=benthos label="" path=root.output
+time="2026-07-04T23:31:11+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-04T23:31:11+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-04T23:31:11+07:00" level=info msg="Input type kafka is now active" @service=benthos label=kafka_input path=root.input
+time="2026-07-04T23:31:11+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-04T23:31:11+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:31:11+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:31:11+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:32:11+07:00" level=error msg="Failed to send message to sql_insert: code: 60, message: Table default.status_tb does not exist" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:32:11+07:00" level=error msg="Failed to send message to sql_insert: code: 60, message: Table default.alarm_tb does not exist" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:32:11+07:00" level=error msg="Failed to send message to sql_insert: code: 60, message: Table default.data_tb does not exist" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:33:19+07:00" level=error msg="Failed to send message to sql_insert: dial tcp: lookup clickhouse on 127.0.0.11:53: server misbehaving" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:33:19+07:00" level=error msg="Failed to send message to sql_insert: dial tcp: lookup clickhouse on 127.0.0.11:53: server misbehaving" @service=benthos label="" path=root.output.switch.output
+time="2026-07-04T23:33:19+07:00" level=error msg="Failed to send message to sql_insert: dial tcp: lookup clickhouse on 127.0.0.11:53: server misbehaving" @service=benthos label="" path=root.output.switch.output
+time="2026-07-05T19:58:40+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-05T19:58:40+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-05T19:58:40+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-05T19:58:40+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-05T19:58:40+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-05T19:58:40+07:00" level=info msg="Output type sql_insert is now active" @service=benthos label="" path=root.output.switch.output
+time="2026-07-05T19:58:41+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:42+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:43+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:45+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:47+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:49+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:50+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:53+07:00" level=error msg="Failed to connect to kafka: kafka: client has run out of available brokers to talk to: dial tcp 172.18.0.10:9092: connect: connection refused" @service=benthos label=kafka_input path=root.input
+time="2026-07-05T19:58:54+07:00" level=info msg="Input type kafka is now active" @service=benthos label=kafka_input path=root.input

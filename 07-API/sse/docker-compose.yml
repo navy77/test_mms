@@ -1,0 +1,19 @@
+services:
+  agent-api-sse:
+    build: .
+    container_name: agent-api-sse
+    ports:
+      - "8001:8001"
+    restart: always
+    environment:
+      - TZ=Asia/Bangkok
+    env_file:
+      - .env
+    volumes:
+      - ./log:/app/log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true

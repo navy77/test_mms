@@ -1,3 +1,8 @@
+logger:
+  level: INFO
+  format: logfmt
+  add_timestamp: true
+
 input:
   label: kafka_input
   kafka:
@@ -30,7 +35,7 @@ output:
               ]
             batching:
               count: 10000
-              period: 60s
+              period: 10s
 
       - check: meta("kafka_topic") == "alarm"
         output:
@@ -50,7 +55,7 @@ output:
               ]
             batching:
               count: 10000
-              period: 60s
+              period: 10s
 
       - check: meta("kafka_topic") == "data"
         output:
@@ -78,4 +83,4 @@ output:
               ]
             batching:
               count: 10000
-              period: 60s
+              period: 10s

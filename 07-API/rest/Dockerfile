@@ -11,9 +11,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY main.py .
+COPY . .
 
 # Create the log directory inside the container
 RUN mkdir -p /app/log
 
-CMD ["python", "mqtt_to_redis.py"]
+# Run app
+CMD ["python", "main.py"]

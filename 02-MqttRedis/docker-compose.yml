@@ -1,15 +1,20 @@
 services:
-  agent-mqtt-redis:
-    build: .
-    container_name: agent-mqtt-redis
+  mqtt-redis:
+    image: jeffail/benthos:latest
+    container_name: mqtt-redis
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - 4195:4195
     restart: always
     env_file:
       - .env
     volumes:
+      - ./benthos.yaml:/benthos.yaml
       - ./log:/app/log
+    entrypoint: ["sh", "-c", "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"]
     networks:
       - mms-network
-
 networks:
   mms-network:
     external: true
