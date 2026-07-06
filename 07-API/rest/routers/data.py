@@ -189,18 +189,18 @@ def group_by_month_and_device(
     return results
 
 
-# 1. Hourly Endpoints
-@router.get("/hourly/{process}", response_model=List[DataResponse])
-def get_hourly_process(
+# 1. currently Endpoints
+@router.get("/currently/{process}", response_model=List[DataResponse])
+def get_currently_process(
     process: str = Path(..., description="The process identifier")
 ):
     """
-    Get hourly data for all devices in a process from 07:00 of the current production day until now.
+    Get currently data for all devices in a process from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching hourly data for process '{process}' from {start_time} to {now}")
+    logger.info(f"Fetching currently data for process '{process}' from {start_time} to {now}")
     client = get_ch_client()
     try:
         cols = get_registered_columns(client, process)
@@ -234,24 +234,24 @@ def get_hourly_process(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching hourly process data: {e}")
+        logger.error(f"Error fetching currently process data: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-@router.get("/hourly/{process}/{device}", response_model=DataResponse)
-def get_hourly_device(
+@router.get("/currently/{process}/{device}", response_model=DataResponse)
+def get_currently_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
 ):
     """
-    Get hourly data for a specific device in a process from 07:00 of the current production day until now.
+    Get currently data for a specific device in a process from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching hourly data for device '{process}/{device}' from {start_time} to {now}")
+    logger.info(f"Fetching currently data for device '{process}/{device}' from {start_time} to {now}")
     client = get_ch_client()
     try:
         cols = get_registered_columns(client, process)
@@ -287,7 +287,7 @@ def get_hourly_device(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching hourly device data: {e}")
+        logger.error(f"Error fetching currently device data: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)

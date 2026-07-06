@@ -162,7 +162,7 @@ def group_status_by_device(
     initial_statuses: Dict[str, Dict[str, Any]]
 ) -> List[StatusResponse]:
     """
-    Groups hourly status records by device and calculates status ratio segments.
+    Groups currently status records by device and calculates status ratio segments.
     """
     groups: Dict[str, List[Dict[str, Any]]] = {}
     for r in records:
@@ -243,6 +243,13 @@ def group_status_by_prod_date(
         else:
             active_statuses[dev] = "no data"
             
+    # Get current production date in Bangkok timezone
+    now = get_now_bangkok()
+    if now.hour < 7:
+        current_prod_date = (now - timedelta(days=1)).date()
+    else:
+        current_prod_date = now.date()
+            
     results = []
     for d in date_list:
         d_str = d.isoformat()
@@ -255,7 +262,14 @@ def group_status_by_prod_date(
             day_records.sort(key=lambda x: x.get("created_at") if isinstance(x.get("created_at"), datetime) else datetime.fromisoformat(x.get("created_at")))
             
             init_status = {"status": active_statuses[dev]} if active_statuses[dev] else None
-            segments = calculate_status_ratio(day_records, day_start, day_end, init_status, dev)
+            
+            if d < current_prod_date:
+                segments = calculate_status_ratio(day_records, day_start, day_end, init_status, dev)
+            elif d == current_prod_date:
+                segments = calculate_status_ratio(day_records, day_start, now, init_status, dev)
+            else:
+                segments = []
+                
             results.append(
                 DailyStatusResponse(
                     date=d_str,
@@ -305,18 +319,18 @@ def group_status_by_month(
         )
     return results
 
-# 1. Hourly Endpoints
-@router.get("/hourly/{process}", response_model=List[StatusResponse])
-def get_hourly_process(
+# 1. currently Endpoints
+@router.get("/currently/{process}", response_model=List[StatusResponse])
+def get_currently_process(
     process: str = Path(..., description="The process identifier")
 ):
     """
-    Get hourly status segments for all devices in a process from 07:00 of the current production day until now.
+    Get currently status segments for all devices in a process from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching hourly status for process '{process}' from {start_time} to {now}")
+    logger.info(f"Fetching currently status for process '{process}' from {start_time} to {now}")
     client = get_ch_client()
     try:
         devices = get_registered_devices(client, process)
@@ -351,24 +365,24 @@ def get_hourly_process(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching hourly process status: {e}")
+        logger.error(f"Error fetching currently process status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-@router.get("/hourly/{process}/{device}", response_model=StatusResponse)
-def get_hourly_device(
+@router.get("/currently/{process}/{device}", response_model=StatusResponse)
+def get_currently_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
 ):
     """
-    Get hourly status segments for a specific device from 07:00 of the current production day until now.
+    Get currently status segments for a specific device from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching hourly status for device '{process}/{device}' from {start_time} to {now}")
+    logger.info(f"Fetching currently status for device '{process}/{device}' from {start_time} to {now}")
     client = get_ch_client()
     try:
         initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
@@ -411,7 +425,7 @@ def get_hourly_device(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching hourly device status: {e}")
+        logger.error(f"Error fetching currently device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
@@ -562,6 +576,10 @@ def get_monthly_process(
         next_month = month + 1
     end_time = datetime(next_year, next_month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
     
+    now = get_now_bangkok()
+    if end_time > now:
+        end_time = max(start_time, now)
+    
     logger.info(f"Fetching monthly status for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
@@ -622,6 +640,10 @@ def get_monthly_device(
         next_year = year
         next_month = month + 1
     end_time = datetime(next_year, next_month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
+    
+    now = get_now_bangkok()
+    if end_time > now:
+        end_time = max(start_time, now)
     
     logger.info(f"Fetching monthly status for device '{process}/{device}' from {start_time} to {end_time}")
     client = get_ch_client()

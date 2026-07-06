@@ -33,3 +33,23 @@ class MonthlyStatusResponse(BaseModel):
     month: str
     device: str
     data: List[StatusSegment]
+
+class AlarmSegment(BaseModel):
+    alarm: str
+    duration: float
+    ratio: float
+
+class AlarmResponse(BaseModel):
+    device: str
+    data: List[AlarmSegment]
+
+class DailyAlarmResponse(BaseModel):
+    date: str
+    device: str
+    data: List[AlarmSegment]
+
+class MonthlyAlarmResponse(BaseModel):
+    month: str
+    device: str
+    data: List[AlarmSegment]
+

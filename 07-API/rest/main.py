@@ -13,7 +13,7 @@ dotenv.load_dotenv(dotenv_path=os.path.join(script_dir, ".env"))
 sys.path.append(script_dir)
 
 from database import get_ch_client
-from routers import data_router, status_router
+from routers import data_router, status_router, alarm_router
 
 # Configure logging
 log_dir = os.path.join(script_dir, "log")
@@ -50,6 +50,7 @@ app.add_middleware(
 # Include Routers
 app.include_router(data_router)
 app.include_router(status_router)
+app.include_router(alarm_router)
 
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check():
