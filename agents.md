@@ -246,13 +246,29 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 * **โครงสร้างต้นแบบโฟลเดอร์ (FastAPI Folder Structure):**
     ```text
     07-API/
-    ├── main.py
-    ├── database.py
-    ├── models.py
-    └── routers/
-        ├── __init__.py
-        ├── history.py
-        └── stream.py
+    ├── sse/
+    │   ├── Dockerfile
+    │   ├── requirements.txt
+    │   ├── .env
+    │   ├── main.py
+    │   ├── database.py
+    │   ├── models.py
+    │   └── routers/
+    │       ├── __init__.py
+    │       └── stream.py
+    └── rest/
+        ├── Dockerfile
+        ├── requirements.txt
+        ├── .env
+        ├── main.py
+        ├── database.py
+        ├── models.py
+        └── routers/
+            ├── __init__.py
+            ├── data.py
+            ├── status.py
+            ├── alarm.py
+            ├── device.py
     ```
 
 * **รายละเอียดไฟล์ต้นแบบแต่ละส่วน:**
@@ -285,30 +301,56 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
     from pydantic import BaseModel
     from typing import List, Any
 
-    class HistoryResponse(BaseModel):
+    class DataResponse(BaseModel):
         device: str
         data: List[Any]
     ```
 
-  * **`routers/history.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse)**
-    ```python
-    from fastapi import APIRouter, HTTPException
-    from database import ch_client
-    from models import HistoryResponse
-
-    router = APIRouter(prefix="/api/v1", tags=["History"])
-
-    @router.get("/history", response_model=HistoryResponse)
-    def get_history(device_id: str, limit: int = 100):
-        try:
-            query = f"SELECT * FROM data_tb WHERE device = '{device_id}' ORDER BY timestamp DESC LIMIT {limit}"
-            result = ch_client.query(query)
-            return HistoryResponse(device=device_id, data=result.result_rows)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+  ** `routers/data.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "data_tb")**
+     ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
+      แบ่งเป็น api ย่อย
+      - /api/v1/data/hourly/{process}  # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/data/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/data/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/data/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/data/monthly/{year}/{month}/{process}
+      - /api/v1/data/monthly/{year}/{month}/{process}/{device}
     ```
 
-  * **`routers/stream.py` (SSE API: ดึงข้อมูล Real-time จาก Redis)**
+  ** `routers/status.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "status_tb")**
+     ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
+
+     โดยส่งเป็น duration ของ status และ time_start และ time_end
+      - /api/v1/status/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/status/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/status/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/status/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/status/monthly/{year}/{month}/{process}
+      - /api/v1/status/monthly/{year}/{month}/{process}/{device}
+    ```
+
+  ** `routers/alarm.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "alarm_tb")**
+     ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
+     โดยส่งเป็น duration ของ status และ time_start และ time_end
+      - /api/v1/alarm/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/alarm/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/alarm/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/alarm/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/alarm/monthly/{year}/{month}/{process}
+      - /api/v1/alarm/monthly/{year}/{month}/{process}/{device}
+    ```
+  ** `routers/device.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "device_tb")**
+     ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
+     โดยส่งเป็น duration ของ status และ time_start และ time_end
+      - /api/v1/device/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/device/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/device/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/device/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
+      - /api/v1/device/monthly/{year}/{month}/{process}
+      - /api/v1/device/monthly/{year}/{month}/{process}/{device}
+    ```
+
+  ** `routers/stream.py` (SSE API: ดึงข้อมูล Real-time จาก Redis)**
     ```python
     import asyncio
     from fastapi import APIRouter

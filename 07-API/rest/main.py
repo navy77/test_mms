@@ -13,6 +13,7 @@ dotenv.load_dotenv(dotenv_path=os.path.join(script_dir, ".env"))
 sys.path.append(script_dir)
 
 from database import get_ch_client
+from routers import data_router, status_router
 
 # Configure logging
 log_dir = os.path.join(script_dir, "log")
@@ -46,6 +47,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include Routers
+app.include_router(data_router)
+app.include_router(status_router)
+
 @app.get("/health", status_code=status.HTTP_200_OK)
 def health_check():
     client = get_ch_client()
@@ -55,6 +60,6 @@ def health_check():
 if __name__ == "__main__":
     import uvicorn
     host = os.getenv("HOST", "0.0.0.0").strip().strip("'\"")
-    port = int(os.getenv("PORT", 8002))
+    port = int(os.getenv("PORT", 8003))
     logger.info(f"Starting MMS REST API Server at http://{host}:{port}")
     uvicorn.run("main:app", host=host, port=port, reload=True)

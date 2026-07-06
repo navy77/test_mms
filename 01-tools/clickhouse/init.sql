@@ -92,7 +92,7 @@ VALUES ('demo1', 'process', 'String'),
 
 INSERT INTO "default"."device_register_tb" (process, device) 
 SELECT 'demo1' AS process, concat('no_', toString(number + 1)) 
-AS device FROM numbers(50);
+AS device FROM numbers(1000);
 
 INSERT INTO "default"."user_register_tb" (user, password, role) 
 VALUES ('admin', 'admin', 'admin'),

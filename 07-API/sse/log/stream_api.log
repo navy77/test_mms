@@ -1,0 +1,15 @@
+2026-07-05 00:52:46,152 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8001
+2026-07-05 00:53:31,570 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-05 00:53:44,882 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-05 00:54:00,616 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-06 11:33:51,250 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8001
+2026-07-06 11:34:55,768 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-06 11:35:21,569 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-06 11:35:45,669 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-06 11:35:46,639 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-06 11:36:53,327 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-06 11:37:17,423 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-06 12:02:18,951 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8001
+2026-07-06 12:02:23,705 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-06 12:02:34,532 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-06 12:02:47,860 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8003

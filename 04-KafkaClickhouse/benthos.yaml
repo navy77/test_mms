@@ -2,6 +2,10 @@ logger:
   level: INFO
   format: logfmt
   add_timestamp: true
+metrics:
+  logger:
+    push_interval: 30s
+    flush_metrics: true
 
 input:
   label: kafka_input
@@ -11,8 +15,8 @@ input:
     consumer_group: "benthos_clickhouse_group"
     start_from_oldest: true
     batching:
-      period: 2s
-      byte_size: 5000000
+      period: 1s
+      byte_size: 100000
 
 output:
   switch:
@@ -35,7 +39,7 @@ output:
               ]
             batching:
               count: 10000
-              period: 10s
+              period: 1s
 
       - check: meta("kafka_topic") == "alarm"
         output:
@@ -55,7 +59,7 @@ output:
               ]
             batching:
               count: 10000
-              period: 10s
+              period: 1s
 
       - check: meta("kafka_topic") == "data"
         output:
@@ -83,4 +87,4 @@ output:
               ]
             batching:
               count: 10000
-              period: 10s
+              period: 1s

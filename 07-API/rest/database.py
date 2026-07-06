@@ -6,7 +6,7 @@ import clickhouse_connect
 logger = logging.getLogger("RESTBackend.Database")
 
 def get_ch_client():
-    host = os.getenv("CLICKHOUSE_HOST", "redis").strip().strip("'\"")
+    host = os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\"")
     port = int(os.getenv("CLICKHOUSE_PORT", 8123))
     user = os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\"")
     password = os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\"")

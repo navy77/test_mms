@@ -94,7 +94,6 @@ class DeviceChecker:
             return
 
         now = datetime.now()
-        print(now)
         data_to_insert = []
 
         # 3. Check status for each registered device
@@ -111,13 +110,19 @@ class DeviceChecker:
                 try:
                     div = redis_entry.get("div", "div")
                     timestamp_str = redis_entry.get("timestamp")
-                    # Parse timestamp (supports both with/without microseconds)
-                    if "." in timestamp_str:
-                        ts = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S.%f")
-                    else:
-                        ts = datetime.strptime(timestamp_str, "%Y-%m-%dT%H:%M:%S")
+                    try:
+                        ts = datetime.fromisoformat(timestamp_str)
+                    except ValueError:
+                        # Fallback for formats that might not be fully standard
+                        if "." in timestamp_str:
+                            ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S.%f")
+                        else:
+                            ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S")
                     
-                    diff_seconds = (now - ts).total_seconds()
+                    if ts.tzinfo is not None:
+                        diff_seconds = (datetime.now(ts.tzinfo) - ts).total_seconds()
+                    else:
+                        diff_seconds = (now - ts).total_seconds()
  
                     # Parse payload variables
                     payload_str = redis_entry.get("payload", "{}")
@@ -158,10 +163,10 @@ class DeviceChecker:
                 payload = json.dumps({"status": "offline"})
                 try:
                     self.mqtt_client.publish(topic, payload, qos=1, retain=True)
-                    if redis_entry is not None:
-                        logger.info(f"Device {proc}/{dev} is OFFLINE (diff > {self.check_period}s). Published to MQTT topic: {topic}")
-                    else:
-                        logger.info(f"Device {proc}/{dev} is OFFLINE (never seen in Redis). Published to MQTT topic: {topic}")
+                    # if redis_entry is not None:
+                    #     logger.info(f"Device {proc}/{dev} is OFFLINE (diff > {self.check_period}s). Published to MQTT topic: {topic}")
+                    # else:
+                    #     logger.info(f"Device {proc}/{dev} is OFFLINE (never seen in Redis). Published to MQTT topic: {topic}")
                 except Exception as e:
                     logger.error(f"Error publishing to MQTT topic {topic}: {e}")
             elif status == "online" and prev_status == "offline":
@@ -194,8 +199,7 @@ class DeviceChecker:
             except Exception as e:
                 logger.error(f"Unhandled error in check loop: {e}")
             
-            # Check every 30 seconds
-            time.sleep(30)
+            time.sleep(self.check_period)
 
 def main():
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -208,13 +212,13 @@ def main():
     mqtt_port = int(os.getenv("MQTT_PORT", 1883))
     mqtt_status_topic = os.getenv("MQTT_STATUS_TOPIC", "status/mic/#").strip().strip("'\"")
     
-    redis_host = os.getenv("REDIS_HOST", "127.0.0.1").strip().strip("'\"")
+    redis_host = os.getenv("REDIS_HOST", "redis").strip().strip("'\"")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
     redis_queue_key = os.getenv("REDIS_QUEUE_KEY", "rt_mqtt").strip().strip("'\"")
     
     period = int(os.getenv("PERIOD", 300))
     
-    ch_host = os.getenv("CLICKHOUSE_HOST", "127.0.0.1").strip().strip("'\"")
+    ch_host = os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\"")
     ch_port = int(os.getenv("CLICKHOUSE_PORT", 8123))
     ch_user = os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\"")
     ch_pass = os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\"")

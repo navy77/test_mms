@@ -3,9 +3,15 @@ logger:
   format: logfmt
   add_timestamp: true
 
+metrics:
+  logger:
+    push_interval: 30s
+    flush_metrics: true
+
+
 input:
   redis_list:
-    url: "redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}"
+    url: "redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}"
     key: "${REDIS_QUEUE_KEY:mqtt_queue}"
 
 pipeline:
@@ -21,7 +27,7 @@ pipeline:
           "status" => 1,
           "alarm" => 2,
           "mqtt" => 3,
-          _ => 0
+          _ => 4
         }
         
         # 3. Store routing variables in metadata
@@ -37,10 +43,10 @@ pipeline:
 
 output:
   kafka:
-    addresses: [ "${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}" ]
+    addresses: [ "${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}" ]
     topic: "${! meta(\"kafka_topic\") }"
     partitioner: manual
     partition: "${! meta(\"kafka_partition\") }"
     batching:
-      count: 1000
-      period: 20ms
+      count: 5000
+      period: 200ms

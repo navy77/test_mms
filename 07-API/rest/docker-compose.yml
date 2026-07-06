@@ -3,7 +3,7 @@ services:
     build: .
     container_name: agent-api-rest
     ports:
-      - "8002:8002"
+      - "8003:8003"
     restart: always
     environment:
       - TZ=Asia/Bangkok

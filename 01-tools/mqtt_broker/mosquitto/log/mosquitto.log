@@ -246,3 +246,80 @@ To fix this, use `chmod 0700 /mosquitto/config/acl`.
 1783263523: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1783265324: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1783267125: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783305317: mosquitto version 2.1.2 starting
+1783305317: Config loaded from /mosquitto/config/mosquitto.conf.
+1783305317: Bridge support available.
+1783305317: Persistence support available.
+1783305317: TLS support available.
+1783305317: TLS-PSK support available.
+1783305317: Websockets support available.
+1783305317: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783305317: Plugin builtin-security has registered to receive 'acl-check' events.
+1783305317: Opening ipv4 listen socket on port 1883.
+1783305317: mosquitto version 2.1.2 running
+1783305861: New connection from 172.21.0.1:33428 on port 1883.
+1783305861: New client connected from 172.21.0.1:33428 as mqtt-explorer-34a50344 (p4, c1, k60).
+1783305966: New connection from 172.21.0.1:60806 on port 1883.
+1783305966: New client connected from 172.21.0.1:60806 as mqtt_publisher (p4, c1, k60).
+1783305969: Client mqtt_publisher [172.21.0.1:60806] disconnected.
+1783306381: New connection from 172.21.0.1:49772 on port 1883.
+1783306381: New client connected from 172.21.0.1:49772 as mqtt_publisher (p4, c1, k60).
+1783306479: Client mqtt_publisher [172.21.0.1:49772] disconnected.
+1783306728: New connection from 172.21.0.1:54562 on port 1883.
+1783306728: New client connected from 172.21.0.1:54562 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783306750: New connection from 172.21.0.1:35026 on port 1883.
+1783306750: New client connected from 172.21.0.1:35026 as mqtt_publisher (p4, c1, k60).
+1783306752: Client mqtt_publisher [172.21.0.1:35026] disconnected.
+1783306834: New connection from 172.21.0.1:47048 on port 1883.
+1783306834: New client connected from 172.21.0.1:47048 as mqtt_publisher (p4, c1, k60).
+1783306846: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783306878: Client agent-mqtt-redis-benthos [172.21.0.1:54562] disconnected: connection closed by client.
+1783306882: New connection from 172.21.0.1:51842 on port 1883.
+1783306882: New client connected from 172.21.0.1:51842 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783306886: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783306920: Client mqtt_publisher [172.21.0.1:47048] disconnected.
+1783306927: Client agent-mqtt-redis-benthos [172.21.0.1:51842] disconnected: connection closed by client.
+1783306931: New connection from 172.21.0.1:40958 on port 1883.
+1783306931: New client connected from 172.21.0.1:40958 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783307117: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783308918: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783309116: Client agent-mqtt-redis-benthos [172.21.0.1:40958] disconnected: connection closed by client.
+1783309120: New connection from 172.21.0.1:43946 on port 1883.
+1783309120: New client connected from 172.21.0.1:43946 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783309168: New connection from 172.21.0.1:49778 on port 1883.
+1783309168: New client connected from 172.21.0.1:49778 as mqtt_publisher (p4, c1, k60).
+1783309173: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783309195: Client agent-mqtt-redis-benthos [172.21.0.1:43946] disconnected: Broken pipe.
+1783309195: New connection from 172.21.0.1:55396 on port 1883.
+1783309195: New client connected from 172.21.0.1:55396 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783309198: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783309240: Client agent-mqtt-redis-benthos [172.21.0.1:55396] disconnected: connection closed by client.
+1783309241: New connection from 172.21.0.1:56164 on port 1883.
+1783309241: New client connected from 172.21.0.1:56164 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783309246: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783309255: Client mqtt_publisher [172.21.0.1:49778] disconnected.
+1783309286: Client agent-mqtt-redis-benthos [172.21.0.1:56164] disconnected: connection closed by client.
+1783309287: New connection from 172.21.0.1:50602 on port 1883.
+1783309287: New client connected from 172.21.0.1:50602 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783309518: Client agent-mqtt-redis-benthos [172.21.0.1:50602] disconnected: connection closed by client.
+1783309519: New connection from 172.21.0.1:36766 on port 1883.
+1783309519: New client connected from 172.21.0.1:36766 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783309584: New connection from 172.21.0.1:38296 on port 1883.
+1783309584: New client connected from 172.21.0.1:38296 as mqtt_publisher (p4, c1, k60).
+1783309679: Client mqtt_publisher [172.21.0.1:38296] disconnected.
+1783309785: Client mqtt-explorer-34a50344 [172.21.0.1:33428] disconnected.
+1783309786: New connection from 172.21.0.1:43614 on port 1883.
+1783309786: New client connected from 172.21.0.1:43614 as mqtt-explorer-34a50344 (p4, c1, k60).
+1783309867: New connection from 172.21.0.1:58440 on port 1883.
+1783309867: New client connected from 172.21.0.1:58440 as mqtt_publisher (p4, c1, k60).
+1783309955: Client mqtt_publisher [172.21.0.1:58440] disconnected.
+1783310719: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783311694: Client mqtt-explorer-34a50344 [172.21.0.1:43614] disconnected.
+1783311697: New connection from 172.21.0.1:38996 on port 1883.
+1783311697: New client connected from 172.21.0.1:38996 as mqtt-explorer-34a50344 (p4, c1, k60).
+1783311762: New connection from 172.21.0.1:55082 on port 1883.
+1783311762: New client connected from 172.21.0.1:55082 as mqtt_publisher (p4, c1, k60).
+1783311773: Client mqtt_publisher [172.21.0.1:55082] disconnected.
+1783312520: Saving in-memory database to /mosquitto/data//mosquitto.db.
