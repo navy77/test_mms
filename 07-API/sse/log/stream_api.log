@@ -13,3 +13,105 @@
 2026-07-06 12:02:23,705 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
 2026-07-06 12:02:34,532 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
 2026-07-06 12:02:47,860 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8003
+2026-07-07 11:55:51,314 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 11:57:19,514 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-07 11:57:41,980 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-07 11:59:22,885 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:06:58,230 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:11:39,063 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:12:16,949 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:12:19,992 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-07 12:12:46,480 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-07 12:12:47,224 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:12:58,195 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:16:31,304 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:16:35,239 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:16:38,318 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:13,638 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,641 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,712 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,713 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,723 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,736 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,847 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,879 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,888 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:13,892 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,029 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,048 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,053 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,058 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,061 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,065 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,069 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,078 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,195 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:14,201 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:17:44,255 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,269 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,270 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,279 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,281 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,283 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,287 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,288 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,288 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,289 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,290 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,291 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,293 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,294 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,295 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,296 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,297 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,298 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,299 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:17:44,300 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:19:20,775 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-07 12:19:32,891 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-07 12:20:40,251 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,320 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,322 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,462 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,477 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,483 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,497 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,522 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,553 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,642 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,646 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,700 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,702 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,704 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,706 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,724 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,728 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,730 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,847 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:20:40,849 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:21:20,599 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-07 12:21:39,178 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,180 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,181 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,183 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,185 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,186 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,186 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,187 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,188 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,189 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,190 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,191 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,192 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,193 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,194 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,195 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,202 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,202 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,204 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:21:39,205 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:22:25,069 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-07 12:22:33,523 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-07 12:23:00,941 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-07 12:23:01,783 [INFO] SSEBackend.SSERouter: Real-time stream started for category=device, process=demo1
+2026-07-07 12:24:31,650 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002

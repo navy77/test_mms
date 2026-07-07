@@ -1,10 +1,11 @@
 services:
-  agent-python-devicechecker:
+  devicechecker:
     build: .
-    container_name: agent-python-devicechecker
+    image: mic/devicechecker:1.0.0
+    container_name: devicechecker
     restart: always
     env_file:
-      - .env
+      - ../.env
     volumes:
       - ./log:/app/log
     networks:

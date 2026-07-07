@@ -35,7 +35,7 @@ async def get_realtime_stream(
             while True:
                 try:
                     # Fetch all keys/values from the Redis hash
-                    redis_data = redis_client.hgetall(redis_key)
+                    redis_data = await redis_client.hgetall(redis_key)
                     
                     matched_messages = []
                     for topic, val_str in redis_data.items():

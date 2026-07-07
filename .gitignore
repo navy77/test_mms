@@ -1,6 +1,10 @@
-__pycache__
+__pycache__/
 *.pyc
-.venv
-venv
+.venv/
+venv/
 01-tools/mqtt_broker/mosquitto/log/
 01-tools/mqtt_broker/mosquitto/data/
+.env
+*.log
+log/
+.pytest_cache/

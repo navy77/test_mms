@@ -321,8 +321,8 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
      ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
 
      โดยส่งเป็น duration ของ status และ time_start และ time_end
-      - /api/v1/status/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
-      - /api/v1/status/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/status/currently/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/status/currently/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
       - /api/v1/status/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/status/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/status/monthly/{year}/{month}/{process}
@@ -332,8 +332,8 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
   ** `routers/alarm.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "alarm_tb")**
      ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
      โดยส่งเป็น duration ของ status และ time_start และ time_end
-      - /api/v1/alarm/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
-      - /api/v1/alarm/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/alarm/currently/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/alarm/currently/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
       - /api/v1/alarm/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/alarm/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/alarm/monthly/{year}/{month}/{process}
@@ -342,8 +342,8 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
   ** `routers/device.py` (REST API: ดึงประวัติข้อมูลจาก ClickHouse "device_tb")**
      ** การคำนวนวันจะเริ่มที่ 7:00 - 6:59 ของอีกวัน ต้องระวังวันที่ด้วย ช่วงหลัง 00:00-6:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันก่อนหน้ามา 1 วัน เช่น วันที่ 2026-07-03 00:00:00 - 06:59:59 ของอีกวัน ให้ใช้การคำนวนเป็นวันที่ 2026-07-02
      โดยส่งเป็น duration ของ status และ time_start และ time_end
-      - /api/v1/device/hourly/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
-      - /api/v1/device/hourly/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/device/currently/{process} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
+      - /api/v1/device/currently/{process}/{device} # เริ่ม7:00 ถึงชั่วโมงล่าสุด
       - /api/v1/device/daily/{process} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/device/daily/{process}/{device} # เริ่มวันที่ 1 ของ เดือนที่เรียก API
       - /api/v1/device/monthly/{year}/{month}/{process}

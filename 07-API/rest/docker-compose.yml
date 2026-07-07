@@ -1,14 +1,15 @@
 services:
-  agent-api-rest:
+  api-rest:
     build: .
-    container_name: agent-api-rest
+    image: mic/api-rest:1.0.0
+    container_name: api-rest
     ports:
       - "8003:8003"
     restart: always
     environment:
       - TZ=Asia/Bangkok
     env_file:
-      - .env
+      - ../../.env
     volumes:
       - ./log:/app/log
     networks:

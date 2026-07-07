@@ -2,13 +2,13 @@ import os
 import logging
 import calendar
 from datetime import datetime, timedelta, timezone
-from typing import List, Any, Dict, Optional, Set, Tuple
+from typing import List, Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Path, status
 from database import get_ch_client, format_result
-from models import AlarmResponse, DailyAlarmResponse, MonthlyAlarmResponse, AlarmSegment
+from models import DeviceResponse, DailyDeviceResponse, MonthlyDeviceResponse, DeviceSegment
 
-logger = logging.getLogger("RESTBackend.Routers.Alarm")
-router = APIRouter(prefix="/api/v1/alarm", tags=["Alarm"])
+logger = logging.getLogger("RESTBackend.Routers.Device")
+router = APIRouter(prefix="/api/v1/device", tags=["Device"])
 
 # Bangkok timezone (+07:00)
 TZ_BANGKOK = timezone(timedelta(hours=7))
@@ -43,9 +43,9 @@ def get_registered_devices(client, process: str) -> List[str]:
         logger.warning(f"Error querying device_register_tb for process '{process}': {e}")
         return []
 
-def get_initial_alarms_batch(client, process: str, start_time: datetime, devices: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
+def get_initial_devices_batch(client, process: str, start_time: datetime, devices: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
     """
-    Query the latest alarm of all devices (or specified devices) before start_time in a single query.
+    Query the latest device status of all devices (or specified devices) before start_time in a single query.
     Returns a dictionary mapping device_name -> {"status": status, "created_at": datetime}.
     """
     try:
@@ -56,7 +56,7 @@ def get_initial_alarms_batch(client, process: str, start_time: datetime, devices
             parameters["devices"] = devices
 
         query = f"""
-            SELECT device, status, created_at FROM alarm_tb
+            SELECT device, status, created_at FROM device_tb
             WHERE process = %(process)s
               {device_filter}
               AND created_at < %(start_time)s
@@ -66,115 +66,103 @@ def get_initial_alarms_batch(client, process: str, start_time: datetime, devices
         result = client.query(query, parameters=parameters)
         return {row[0]: {"status": row[1], "created_at": row[2]} for row in result.result_rows}
     except Exception as e:
-        logger.warning(f"Error batch fetching initial alarms for process '{process}': {e}")
+        logger.warning(f"Error batch fetching initial device statuses for process '{process}': {e}")
         return {}
 
-def calculate_alarm_ratio(
+def calculate_device_ratio(
     records: List[Dict[str, Any]], 
     start_time: datetime, 
     end_time: datetime,
-    initial_active_alarms: Set[str],
+    initial_status: Optional[Dict[str, Any]],
     device: str
-) -> Tuple[List[AlarmSegment], Set[str]]:
+) -> List[DeviceSegment]:
     """
-    Implements the alarm duration ratio calculation logic in Python.
-    Alarms come in pairs: start event (e.g. alarm_name) and end event (e.g. alarm_name_).
+    Implements the exact device status ratio calculation logic in pure Python.
     """
     if start_time.tzinfo is None:
         start_time = start_time.replace(tzinfo=TZ_BANGKOK)
     if end_time.tzinfo is None:
         end_time = end_time.replace(tzinfo=TZ_BANGKOK)
 
-    # 1. Parse all records in range and sort by timestamp
-    parsed_records = []
-    for r in records:
-        ca = r.get("created_at")
-        if isinstance(ca, str):
-            ca = datetime.fromisoformat(ca)
-        if ca.tzinfo is None:
-            ca = ca.replace(tzinfo=TZ_BANGKOK)
-        parsed_records.append({
-            "created_at": ca,
-            "status": r.get("status", "unknown")
-        })
-    parsed_records.sort(key=lambda x: x["created_at"])
+    # 1. Prepare raw record list
+    df_list = []
+    
+    if not records:  # df2 is empty
+        if not initial_status:  # df1 is empty
+            df_list = [{"created_at": start_time, "status": "no data"}]
+        else:  # df1 has data
+            df_list = [{"created_at": start_time, "status": initial_status["status"]}]
+    else:  # df2 is not empty
+        # Parse all records in range
+        parsed_records = []
+        for r in records:
+            ca = r.get("created_at")
+            if isinstance(ca, str):
+                ca = datetime.fromisoformat(ca)
+            if ca.tzinfo is None:
+                ca = ca.replace(tzinfo=TZ_BANGKOK)
+            parsed_records.append({
+                "created_at": ca,
+                "status": r.get("status", "unknown")
+            })
+        
+        parsed_records.sort(key=lambda x: x["created_at"])
+            
+        if not initial_status:  # df1 is empty
+            first_status = "no data"
+            df_list = [{"created_at": start_time, "status": first_status}] + parsed_records
+        else:  # df1 has data
+            df_list = [{"created_at": start_time, "status": initial_status["status"]}] + parsed_records
 
-    # 2. Initialize active alarms
-    active_alarms = set(initial_active_alarms)
-
-    # 3. Create a timeline of timestamps and trace status intervals
-    # We will build a list of events to process
-    timeline_events = [{"time": start_time, "is_event": False}]
-    for pr in parsed_records:
-        timeline_events.append({"time": pr["created_at"], "is_event": True, "status": pr["status"]})
-    timeline_events.append({"time": end_time, "is_event": False})
-
-    # Sort events by time.
-    timeline_events.sort(key=lambda x: x["time"])
-
-    alarm_durations = {}
+    # 2. Sort all by timestamp
+    df_list.sort(key=lambda x: x["created_at"])
+    
+    # 3. Calculate next_ts and duration
     total_duration = 0.0
-
-    for i in range(len(timeline_events) - 1):
-        t_curr = timeline_events[i]["time"]
-        t_next = timeline_events[i+1]["time"]
-        duration = max(0.0, (t_next - t_curr).total_seconds())
+    status_durations = {}
+    
+    for i in range(len(df_list)):
+        curr_rec = df_list[i]
+        curr_ts = curr_rec["created_at"]
+        curr_status = str(curr_rec["status"])
+        
+        if i < len(df_list) - 1:
+            next_ts = df_list[i+1]["created_at"]
+        else:
+            next_ts = end_time
+            
+        duration = max(0.0, (next_ts - curr_ts).total_seconds())
         duration = round(duration, 1)
-
-        # Apply active alarms to this interval
-        if duration > 0:
-            # We filter out "no data" and "normal" to only calculate actual active alarms
-            valid_alarms = [alm for alm in active_alarms if alm not in ("no data", "normal")]
-            if valid_alarms:
-                for alm in valid_alarms:
-                    alarm_durations[alm] = alarm_durations.get(alm, 0.0) + duration
-                    total_duration += duration
-
-        # Update active_alarms state at t_next based on its event (if any)
-        next_event = timeline_events[i+1]
-        if next_event.get("is_event"):
-            status_val = next_event["status"]
-            if status_val.endswith("_"):
-                # End of an alarm
-                base_alarm = status_val[:-1]
-                if base_alarm in active_alarms:
-                    active_alarms.remove(base_alarm)
-                else:
-                    # The alarm started before start_time and has just ended
-                    missed_duration = max(0.0, (t_next - start_time).total_seconds())
-                    missed_duration = round(missed_duration, 1)
-                    if missed_duration > 0:
-                        alarm_durations[base_alarm] = alarm_durations.get(base_alarm, 0.0) + missed_duration
-                        total_duration += missed_duration
-            else:
-                # Start of an alarm
-                active_alarms.discard("no data")
-                active_alarms.add(status_val)
+        
+        status_durations[curr_status] = status_durations.get(curr_status, 0.0) + duration
+        total_duration += duration
 
     # 4. Find ratio %
     results = []
     if total_duration > 0:
-        for alarm_name, duration in alarm_durations.items():
+        for status_name, duration in status_durations.items():
             ratio = round((duration / total_duration) * 100, 1)
             results.append(
-                AlarmSegment(
-                    alarm=alarm_name,
+                DeviceSegment(
+                    status=status_name,
                     duration=duration,
                     ratio=ratio
                 )
             )
+    else:
+        results = [DeviceSegment(status="no data", duration=0.0, ratio=0.0)]
         
-    return results, active_alarms
+    return results
 
-def group_alarm_by_device(
+def group_device_by_device(
     records: List[Dict[str, Any]],
     devices: List[str],
     start_time: datetime,
     end_time: datetime,
-    initial_alarms: Dict[str, Dict[str, Any]]
-) -> List[AlarmResponse]:
+    initial_statuses: Dict[str, Dict[str, Any]]
+) -> List[DeviceResponse]:
     """
-    Groups current alarm records by device and calculates duration ratio segments.
+    Groups current device status records by device and calculates status ratio segments.
     """
     groups: Dict[str, List[Dict[str, Any]]] = {}
     for r in records:
@@ -189,34 +177,26 @@ def group_alarm_by_device(
     results = []
     for dev in all_devices:
         dev_records = groups.get(dev, [])
-        init_val = initial_alarms.get(dev)
-        init_active = set()
-        if init_val:
-            init_status = init_val.get("status")
-            if init_status and not init_status.endswith("_") and init_status != "no data" and init_status != "normal":
-                init_active.add(init_status)
-        else:
-            if not dev_records:
-                init_active.add("no data")
-
-        segments, _ = calculate_alarm_ratio(dev_records, start_time, end_time, init_active, dev)
+        init_status = initial_statuses.get(dev)
+        segments = calculate_device_ratio(dev_records, start_time, end_time, init_status, dev)
         results.append(
-            AlarmResponse(
+            DeviceResponse(
                 device=dev,
                 data=segments
             )
         )
     return results
 
-def group_alarm_by_prod_date(
+def group_device_by_prod_date(
     records: List[Dict[str, Any]],
     devices: List[str],
     start_date,
     end_date,
-    initial_alarms: Dict[str, Dict[str, Any]]
-) -> List[DailyAlarmResponse]:
+    initial_statuses: Dict[str, Dict[str, Any]]
+) -> List[DailyDeviceResponse]:
     """
-    Groups alarm records by day (production date) and device, computing duration segments.
+    Groups device status records by day (production date) and device, computing status ratio segments.
+    Carries forward device status from day to day.
     """
     groups: Dict[tuple, List[Dict[str, Any]]] = {}
     for r in records:
@@ -253,18 +233,14 @@ def group_alarm_by_prod_date(
     all_devices = list(set(devices + [r.get("device") for r in records if r.get("device")]))
     all_devices.sort()
     
-    # Track the active alarms set for each device.
-    active_alarms_map = {}
+    # Track the active status of each device.
+    active_statuses = {}
     for dev in all_devices:
-        init_val = initial_alarms.get(dev)
-        init_active = set()
-        if init_val:
-            init_status = init_val.get("status")
-            if init_status and not init_status.endswith("_") and init_status != "no data" and init_status != "normal":
-                init_active.add(init_status)
+        init = initial_statuses.get(dev)
+        if init:
+            active_statuses[dev] = init["status"]
         else:
-            init_active.add("no data")
-        active_alarms_map[dev] = init_active
+            active_statuses[dev] = "no data"
             
     # Get current production date in Bangkok timezone
     now = get_now_bangkok()
@@ -281,41 +257,40 @@ def group_alarm_by_prod_date(
         
         for dev in all_devices:
             day_records = groups.get((d_str, dev), [])
-            # Sort day_records chronologically
             day_records.sort(key=lambda x: x.get("created_at") if isinstance(x.get("created_at"), datetime) else datetime.fromisoformat(x.get("created_at")))
             
-            init_active = set(active_alarms_map[dev])
+            init_status = {"status": active_statuses[dev]} if active_statuses[dev] else None
             
             if d < current_prod_date:
-                segments, final_active = calculate_alarm_ratio(day_records, day_start, day_end, init_active, dev)
+                segments = calculate_device_ratio(day_records, day_start, day_end, init_status, dev)
             elif d == current_prod_date:
-                segments, final_active = calculate_alarm_ratio(day_records, day_start, now, init_active, dev)
+                segments = calculate_device_ratio(day_records, day_start, now, init_status, dev)
             else:
                 segments = []
-                final_active = init_active
                 
             results.append(
-                DailyAlarmResponse(
+                DailyDeviceResponse(
                     date=d_str,
                     device=dev,
                     data=segments
                 )
             )
             
-            active_alarms_map[dev] = final_active
+            if day_records:
+                active_statuses[dev] = day_records[-1].get("status", "unknown")
                 
     return results
 
-def group_alarm_by_month(
+def group_device_by_month(
     records: List[Dict[str, Any]],
     month_str: str,
     devices: List[str],
     start_time: datetime,
     end_time: datetime,
-    initial_alarms: Dict[str, Dict[str, Any]]
-) -> List[MonthlyAlarmResponse]:
+    initial_statuses: Dict[str, Dict[str, Any]]
+) -> List[MonthlyDeviceResponse]:
     """
-    Groups alarm records by device for the entire month, calculating status ratio segments.
+    Groups device status records by device for the entire month, calculating status ratio segments.
     """
     groups: Dict[str, List[Dict[str, Any]]] = {}
     for r in records:
@@ -330,19 +305,10 @@ def group_alarm_by_month(
     results = []
     for dev in all_devices:
         dev_records = groups.get(dev, [])
-        init_val = initial_alarms.get(dev)
-        init_active = set()
-        if init_val:
-            init_status = init_val.get("status")
-            if init_status and not init_status.endswith("_") and init_status != "no data" and init_status != "normal":
-                init_active.add(init_status)
-        else:
-            if not dev_records:
-                init_active.add("no data")
-
-        segments, _ = calculate_alarm_ratio(dev_records, start_time, end_time, init_active, dev)
+        init_status = initial_statuses.get(dev)
+        segments = calculate_device_ratio(dev_records, start_time, end_time, init_status, dev)
         results.append(
-            MonthlyAlarmResponse(
+            MonthlyDeviceResponse(
                 month=month_str,
                 device=dev,
                 data=segments
@@ -350,26 +316,26 @@ def group_alarm_by_month(
         )
     return results
 
-# 1. Currently Endpoint
-@router.get("/currently/{process}", response_model=List[AlarmResponse])
+# 1. Currently Endpoints
+@router.get("/currently/{process}", response_model=List[DeviceResponse])
 def get_currently_process(
     process: str = Path(..., description="The process identifier")
 ):
     """
-    Get current alarm segments for all devices in a process from 07:00 of the current production day until now.
+    Get current device status segments for all devices in a process from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching current alarm for process '{process}' from {start_time} to {now}")
+    logger.info(f"Fetching current device status for process '{process}' from {start_time} to {now}")
     client = get_ch_client()
     try:
         devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        initial_statuses = get_initial_devices_batch(client, process, start_time, devices)
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
@@ -385,42 +351,42 @@ def get_currently_process(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        return group_alarm_by_device(records, devices, start_time, now, initial_alarms)
+        return group_device_by_device(records, devices, start_time, now, initial_statuses)
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching current process alarms: {e}")
+        logger.error(f"Error fetching current process device statuses: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-@router.get("/currently/{process}/{device}", response_model=AlarmResponse)
+@router.get("/currently/{process}/{device}", response_model=DeviceResponse)
 def get_currently_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
 ):
     """
-    Get current alarm segments for a specific device from 07:00 of the current production day until now.
+    Get current device status segments for a specific device from 07:00 of the current production day until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
     
-    logger.info(f"Fetching current alarm for device '{process}/{device}' from {start_time} to {now}")
+    logger.info(f"Fetching current device status for device '{process}/{device}' from {start_time} to {now}")
     client = get_ch_client()
     try:
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, [device])
+        initial_statuses = get_initial_devices_batch(client, process, start_time, [device])
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND device = %(device)s
               AND created_at >= %(start_time)s
@@ -438,14 +404,14 @@ def get_currently_device(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        res = group_alarm_by_device(records, [device], start_time, now, initial_alarms)
+        res = group_device_by_device(records, [device], start_time, now, initial_statuses)
         if res:
             return res[0]
         else:
@@ -456,19 +422,19 @@ def get_currently_device(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching current device alarms: {e}")
+        logger.error(f"Error fetching current device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
 # 2. Daily Endpoints
-@router.get("/daily/{process}", response_model=List[DailyAlarmResponse])
+@router.get("/daily/{process}", response_model=List[DailyDeviceResponse])
 def get_daily_process(
     process: str = Path(..., description="The process identifier")
 ):
     """
-    Get daily alarm segments for all devices in a process for the current production month.
+    Get daily device status segments for all devices in a process for the current production month.
     """
     now = get_now_bangkok()
     if now.hour < 7:
@@ -483,15 +449,15 @@ def get_daily_process(
     start_time = datetime.combine(start_date, datetime.min.time(), tzinfo=TZ_BANGKOK) + timedelta(hours=7)
     end_time = datetime.combine(end_date, datetime.max.time(), tzinfo=TZ_BANGKOK)
     
-    logger.info(f"Fetching daily alarms for process '{process}' from {start_time} to {end_time}")
+    logger.info(f"Fetching daily device status for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
         devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        initial_statuses = get_initial_devices_batch(client, process, start_time, devices)
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
@@ -507,30 +473,30 @@ def get_daily_process(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        return group_alarm_by_prod_date(records, devices, start_date, end_date, initial_alarms)
+        return group_device_by_prod_date(records, devices, start_date, end_date, initial_statuses)
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching daily process alarms: {e}")
+        logger.error(f"Error fetching daily process device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-@router.get("/daily/{process}/{device}", response_model=List[DailyAlarmResponse])
+@router.get("/daily/{process}/{device}", response_model=List[DailyDeviceResponse])
 def get_daily_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
 ):
     """
-    Get daily alarm segments for a specific device for the current production month.
+    Get daily device status segments for a specific device for the current production month.
     """
     now = get_now_bangkok()
     if now.hour < 7:
@@ -545,14 +511,14 @@ def get_daily_device(
     start_time = datetime.combine(start_date, datetime.min.time(), tzinfo=TZ_BANGKOK) + timedelta(hours=7)
     end_time = datetime.combine(end_date, datetime.max.time(), tzinfo=TZ_BANGKOK)
     
-    logger.info(f"Fetching daily alarms for device '{process}/{device}' from {start_time} to {end_time}")
+    logger.info(f"Fetching daily device status for device '{process}/{device}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, [device])
+        initial_statuses = get_initial_devices_batch(client, process, start_time, [device])
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND device = %(device)s
               AND created_at >= %(start_time)s
@@ -570,32 +536,32 @@ def get_daily_device(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        return group_alarm_by_prod_date(records, [device], start_date, end_date, initial_alarms)
+        return group_device_by_prod_date(records, [device], start_date, end_date, initial_statuses)
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching daily device alarms: {e}")
+        logger.error(f"Error fetching daily device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
 # 3. Monthly Endpoints
-@router.get("/monthly/{year}/{month}/{process}", response_model=List[MonthlyAlarmResponse])
+@router.get("/monthly/{year}/{month}/{process}", response_model=List[MonthlyDeviceResponse])
 def get_monthly_process(
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
     process: str = Path(..., description="The process identifier")
 ):
     """
-    Get alarm segments for all devices in a process for a specific month.
+    Get device status segments for all devices in a process for a specific month.
     """
     start_time = datetime(year, month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
     
@@ -611,15 +577,15 @@ def get_monthly_process(
     if end_time > now:
         end_time = max(start_time, now)
         
-    logger.info(f"Fetching monthly alarms for process '{process}' from {start_time} to {end_time}")
+    logger.info(f"Fetching monthly device status for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
         devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        initial_statuses = get_initial_devices_batch(client, process, start_time, devices)
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND created_at >= %(start_time)s
               AND created_at < %(end_time)s
@@ -635,24 +601,24 @@ def get_monthly_process(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        return group_alarm_by_month(records, f"{year}-{month:02d}", devices, start_time, end_time, initial_alarms)
+        return group_device_by_month(records, f"{year}-{month:02d}", devices, start_time, end_time, initial_statuses)
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching monthly process alarms: {e}")
+        logger.error(f"Error fetching monthly process device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
 
-@router.get("/monthly/{year}/{month}/{process}/{device}", response_model=List[MonthlyAlarmResponse])
+@router.get("/monthly/{year}/{month}/{process}/{device}", response_model=List[MonthlyDeviceResponse])
 def get_monthly_device(
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
@@ -660,7 +626,7 @@ def get_monthly_device(
     device: str = Path(..., description="The device identifier")
 ):
     """
-    Get alarm segments for a specific device in a process for a specific month.
+    Get device status segments for a specific device in a process for a specific month.
     """
     start_time = datetime(year, month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
     
@@ -676,14 +642,14 @@ def get_monthly_device(
     if end_time > now:
         end_time = max(start_time, now)
         
-    logger.info(f"Fetching monthly alarms for device '{process}/{device}' from {start_time} to {end_time}")
+    logger.info(f"Fetching monthly device status for device '{process}/{device}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, [device])
+        initial_statuses = get_initial_devices_batch(client, process, start_time, [device])
         
         query = """
             SELECT process, device, status, created_at
-            FROM alarm_tb
+            FROM device_tb
             WHERE process = %(process)s
               AND device = %(device)s
               AND created_at >= %(start_time)s
@@ -701,18 +667,18 @@ def get_monthly_device(
         )
         records = format_result(result)
         
-        has_data = len(records) > 0 or len(initial_alarms) > 0
+        has_data = len(records) > 0 or len(initial_statuses) > 0
         if not has_data:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Item not found"
             )
             
-        return group_alarm_by_month(records, f"{year}-{month:02d}", [device], start_time, end_time, initial_alarms)
+        return group_device_by_month(records, f"{year}-{month:02d}", [device], start_time, end_time, initial_statuses)
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error fetching monthly device alarms: {e}")
+        logger.error(f"Error fetching monthly device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)

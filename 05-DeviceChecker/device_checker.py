@@ -9,6 +9,8 @@ import redis
 import paho.mqtt.client as mqtt
 import clickhouse_connect
 
+from logging.handlers import RotatingFileHandler
+
 # Configure logging to write to both stdout and a local file
 log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "log")
 os.makedirs(log_dir, exist_ok=True)
@@ -18,7 +20,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
-        logging.FileHandler(log_file),
+        RotatingFileHandler(log_file, maxBytes=20*1024*1024, backupCount=3),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -202,10 +204,12 @@ class DeviceChecker:
             time.sleep(self.check_period)
 
 def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    env_path = os.path.join(script_dir, ".env")
-    dotenv.load_dotenv(dotenv_path=env_path)
-    logger.info(f"Loaded environment variables from: {env_path}")
+    env_path = dotenv.find_dotenv()
+    if env_path:
+        dotenv.load_dotenv(dotenv_path=env_path)
+        logger.info(f"Loaded environment variables from: {env_path}")
+    else:
+        logger.info("No .env file found, using system environment variables")
 
     # Read config from environment variables
     mqtt_broker = os.getenv("MQTT_BROKER", "127.0.0.1").strip().strip("'\"")

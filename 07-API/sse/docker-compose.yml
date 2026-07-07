@@ -1,14 +1,15 @@
 services:
-  agent-api-sse:
+  api-sse:
     build: .
-    container_name: agent-api-sse
+    image: mic/api-sse:1.0.0
+    container_name: api-sse
     ports:
-      - "8001:8001"
+      - "8002:8002"
     restart: always
     environment:
       - TZ=Asia/Bangkok
     env_file:
-      - .env
+      - ../../.env
     volumes:
       - ./log:/app/log
     networks:
