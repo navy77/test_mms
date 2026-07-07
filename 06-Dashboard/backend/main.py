@@ -14,6 +14,7 @@ sys.path.append(script_dir)
 
 from database import get_ch_client
 from routers.register import router as register_router
+from routers.auth import router as auth_router
 
 from logging.handlers import RotatingFileHandler
 
@@ -49,7 +50,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Register Router
+# Include Routers
+app.include_router(auth_router)
 app.include_router(register_router)
 
 @app.get("/health", status_code=status.HTTP_200_OK)

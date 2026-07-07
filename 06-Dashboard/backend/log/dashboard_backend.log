@@ -7,3 +7,8 @@
 2026-07-04 16:57:32,826 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8000
 2026-07-04 16:58:43,930 [INFO] DashboardBackend.RegisterRouter: Creating user: mic
 2026-07-04 16:59:03,382 [INFO] DashboardBackend.RegisterRouter: Creating user: mic
+2026-07-07 16:40:32,231 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-07 17:41:02,933 [WARNING] urllib3.connectionpool: Retrying (Retry(total=0, connect=None, read=None, redirect=0, status=None)) after connection broken by 'NameResolutionError("<urllib3.connection.HTTPConnection object at 0x000001C9729B4C50>: Failed to resolve 'clickhouse' ([Errno 11001] getaddrinfo failed)")': /?
+2026-07-07 17:41:05,628 [WARNING] clickhouse_connect.driver.httpclient: Unexpected Http Driver Exception
+2026-07-07 17:41:05,628 [ERROR] DashboardBackend.Database: Failed to connect to ClickHouse: Error HTTPConnectionPool(host='clickhouse', port=8123): Max retries exceeded with url: /? (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x000001C9729FC4A0>: Failed to resolve 'clickhouse' ([Errno 11001] getaddrinfo failed)")) executing HTTP request attempt 1 (http://clickhouse:8123)
+2026-07-07 16:43:42,275 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001

@@ -20,6 +20,18 @@ def get_ch_client():
             database=database
         )
     except Exception as e:
+        if host not in ("127.0.0.1", "localhost"):
+            logger.info(f"Failed to connect to ClickHouse at '{host}'. Trying fallback to '127.0.0.1'...")
+            try:
+                return clickhouse_connect.get_client(
+                    host="127.0.0.1",
+                    port=port,
+                    username=user,
+                    password=password,
+                    database=database
+                )
+            except Exception as inner_e:
+                logger.error(f"Fallback connection to 127.0.0.1 also failed: {inner_e}")
         logger.error(f"Failed to connect to ClickHouse: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
