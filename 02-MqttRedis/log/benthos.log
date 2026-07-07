@@ -9813,3 +9813,344 @@ time="2026-07-07T13:12:00+07:00" level=info msg="Timing metric" @service=benthos
 time="2026-07-07T13:12:00+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
 time="2026-07-07T13:12:00+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
 time="2026-07-07T13:12:00+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:13:05+07:00" level=info msg="Running main config from specified file" @service=benthos benthos_version=v4.27.0 path=/benthos.yaml
+time="2026-07-07T22:13:05+07:00" level=info msg="Listening for HTTP requests at: http://0.0.0.0:4195" @service=benthos
+time="2026-07-07T22:13:05+07:00" level=info msg="Output type drop is now active" @service=benthos label="" path=root.output.broker.outputs.1
+time="2026-07-07T22:13:05+07:00" level=info msg="Launching a benthos instance, use CTRL+C to close" @service=benthos
+time="2026-07-07T22:13:07+07:00" level=info msg="Input type mqtt is now active" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:13:07+07:00" level=info msg="Output type redis_list is now active" @service=benthos label="" path=root.output.broker.outputs.0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=1
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=1
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=1
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=2000
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=5
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=1
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:13:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=8
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=576.5 p90=1322 p99=1322
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=1.0692631e+07 p90=5.3341083e+07 p99=5.3341083e+07
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=1.957277035e+08 p90=3.315355734e+08 p99=3.5535102502e+08
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=2.4011955e+06 p90=1.3388522e+07 p99=1.3388522e+07
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=6.62778e+06 p90=2.288410590000001e+07 p99=1.7333910445000005e+08
+time="2026-07-07T22:13:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=4.80792185e+07 p90=2.48031881e+08 p99=2.48031881e+08
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:05+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:14:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:15:13+07:00" level=error msg="Connection lost due to: EOF" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:13+07:00" level=error msg="Failed to connect to mqtt: network Error : EOF" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:13+07:00" level=error msg="Failed to connect to mqtt: network Error : EOF" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:13+07:00" level=error msg="Failed to connect to mqtt: network Error : EOF" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:15+07:00" level=error msg="Failed to connect to mqtt: network Error : dial tcp 192.168.1.30:1883: connect: connection refused" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:18+07:00" level=error msg="Failed to connect to mqtt: network Error : dial tcp 192.168.1.30:1883: connect: connection refused" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:20+07:00" level=error msg="Failed to connect to mqtt: network Error : dial tcp 192.168.1.30:1883: connect: connection refused" @service=benthos label="" path=root.input.batched.child
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=1
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=6
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=1000
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=2
+time="2026-07-07T22:15:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=1
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=4.82629235e+07 p90=6.81711451e+07 p99=7.971174838e+07
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=1.703016e+06 p90=2.122287e+06 p99=2.122287e+06
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=3.146194e+06 p90=4.8040775e+06 p99=6.707733350000001e+06
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=2.84528365e+07 p90=2.9340947e+07 p99=2.9340947e+07
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=491 p90=531 p99=531
+time="2026-07-07T22:15:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=1.13171735e+07 p90=1.16014e+07 p99=1.16014e+07
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:16:35+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_lost value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_batch_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_failed value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_failed value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_up value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=input_connection_lost value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_connection_up value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=input_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_received value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_batch_sent value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=batch_created value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=output_error value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Counter metric" @service=benthos name=processor_error value=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=input_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=processor_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
+time="2026-07-07T22:17:05+07:00" level=info msg="Timing metric" @service=benthos name=output_latency_ns p50=0 p90=0 p99=0
