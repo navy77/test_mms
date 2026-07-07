@@ -233,7 +233,17 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 ### 6. Dashboard (`06-Dashboard`)
 * **หน้าที่:** backend: fastapi เพื่อรับข้อมูลจาก frontend ผ่าน API โดยมามันทึกลง clichouse table user_register_tb,device_register_tb,columns_register_tb โดยสามาร create,update,delete ข้อมูลในตารางทั้งสาม
 
-* **หน้าที่:** Frontend: Svelte สร้าง ui ลักษณะ wizard setup โดยสร้างผ่าน API โดยมามันทึกลง clichouse table user_register_tb,device_register_tb,columns_register_tb โดยสามาร create,update,delete ข้อมูลในตารางทั้งสาม
+* **หน้าที่:** Frontend: โดยใช้ Sveltekit+shadcn (npx shadcn-svelte init --preset bMTlT9ESW) style minimal iot dashboard
+1.สร้าง ui ลักษณะ dashboard มี sidebar = [home,production,machine status,alarm status,device status,setting]
+  1.1 home = แสดงภาพรวมของข้อมูลทั้งหมด
+  1.2 production = แสดงข้อมูลการผลิต
+  1.3 machine status = แสดงสถานะของเครื่องจักร
+  1.4 alarm status = แสดงสถานะของ alarm
+  1.5 device status = แสดงสถานะของ device
+  1.6 setting = แสดงการตั้งค่าสร้าง ui ลักษณะ wizard setup โดยสร้างผ่าน API โดยมามันทึกลง clichouse table user_register_tb,device_register_tb,columns_register_tb โดยสามาร create,update,delete ข้อมูลในตารางทั้งสาม
+
+
+
 
 * **Docker Service:** `agent-dashboard`
 * **โครงสร้างคลาสต้นแบบ (Python Class Concept):**
