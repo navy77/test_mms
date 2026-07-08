@@ -27,9 +27,8 @@ src/routes/
 ├── about/+page.svelte          # /about
 └── dashboard/
     ├── +layout.svelte          # Dashboard layout (dashboard pages only)
-    ├── +page.svelte            # /dashboard
-    └── settings/+page.svelte   # /dashboard/settings
-```
+    ├── +page.svelte 
+    ├── +page.server.ts         
 
 ```svelte
 <!-- +layout.svelte -->

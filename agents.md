@@ -234,6 +234,7 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
 * **หน้าที่:** backend: fastapi เพื่อรับข้อมูลจาก frontend ผ่าน API โดยมามันทึกลง clichouse table user_register_tb,device_register_tb,columns_register_tb โดยสามาร create,update,delete ข้อมูลในตารางทั้งสาม
 
 * **หน้าที่:** Frontend: โดยใช้ Sveltekit+shadcn (npx shadcn-svelte init --preset bMTlT9ESW) style minimal iot dashboard
+structure แยก +page.svelte และ +page.server.ts
 *** ไม่ใช้ cdn เด็ดขาด เนื่องจาก offline****
 1.สร้าง ui ลักษณะ dashboard มี sidebar = [home,production,machine status,alarm status,device status,setting]
   1.1 home = แสดงภาพรวมของข้อมูลทั้งหมด
@@ -242,8 +243,6 @@ example topic : data/div/process/##,status/div/process/##,alarm/div/process/##
   1.4 alarm status = แสดงสถานะของ alarm
   1.5 device status = แสดงสถานะของ device
   1.6 setting = แสดงการตั้งค่าสร้าง ui ลักษณะ wizard setup โดยสร้างผ่าน API โดยมามันทึกลง clichouse table user_register_tb,device_register_tb,columns_register_tb โดยสามาร create,update,delete ข้อมูลในตารางทั้งสาม
-
-
 
 
 * **Docker Service:** `agent-dashboard`

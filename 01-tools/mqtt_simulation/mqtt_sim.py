@@ -4,6 +4,7 @@ import json
 import dotenv
 import os
 import random
+import concurrent.futures
 
 class MQTTPublish:
     def __init__(self):
@@ -30,59 +31,68 @@ class MQTTPublish:
         self.msg_loop = 1
 
     def on_connect(self, client, userdata, flags, rc):
+        client_id = getattr(client, "_client_id", "mqtt_client")
+        if isinstance(client_id, bytes):
+            client_id = client_id.decode(errors='ignore')
         if rc == 0:
-            print("Connected to MQTT Broker!")
+            print(f"[{client_id}] Connected to MQTT Broker!")
         else:
-            print(f"Failed to connect, return code {rc}")
+            print(f"[{client_id}] Failed to connect, return code {rc}")
 
     def on_disconnect(self, client, userdata, rc):
-        print("Disconnected from MQTT Broker")
+        client_id = getattr(client, "_client_id", "mqtt_client")
+        if isinstance(client_id, bytes):
+            client_id = client_id.decode(errors='ignore')
+        print(f"[{client_id}] Disconnected from MQTT Broker")
 
-    def pub_data(self,topic_col,qty_topic):
-        message_data={}
-        for i in range(1,topic_col+1):
+    def _create_client(self, client_id):
+        try:
+            client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, client_id)
+        except AttributeError:
+            client = mqtt.Client(client_id)
+        client.on_connect = self.on_connect
+        client.on_disconnect = self.on_disconnect
+        client.connect(self.mqtt_broker, self.mqtt_port, 60)
+        client.loop_start()
+        return client
+
+    # Original methods for backward compatibility
+    def pub_data(self, topic_col, qty_topic):
+        message_data = {}
+        for i in range(1, topic_col + 1):
             key = f"data{i}"
-            message_data[key] = self.msg_loop 
+            message_data[key] = self.msg_loop
 
-        for j in range(1, qty_topic+1):
+        for j in range(1, qty_topic + 1):
             topic = f"{self.topic_name1}no_{j}"
             self.client.publish(topic, json.dumps(message_data))
-        self.msg_loop +=1
+        self.msg_loop += 1
 
-    def pub_status(self,qty_topic):
-        for i in range(1,qty_topic+1):
+    def pub_status(self, qty_topic):
+        for i in range(1, qty_topic + 1):
             status = f"status_{random.randrange(5)}"
-            message_status = {
-                "status": status
-            }
+            message_status = {"status": status}
             topic = f"{self.topic_name2}no_{i}"
             self.client.publish(topic, json.dumps(message_status))
 
-    def pub_alarm(self,qty_topic):
+    def pub_alarm(self, qty_topic):
         alarm = f"alarm_{random.randrange(10)}"
         self.alarm_name = alarm
-        for i in range(1,qty_topic+1):
-            message_alarm = {
-                "status": self.alarm_name
-            }
+        for i in range(1, qty_topic + 1):
+            message_alarm = {"status": self.alarm_name}
             topic = f"{self.topic_name3}no_{i}"
             self.client.publish(topic, json.dumps(message_alarm))
 
-    def pub_alarm_closed(self,qty_topic):
+    def pub_alarm_closed(self, qty_topic):
         alarm_closed = f"{self.alarm_name}_"
-        for i in range(1,qty_topic+1):
-            # alarm = f"alarm_{random.randrange(10)}"
-            message_alarm = {
-                "status": alarm_closed
-            }
+        for i in range(1, qty_topic + 1):
+            message_alarm = {"status": alarm_closed}
             topic = f"{self.topic_name3}no_{i}"
             self.client.publish(topic, json.dumps(message_alarm))
 
-    def pub_esp32(self,qty_topic):
-        for i in range(1,qty_topic+1):
-            # broker = random.randrange(2)
+    def pub_esp32(self, qty_topic):
+        for i in range(1, qty_topic + 1):
             broker = 1
-            # modbus = random.randrange(2)
             modbus = 1
             mac_id = f"mac-{random.randrange(10)}"
             message_esp32 = {
@@ -93,27 +103,91 @@ class MQTTPublish:
             topic = f"{self.topic_name4}no_{i}"
             self.client.publish(topic, json.dumps(message_esp32))
 
-    def run(self,msg_round):
-        self.client.connect(self.mqtt_broker, self.mqtt_port, 60)
-        self.client.loop_start()
+    # Parallel loop tasks
+    def run_data_loop(self, msg_round, qty_topic):
+        client = self._create_client("mqtt_pub_data")
         try:
-            for i in range(1,msg_round+1):
-                print(f"Publishing round {i}/{msg_round}...")
-                self.pub_data(5,1000)
-                time.sleep(0.1)
-                self.pub_status(1000)
-                time.sleep(0.1)
-                self.pub_alarm(1000)
-                time.sleep(0.1)
-                self.pub_esp32(1000)
-                time.sleep(0.1)
-                self.pub_alarm_closed(1000)
-                time.sleep(0.1)
-            # Give a brief moment for the messages to be sent out
-            time.sleep(30)
+            msg_loop = 1
+            for i in range(1, msg_round + 1):
+                print(f"[Data] Publishing round {i}/{msg_round}...")
+                message_data = {f"data{k}": msg_loop for k in range(1, 6)}
+                for j in range(1, qty_topic + 1):
+                    topic = f"{self.topic_name1}no_{j}"
+                    client.publish(topic, json.dumps(message_data))
+                msg_loop += 1
+                time.sleep(0.5)
         finally:
-            self.client.loop_stop()
-            self.client.disconnect()
+            client.loop_stop()
+            client.disconnect()
+
+    def run_status_loop(self, msg_round, qty_topic):
+        client = self._create_client("mqtt_pub_status")
+        try:
+            for i in range(1, msg_round + 1):
+                print(f"[Status] Publishing round {i}/{msg_round}...")
+                for j in range(1, qty_topic + 1):
+                    status = f"status_{random.randrange(5)}"
+                    message_status = {"status": status}
+                    topic = f"{self.topic_name2}no_{j}"
+                    client.publish(topic, json.dumps(message_status))
+                time.sleep(0.5)
+        finally:
+            client.loop_stop()
+            client.disconnect()
+
+    def run_alarm_loop(self, msg_round, qty_topic):
+        client = self._create_client("mqtt_pub_alarm")
+        try:
+            for i in range(1, msg_round + 1):
+                print(f"[Alarm] Publishing round {i}/{msg_round}...")
+                alarm_name = f"alarm_{random.randrange(10)}"
+                message_alarm = {"status": alarm_name}
+                for j in range(1, qty_topic + 1):
+                    topic = f"{self.topic_name3}no_{j}"
+                    client.publish(topic, json.dumps(message_alarm))
+                time.sleep(10.0)
+
+                message_alarm_closed = {"status": f"{alarm_name}_"}
+                for j in range(1, qty_topic + 1):
+                    topic = f"{self.topic_name3}no_{j}"
+                    client.publish(topic, json.dumps(message_alarm_closed))
+                time.sleep(0.3)
+        finally:
+            client.loop_stop()
+            client.disconnect()
+
+    def run_esp32_loop(self, msg_round, qty_topic):
+        client = self._create_client("mqtt_pub_esp32")
+        try:
+            for i in range(1, msg_round + 1):
+                print(f"[ESP32] Publishing round {i}/{msg_round}...")
+                for j in range(1, qty_topic + 1):
+                    mac_id = f"mac-{random.randrange(10)}"
+                    message_esp32 = {
+                        "broker": 1,
+                        "modbus": 1,
+                        "mac_id": mac_id
+                    }
+                    topic = f"{self.topic_name4}no_{j}"
+                    client.publish(topic, json.dumps(message_esp32))
+                time.sleep(0.5)
+        finally:
+            client.loop_stop()
+            client.disconnect()
+
+    def run(self, msg_round):
+        qty_topic = 1000
+        print(f"Starting parallel MQTT simulation for {msg_round} rounds...")
+        
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [
+                executor.submit(self.run_data_loop, msg_round, qty_topic),
+                executor.submit(self.run_status_loop, msg_round, qty_topic),
+                executor.submit(self.run_alarm_loop, msg_round, qty_topic),
+                executor.submit(self.run_esp32_loop, msg_round, qty_topic)
+            ]
+            concurrent.futures.wait(futures)
+        print("Parallel MQTT simulation completed!")
 
 if __name__ == "__main__":
     publisher = MQTTPublish()
