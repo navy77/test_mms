@@ -10,7 +10,7 @@ def get_ch_client():
     port = int(os.getenv("CLICKHOUSE_PORT", 8123))
     user = os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\"")
     password = os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\"")
-    database = os.getenv("CLICKHOUSE_DATABASE", "default").strip().strip("'\"")
+    database = os.getenv("CLICKHOUSE_CONFIG_DATABASE", "configdb").strip().strip("'\"")
     try:
         return clickhouse_connect.get_client(
             host=host,

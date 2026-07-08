@@ -38,7 +38,7 @@ def get_registered_columns(client, process: str) -> List[str]:
     If no columns are found, default to [].
     """
     try:
-        query = "SELECT column_name FROM columns_register_tb WHERE process = %(process)s"
+        query = "SELECT column_name FROM configdb.columns_register_tb WHERE process = %(process)s"
         result = client.query(query, parameters={"process": process})
         registered = [row[0] for row in result.result_rows]
         
@@ -48,7 +48,7 @@ def get_registered_columns(client, process: str) -> List[str]:
             cols = []
         return cols
     except Exception as e:
-        logger.warning(f"Error querying columns_register_tb for process '{process}': {e}. Using empty columns.")
+        logger.warning(f"Error querying configdb.columns_register_tb for process '{process}': {e}. Using empty columns.")
         return []
 
 def get_registered_devices(client, process: str) -> List[str]:
@@ -56,11 +56,11 @@ def get_registered_devices(client, process: str) -> List[str]:
     Retrieve registered device names for the given process from device_register_tb.
     """
     try:
-        query = "SELECT device FROM device_register_tb WHERE process = %(process)s"
+        query = "SELECT device FROM configdb.device_register_tb WHERE process = %(process)s"
         result = client.query(query, parameters={"process": process})
         return [row[0] for row in result.result_rows]
     except Exception as e:
-        logger.warning(f"Error querying device_register_tb for process '{process}': {e}")
+        logger.warning(f"Error querying configdb.device_register_tb for process '{process}': {e}")
         return []
 
 def group_by_device(records: List[Dict[str, Any]]) -> List[DataResponse]:

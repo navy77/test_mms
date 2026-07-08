@@ -36,11 +36,11 @@ def get_registered_devices(client, process: str) -> List[str]:
     Retrieve registered device names for the given process from device_register_tb.
     """
     try:
-        query = "SELECT device FROM device_register_tb WHERE process = %(process)s"
+        query = "SELECT device FROM configdb.device_register_tb WHERE process = %(process)s"
         result = client.query(query, parameters={"process": process})
         return [row[0] for row in result.result_rows]
     except Exception as e:
-        logger.warning(f"Error querying device_register_tb for process '{process}': {e}")
+        logger.warning(f"Error querying configdb.device_register_tb for process '{process}': {e}")
         return []
 
 def get_initial_devices_batch(client, process: str, start_time: datetime, devices: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:

@@ -55,3 +55,58 @@ class ColumnResponse(BaseModel):
     process: str
     column_name: str
     column_type: str
+
+
+# Project Config schemas
+class ProjectCreate(BaseModel):
+    items: str = Field(..., min_length=1, description="Configuration item key")
+    value: str = Field(..., min_length=1, description="Configuration item value")
+
+class ProjectUpdate(BaseModel):
+    value: str = Field(..., min_length=1, description="New configuration item value")
+
+class ProjectResponse(BaseModel):
+    last_update: Optional[datetime] = None
+    items: str
+    value: str
+
+
+# Status Settings schemas
+class StatusRegisterCreate(BaseModel):
+    process: str = Field(..., min_length=1, description="Process name")
+    status: str = Field(..., min_length=1, description="Status name")
+    color: str = Field(..., min_length=1, description="Color hex or representation")
+
+class StatusRegisterUpdate(BaseModel):
+    old_process: str = Field(..., min_length=1, description="Current process name")
+    old_status: str = Field(..., min_length=1, description="Current status name")
+    new_process: str = Field(..., min_length=1, description="New process name")
+    new_status: str = Field(..., min_length=1, description="New status name")
+    new_color: str = Field(..., min_length=1, description="New color")
+
+class StatusRegisterResponse(BaseModel):
+    last_update: Optional[datetime] = None
+    process: str
+    status: str
+    color: str
+
+
+# Alarm Settings schemas
+class AlarmRegisterCreate(BaseModel):
+    process: str = Field(..., min_length=1, description="Process name")
+    status: str = Field(..., min_length=1, description="Status/Alarm name")
+    color: str = Field(..., min_length=1, description="Color hex or representation")
+
+class AlarmRegisterUpdate(BaseModel):
+    old_process: str = Field(..., min_length=1, description="Current process name")
+    old_status: str = Field(..., min_length=1, description="Current status/alarm name")
+    new_process: str = Field(..., min_length=1, description="New process name")
+    new_status: str = Field(..., min_length=1, description="New status/alarm name")
+    new_color: str = Field(..., min_length=1, description="New color")
+
+class AlarmRegisterResponse(BaseModel):
+    last_update: Optional[datetime] = None
+    process: str
+    status: str
+    color: str
+

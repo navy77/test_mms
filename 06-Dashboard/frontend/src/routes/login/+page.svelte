@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth.svelte';
-	import { Activity } from '@lucide/svelte';
+	import { Activity, Loader2 } from '@lucide/svelte';
+	import { fade, fly } from 'svelte/transition';
 
 	let username = $state('');
 	let password = $state('');
@@ -52,17 +53,21 @@
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-background px-4">
-	<div class="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-md">
+	<div in:fly={{ y: 50, duration: 1000 }} class="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-md transition-all duration-300">
 		<div class="mb-6 text-center">
-			<div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-				<Activity class="h-6 w-6 text-primary" />
+			<div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-transform duration-500 {loading ? 'scale-110' : ''}">
+				{#if loading}
+					<Loader2 class="h-6 w-6 text-primary animate-spin" />
+				{:else}
+					<Activity class="h-6 w-6 text-primary" />
+				{/if}
 			</div>
 			<h2 class="mt-3 text-lg font-semibold text-card-foreground">MMS Monitor Login</h2>
 			<p class="text-xs text-muted-foreground">Sign in to access your IoT Dashboard</p>
 		</div>
 
 		{#if errorMsg}
-			<div class="mb-4 rounded-md bg-destructive/10 p-3 text-xs font-medium text-destructive">
+			<div transition:fade={{ duration: 1000 }} class="mb-4 rounded-md bg-destructive/10 p-3 text-xs font-medium text-destructive">
 				{errorMsg}
 			</div>
 		{/if}

@@ -5,7 +5,8 @@ from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 import dotenv
 from database import get_redis_client
-from routers.stream import router as stream_router
+from contextlib import asynccontextmanager
+from routers.stream import router as stream_router, cache_manager
 from fastapi import HTTPException
 
 # Load environment variables
@@ -35,10 +36,19 @@ logging.basicConfig(
 logging.getLogger("watchfiles").setLevel(logging.WARNING)
 logger = logging.getLogger("SSEApi")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Start background polling cache manager
+    await cache_manager.start()
+    yield
+    # Stop background polling cache manager
+    await cache_manager.stop()
+
 app = FastAPI(
     title="MMS SSE Real-Time API",
     description="Backend API for Server-Sent Events real-time data streaming from Redis",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 # Enable CORS for frontend integration

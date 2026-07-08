@@ -115,3 +115,41 @@
 2026-07-07 12:23:00,941 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
 2026-07-07 12:23:01,783 [INFO] SSEBackend.SSERouter: Real-time stream started for category=device, process=demo1
 2026-07-07 12:24:31,650 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-08 13:19:27,789 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-08 13:19:28,438 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:19:41,052 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-08 13:19:55,696 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-08 13:21:08,989 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:21:09,699 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:21:10,368 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:21:11,090 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:21:15,496 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:21:16,204 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:21:21,603 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-08 13:21:28,467 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:21:29,202 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:21:30,863 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:21:31,550 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:21:35,313 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-08 13:21:36,621 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-08 13:21:49,538 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-08 13:21:53,014 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-08 13:21:58,599 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:22:15,244 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-08 13:22:48,178 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-08 13:22:48,903 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:23:45,162 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-08 13:24:09,770 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-08 13:24:19,304 [INFO] SSEBackend.SSERouter: Real-time stream started for category=alarm, process=demo1
+2026-07-08 13:24:28,320 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-08 13:24:44,834 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-08 13:24:49,643 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=alarm, process=demo1
+2026-07-08 13:24:51,749 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-08 13:24:53,801 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-08 13:25:05,436 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:25:06,567 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-08 13:25:07,207 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=2.0s).
+2026-07-08 13:25:13,569 [INFO] SSEBackend.SSERouter: Real-time stream started for category=data, process=demo1
+2026-07-08 13:25:24,909 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=data, process=demo1
+2026-07-08 13:29:59,688 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
+2026-07-08 13:30:01,294 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002

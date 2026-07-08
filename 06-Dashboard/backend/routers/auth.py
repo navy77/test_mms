@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
 from database import get_ch_client
 
@@ -20,13 +20,12 @@ class LoginResponse(BaseModel):
 
 
 @router.post("/login", response_model=LoginResponse)
-def login(body: LoginRequest):
+def login(body: LoginRequest, client = Depends(get_ch_client)):
     """
     Authenticate user against ClickHouse user_register_tb.
     Compares plain-text username and password (matching existing data schema).
     """
     try:
-        client = get_ch_client()
         result = client.query(
             """
             SELECT user, password, role

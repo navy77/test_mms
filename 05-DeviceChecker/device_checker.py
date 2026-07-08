@@ -71,9 +71,9 @@ class DeviceChecker:
                 password=self.ch_pass,
                 database=self.ch_db
             )
-            result = ch_client.query("SELECT process, device FROM device_register_tb")
+            result = ch_client.query("SELECT process, device FROM configdb.device_register_tb")
             master_devices = result.result_rows  # list of tuples (process, device)
-            logger.info(f"Retrieved {len(master_devices)} master devices from ClickHouse device_register_tb")
+            logger.info(f"Retrieved {len(master_devices)} master devices from ClickHouse configdb.device_register_tb")
         except Exception as e:
             logger.error(f"Error querying ClickHouse: {e}")
             return

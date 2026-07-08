@@ -12,3 +12,475 @@
 2026-07-07 17:41:05,628 [WARNING] clickhouse_connect.driver.httpclient: Unexpected Http Driver Exception
 2026-07-07 17:41:05,628 [ERROR] DashboardBackend.Database: Failed to connect to ClickHouse: Error HTTPConnectionPool(host='clickhouse', port=8123): Max retries exceeded with url: /? (Caused by NameResolutionError("<urllib3.connection.HTTPConnection object at 0x000001C9729FC4A0>: Failed to resolve 'clickhouse' ([Errno 11001] getaddrinfo failed)")) executing HTTP request attempt 1 (http://clickhouse:8123)
 2026-07-07 16:43:42,275 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-08 09:56:07,547 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-08 09:56:10,568 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-08 09:56:13,275 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:13,276 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:13,277 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:13,454 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:13,455 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:13,455 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:15,411 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:15,411 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:15,411 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:17,593 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:17,593 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:17,593 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:20,342 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:20,344 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:20,344 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:21,756 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:21,756 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:21,758 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:31,296 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:31,296 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:31,296 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:31,483 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:31,483 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:31,483 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:48,362 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:48,362 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:48,362 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:56:48,736 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:56:48,736 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:56:48,736 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:57:06,828 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:57:06,830 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 09:57:06,830 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:57:07,139 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 09:57:07,139 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 09:57:07,139 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 13:54:59,789 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-08 14:40:44,445 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-08 14:40:47,157 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-08 14:40:56,088 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:40:56,088 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:40:56,088 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:40:56,095 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:40:56,096 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:40:56,319 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:40:56,325 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:40:56,325 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:40:56,327 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:40:56,329 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:57:59,721 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:57:59,721 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:57:59,721 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:00,752 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:00,758 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:00,761 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:00,761 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:00,764 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:04,792 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:04,792 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:04,794 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:04,794 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:04,794 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:05,322 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:05,322 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:05,322 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:05,327 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:05,327 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:15,356 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:15,356 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:15,356 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:15,358 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:15,358 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:15,553 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:15,553 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:15,555 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:15,555 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:15,557 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:47,258 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-08 14:58:59,568 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:59,568 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:59,568 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:59,570 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:59,571 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:59,846 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:58:59,847 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:58:59,848 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:58:59,848 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:58:59,849 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:59:01,910 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 14:59:01,910 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 14:59:01,910 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 14:59:01,916 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 14:59:01,916 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:27,159 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:00:27,159 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:00:27,159 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:00:27,162 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:27,163 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:27,524 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:00:27,524 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:00:27,525 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:00:27,527 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:27,527 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:30,038 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:00:30,038 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:00:30,039 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:00:30,040 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:30,041 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:50,542 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:00:50,542 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:00:50,542 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:00:50,546 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:50,546 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:55,926 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:00:55,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:00:55,929 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:00:55,938 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:01,533 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:01,533 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:01,533 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:01,533 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:01,542 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:04,807 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:04,807 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:04,807 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:04,809 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:04,809 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:08,669 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:08,669 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:08,669 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:08,669 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:08,669 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:08,911 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:08,912 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:08,912 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:08,914 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:08,915 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:09,981 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:09,982 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:09,982 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:09,984 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:09,985 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:11,148 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:11,148 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:11,148 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:11,153 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:11,153 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:14,448 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:14,448 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:14,448 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:14,455 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:14,455 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:15,788 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:15,788 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:15,789 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:15,789 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:15,789 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:16,367 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:16,367 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:16,374 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:16,375 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:16,376 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:16,812 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:16,812 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:16,812 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:16,823 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:16,823 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:17,412 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:17,412 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:17,412 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:17,413 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:17,413 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:17,910 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:17,910 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:17,910 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:17,912 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:17,913 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:21,608 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:21,608 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:21,608 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:21,609 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:21,610 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:24,214 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:24,214 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:24,214 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:24,217 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:24,217 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:24,677 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:24,677 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:24,677 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:24,686 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:24,686 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:27,426 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:27,426 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:27,428 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:27,428 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:27,429 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:27,936 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:27,936 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:27,936 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:27,936 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:27,939 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:28,346 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:28,346 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:28,346 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:28,348 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:28,348 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:28,805 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:28,805 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:28,806 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:28,806 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:28,806 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:29,189 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:01:29,189 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:01:29,189 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:01:29,190 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:01:29,191 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:52,083 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:02:52,083 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:02:52,084 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:02:52,084 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:52,085 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:53,183 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:02:53,183 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:02:53,183 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:02:53,185 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:53,185 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:53,784 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:02:53,785 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:02:53,788 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:02:53,788 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:02:53,791 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:03:02,756 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:03:02,756 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:03:02,756 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:03:02,767 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:03:02,767 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:03:03,289 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:03:03,289 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:03:03,289 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:03:03,293 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:03:03,293 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:04:53,740 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:04:53,740 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:04:53,746 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:04:53,746 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:04:53,748 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:04:53,765 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:04:53,767 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:04:53,767 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:04:53,767 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:04:53,768 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:11,498 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:11,498 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:11,498 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:11,498 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:11,505 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:12,332 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:12,332 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:12,336 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:12,337 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:12,338 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:14,096 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:14,097 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:14,098 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:14,099 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:14,100 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:14,766 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:14,768 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:14,770 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:14,772 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:14,773 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:26,945 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:26,946 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:26,947 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:26,947 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:26,948 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:26,962 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:05:26,962 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:05:26,964 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:05:26,964 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:05:26,964 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:06,760 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:06,760 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:06,760 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:06,774 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:06,775 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:07,328 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:07,328 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:07,329 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:07,330 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:07,330 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:09,375 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:09,375 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:09,375 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:09,387 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:09,387 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:10,677 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:10,678 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:10,679 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:10,680 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:10,681 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:12,092 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:12,092 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:12,092 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:12,109 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:12,110 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:13,611 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:13,611 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:13,611 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:13,616 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:13,616 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:18,498 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:18,498 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:18,498 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:18,503 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:18,503 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:22,548 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:22,548 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:22,548 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:22,548 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:22,552 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:24,385 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:24,385 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:24,385 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:24,385 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:24,388 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:24,571 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:24,571 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:24,573 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:24,573 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:24,573 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:30,535 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-08 15:06:32,751 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:32,751 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:32,751 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:32,755 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:32,755 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:32,868 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:06:32,869 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:06:32,869 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:06:32,870 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:06:32,870 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:57,784 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:08:57,787 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:08:57,788 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:08:57,789 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:57,789 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:58,520 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:08:58,520 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:08:58,520 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:08:58,522 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:58,523 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:59,907 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:08:59,907 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:08:59,908 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:08:59,910 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:08:59,910 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:01,462 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:01,462 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:01,464 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:01,464 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:01,466 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:02,210 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:02,211 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:02,213 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:02,213 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:02,215 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:02,653 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:02,653 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:02,654 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:02,654 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:02,655 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:04,641 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:04,641 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:04,641 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:04,643 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:04,643 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:04,906 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:04,907 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:04,907 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:04,908 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:04,908 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:10,426 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:10,427 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:10,428 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:10,428 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:10,429 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:15,044 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:15,044 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:15,046 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:15,046 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:15,047 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:19,050 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:19,051 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:19,053 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:19,054 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:19,054 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:20,235 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:20,235 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:20,235 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:20,237 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:20,237 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:20,699 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:20,701 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:20,701 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:20,702 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:20,703 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:21,055 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:21,056 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:21,057 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:21,057 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:21,057 [ERROR] DashboardBackend.RegisterRouter: Error fetching columns: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:21,594 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:21,594 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:21,596 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:21,598 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:21,599 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:22,089 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:09:22,089 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:09:22,089 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:09:22,091 [ERROR] DashboardBackend.RegisterRouter: Error fetching users: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:09:22,091 [ERROR] DashboardBackend.RegisterRouter: Error fetching devices: Attempt to execute concurrent queries within the same session. Please use a separate client instance per thread/process.
+2026-07-08 15:11:05,582 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:05,585 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:05,586 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:05,993 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:05,994 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:06,006 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:07,571 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:07,599 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:07,599 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:08,557 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:08,564 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:08,565 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:09,073 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:09,093 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:09,096 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:09,489 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:09,490 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:09,491 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:28,710 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:28,710 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:28,712 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:35,505 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:11:35,505 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:35,522 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:35,693 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:11:35,693 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:11:35,693 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:09,683 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:09,683 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:12:09,684 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:12:09,876 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:12:09,879 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:12:09,879 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:13,948 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:12:13,950 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:13,951 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:12:14,908 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:14,911 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:12:14,911 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:12:15,379 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:12:15,390 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:12:15,420 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-08 15:12:35,552 [INFO] DashboardBackend.RegisterRouter: Creating user: admin
+2026-07-08 15:13:28,203 [INFO] DashboardBackend.RegisterRouter: Creating user: mic
+2026-07-08 15:13:33,349 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-08 15:13:33,355 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-08 15:13:33,355 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns

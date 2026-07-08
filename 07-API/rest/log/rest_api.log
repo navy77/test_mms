@@ -7427,3 +7427,4 @@
 2026-07-07 13:00:09,517 [INFO] RESTBackend.Routers.Status: Fetching daily status for process 'demo1' from 2026-07-01 07:00:00+07:00 to 2026-07-31 23:59:59.999999+07:00
 2026-07-07 13:00:09,594 [INFO] RESTBackend.Routers.Data: Fetching daily data for process 'demo1' from 2026-07-01 07:00:00+07:00 to 2026-08-01 06:59:59.999999+07:00
 2026-07-07 13:33:02,670 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-08 14:14:10,320 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003

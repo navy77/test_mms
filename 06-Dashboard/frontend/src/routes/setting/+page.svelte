@@ -4,15 +4,18 @@
 	import { auth } from '$lib/stores/auth.svelte';
 	import { Plus, Pencil, Trash2, Loader2 } from '@lucide/svelte';
 
-	type Tab = 'users' | 'devices' | 'columns';
+	type Tab = 'users' | 'projects' | 'devices' | 'columns' | 'statuses' | 'alarms';
 	let activeTab = $state<Tab>('users');
 
 	// ── SvelteKit Server Loaded Data ──────────────────────────────────────────
 	let { data } = $props();
 
 	const usersList = $derived(data.users || []);
+	const projectsList = $derived(data.projects || []);
 	const devicesList = $derived(data.devices || []);
 	const columnsList = $derived(data.columns || []);
+	const statusesList = $derived(data.statuses || []);
+	const alarmsList = $derived(data.alarms || []);
 
 	let loading = $state(false);
 	let errorMsg = $state('');
@@ -24,8 +27,11 @@
 
 	// Form fields
 	let formUser = $state({ user: '', password: '', role: 'user' as 'admin' | 'user' });
+	let formProject = $state({ items: '', value: '' });
 	let formDevice = $state({ process: '', device: '' });
 	let formColumn = $state({ process: '', column_name: '', column_type: 'Float32' });
+	let formStatus = $state({ process: '', status: '', color: '#00cc00' });
+	let formAlarm = $state({ process: '', status: '', color: '#ff9933' });
 
 	// Helper for headers
 	function getHeaders() {
@@ -51,20 +57,41 @@
 
 	// Computed filtered variables
 	const filteredUsers = $derived(
-		usersList.filter((u) => u.user.toLowerCase().includes(searchQuery.toLowerCase()))
+		usersList.filter((u: any) => u.user.toLowerCase().includes(searchQuery.toLowerCase()))
+	);
+	const filteredProjects = $derived(
+		projectsList.filter(
+			(p: any) =>
+				p.items.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				p.value.toLowerCase().includes(searchQuery.toLowerCase())
+		)
 	);
 	const filteredDevices = $derived(
 		devicesList.filter(
-			(d) =>
+			(d: any) =>
 				d.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				d.device.toLowerCase().includes(searchQuery.toLowerCase())
 		)
 	);
 	const filteredColumns = $derived(
 		columnsList.filter(
-			(c) =>
+			(c: any) =>
 				c.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				c.column_name.toLowerCase().includes(searchQuery.toLowerCase())
+		)
+	);
+	const filteredStatuses = $derived(
+		statusesList.filter(
+			(s: any) =>
+				s.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				s.status.toLowerCase().includes(searchQuery.toLowerCase())
+		)
+	);
+	const filteredAlarms = $derived(
+		alarmsList.filter(
+			(a: any) =>
+				a.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				a.status.toLowerCase().includes(searchQuery.toLowerCase())
 		)
 	);
 
@@ -94,8 +121,12 @@
 		modalMode = 'add';
 		editTarget = null;
 		formUser = { user: '', password: '', role: 'user' };
+		formProject = { items: '', value: '' };
 		formDevice = { process: '', device: '' };
 		formColumn = { process: '', column_name: '', column_type: 'Float32' };
+		formStatus = { process: '', status: '', color: '#00cc00' };
+		formAlarm = { process: '', status: '', color: '#ff9933' };
+		errorMsg = '';
 		modalOpen = true;
 	}
 
@@ -104,11 +135,18 @@
 		editTarget = item;
 		if (activeTab === 'users') {
 			formUser = { user: item.user, password: '', role: item.role };
+		} else if (activeTab === 'projects') {
+			formProject = { items: item.items, value: item.value };
 		} else if (activeTab === 'devices') {
 			formDevice = { process: item.process, device: item.device };
 		} else if (activeTab === 'columns') {
 			formColumn = { process: item.process, column_name: item.column_name, column_type: item.column_type };
+		} else if (activeTab === 'statuses') {
+			formStatus = { process: item.process, status: item.status, color: item.color };
+		} else if (activeTab === 'alarms') {
+			formAlarm = { process: item.process, status: item.status, color: item.color };
 		}
+		errorMsg = '';
 		modalOpen = true;
 	}
 
@@ -118,7 +156,7 @@
 		try {
 			if (activeTab === 'users') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/users', {
+					const res = await fetch('http://localhost:8001/api/v1/users', {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formUser)
@@ -129,7 +167,7 @@
 					}
 				} else {
 					// update user
-					const res = await fetch(`http://localhost:8001/api/users/${editTarget.user}`, {
+					const res = await fetch(`http://localhost:8001/api/v1/users/${editTarget.user}`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({ password: formUser.password, role: formUser.role })
@@ -139,9 +177,20 @@
 						throw new Error(details.detail || 'Failed to update user');
 					}
 				}
+			} else if (activeTab === 'projects') {
+				// update only
+				const res = await fetch(`http://localhost:8001/api/v1/projects/${editTarget.items}`, {
+					method: 'PUT',
+					headers: getHeaders(),
+					body: JSON.stringify({ value: formProject.value })
+				});
+				if (!res.ok) {
+					const details = await res.json();
+					throw new Error(details.detail || 'Failed to update project config');
+				}
 			} else if (activeTab === 'devices') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/devices', {
+					const res = await fetch('http://localhost:8001/api/v1/devices', {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formDevice)
@@ -151,7 +200,7 @@
 						throw new Error(details.detail || 'Failed to register device');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/devices', {
+					const res = await fetch('http://localhost:8001/api/v1/devices', {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -168,7 +217,7 @@
 				}
 			} else if (activeTab === 'columns') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/columns', {
+					const res = await fetch('http://localhost:8001/api/v1/columns', {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formColumn)
@@ -178,7 +227,7 @@
 						throw new Error(details.detail || 'Failed to register column');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/columns', {
+					const res = await fetch('http://localhost:8001/api/v1/columns', {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -192,6 +241,62 @@
 					if (!res.ok) {
 						const details = await res.json();
 						throw new Error(details.detail || 'Failed to update column');
+					}
+				}
+			} else if (activeTab === 'statuses') {
+				if (modalMode === 'add') {
+					const res = await fetch('http://localhost:8001/api/v1/statuses', {
+						method: 'POST',
+						headers: getHeaders(),
+						body: JSON.stringify(formStatus)
+					});
+					if (!res.ok) {
+						const details = await res.json();
+						throw new Error(details.detail || 'Failed to register status');
+					}
+				} else {
+					const res = await fetch('http://localhost:8001/api/v1/statuses', {
+						method: 'PUT',
+						headers: getHeaders(),
+						body: JSON.stringify({
+							old_process: editTarget.process,
+							old_status: editTarget.status,
+							new_process: formStatus.process,
+							new_status: formStatus.status,
+							new_color: formStatus.color
+						})
+					});
+					if (!res.ok) {
+						const details = await res.json();
+						throw new Error(details.detail || 'Failed to update status');
+					}
+				}
+			} else if (activeTab === 'alarms') {
+				if (modalMode === 'add') {
+					const res = await fetch('http://localhost:8001/api/v1/alarms', {
+						method: 'POST',
+						headers: getHeaders(),
+						body: JSON.stringify(formAlarm)
+					});
+					if (!res.ok) {
+						const details = await res.json();
+						throw new Error(details.detail || 'Failed to register alarm');
+					}
+				} else {
+					const res = await fetch('http://localhost:8001/api/v1/alarms', {
+						method: 'PUT',
+						headers: getHeaders(),
+						body: JSON.stringify({
+							old_process: editTarget.process,
+							old_status: editTarget.status,
+							new_process: formAlarm.process,
+							new_status: formAlarm.status,
+							new_color: formAlarm.color
+						})
+					});
+					if (!res.ok) {
+						const details = await res.json();
+						throw new Error(details.detail || 'Failed to update alarm');
 					}
 				}
 			}
@@ -210,7 +315,7 @@
 		loading = true;
 		try {
 			if (activeTab === 'users') {
-				const res = await fetch(`http://localhost:8001/api/users/${item.user}`, {
+				const res = await fetch(`http://localhost:8001/api/v1/users/${item.user}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -219,7 +324,7 @@
 					throw new Error(details.detail || 'Failed to delete user');
 				}
 			} else if (activeTab === 'devices') {
-				const res = await fetch(`http://localhost:8001/api/devices?process=${encodeURIComponent(item.process)}&device=${encodeURIComponent(item.device)}`, {
+				const res = await fetch(`http://localhost:8001/api/v1/devices?process=${encodeURIComponent(item.process)}&device=${encodeURIComponent(item.device)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -228,13 +333,31 @@
 					throw new Error(details.detail || 'Failed to delete device');
 				}
 			} else if (activeTab === 'columns') {
-				const res = await fetch(`http://localhost:8001/api/columns?process=${encodeURIComponent(item.process)}&column_name=${encodeURIComponent(item.column_name)}`, {
+				const res = await fetch(`http://localhost:8001/api/v1/columns?process=${encodeURIComponent(item.process)}&column_name=${encodeURIComponent(item.column_name)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
 				if (!res.ok) {
 					const details = await res.json();
 					throw new Error(details.detail || 'Failed to delete column');
+				}
+			} else if (activeTab === 'statuses') {
+				const res = await fetch(`http://localhost:8001/api/v1/statuses?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
+					method: 'DELETE',
+					headers: getHeaders()
+				});
+				if (!res.ok) {
+					const details = await res.json();
+					throw new Error(details.detail || 'Failed to delete status');
+				}
+			} else if (activeTab === 'alarms') {
+				const res = await fetch(`http://localhost:8001/api/v1/alarms?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
+					method: 'DELETE',
+					headers: getHeaders()
+				});
+				if (!res.ok) {
+					const details = await res.json();
+					throw new Error(details.detail || 'Failed to delete alarm');
 				}
 			}
 			await refreshData();
@@ -245,11 +368,14 @@
 		}
 	}
 
-	const tabs = [
-		{ key: 'users' as Tab,   label: 'Users',   count: () => usersList.length },
-		{ key: 'devices' as Tab, label: 'Devices', count: () => devicesList.length },
-		{ key: 'columns' as Tab, label: 'Columns', count: () => columnsList.length }
-	];
+	const tabs = $derived([
+		{ key: 'users' as Tab,     label: 'Users',    count: usersList.length },
+		{ key: 'projects' as Tab,  label: 'Projects', count: projectsList.length },
+		{ key: 'devices' as Tab,   label: 'Devices',  count: devicesList.length },
+		{ key: 'columns' as Tab,   label: 'Columns',  count: columnsList.length },
+		{ key: 'statuses' as Tab,  label: 'Statuses', count: statusesList.length },
+		{ key: 'alarms' as Tab,    label: 'Alarms',   count: alarmsList.length }
+	]);
 </script>
 
 <div class="space-y-4">
@@ -263,12 +389,12 @@
 					: 'text-muted-foreground hover:text-foreground'}"
 			>
 				{tab.label}
-				<span class="rounded-full bg-current/20 px-1.5 text-[10px] font-medium">{tab.count()}</span>
+				<span class="rounded-full bg-current/20 px-1.5 text-[10px] font-medium">{tab.count}</span>
 			</button>
 		{/each}
 	</div>
 
-	{#if errorMsg}
+	{#if errorMsg && !modalOpen}
 		<div class="rounded-md bg-destructive/10 p-3 text-xs font-medium text-destructive">
 			{errorMsg}
 		</div>
@@ -283,13 +409,15 @@
 					<Loader2 class="h-4 w-4 animate-spin text-muted-foreground" />
 				{/if}
 			</div>
-			<button
-				onclick={openAdd}
-				class="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-			>
-				<Plus class="h-3 w-3" />
-				Add
-			</button>
+			{#if activeTab !== 'projects'}
+				<button
+					onclick={openAdd}
+					class="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+				>
+					<Plus class="h-3 w-3" />
+					Add
+				</button>
+			{/if}
 		</div>
 
 		<!-- Search Input Bar -->
@@ -297,7 +425,7 @@
 			<input
 				type="text"
 				bind:value={searchQuery}
-				placeholder={activeTab === 'users' ? 'Search by username...' : activeTab === 'devices' ? 'Search by process or device...' : 'Search by process or column...'}
+				placeholder={activeTab === 'users' ? 'Search by username...' : activeTab === 'projects' ? 'Search by items key...' : activeTab === 'devices' ? 'Search by process or device...' : activeTab === 'columns' ? 'Search by process or column...' : 'Search by process or status...'}
 				class="flex-1 max-w-sm rounded border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary placeholder:text-muted-foreground"
 			/>
 		</div>
@@ -334,6 +462,33 @@
 				</tbody>
 			</table>
 
+		<!-- Projects Table -->
+		{:else if activeTab === 'projects'}
+			<table class="w-full text-xs">
+				<thead class="bg-muted/50">
+					<tr>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Items Key</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Value</th>
+						<th class="px-4 py-2.5 text-right font-medium text-muted-foreground">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-border">
+					{#each filteredProjects as p (p.items)}
+						<tr class="hover:bg-muted/30 transition-colors">
+							<td class="px-4 py-2.5 font-medium text-foreground">{p.items}</td>
+							<td class="px-4 py-2.5 text-muted-foreground font-mono">{p.value}</td>
+							<td class="px-4 py-2.5 text-right">
+								<button onclick={() => openEdit(p)} class="text-muted-foreground hover:text-foreground"><Pencil class="inline h-3 w-3" /></button>
+							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="3" class="px-4 py-8 text-center text-muted-foreground">No project configurations found</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+
 		<!-- Devices Table -->
 		{:else if activeTab === 'devices'}
 			<table class="w-full text-xs">
@@ -363,7 +518,7 @@
 			</table>
 
 		<!-- Columns Table -->
-		{:else}
+		{:else if activeTab === 'columns'}
 			<table class="w-full text-xs">
 				<thead class="bg-muted/50">
 					<tr>
@@ -387,6 +542,76 @@
 					{:else}
 						<tr>
 							<td colspan="4" class="px-4 py-8 text-center text-muted-foreground">No columns registered</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+
+		<!-- Statuses Table -->
+		{:else if activeTab === 'statuses'}
+			<table class="w-full text-xs">
+				<thead class="bg-muted/50">
+					<tr>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Process</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Status</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Color</th>
+						<th class="px-4 py-2.5 text-right font-medium text-muted-foreground">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-border">
+					{#each filteredStatuses as s (`${s.process}-${s.status}`)}
+						<tr class="hover:bg-muted/30 transition-colors">
+							<td class="px-4 py-2.5 font-medium text-foreground">{s.process}</td>
+							<td class="px-4 py-2.5 text-muted-foreground">{s.status}</td>
+							<td class="px-4 py-2.5">
+								<div class="flex items-center gap-2">
+									<span class="inline-block h-3.5 w-3.5 rounded-full border border-border" style="background-color: {s.color}"></span>
+									<span class="font-mono text-muted-foreground">{s.color}</span>
+								</div>
+							</td>
+							<td class="px-4 py-2.5 text-right">
+								<button onclick={() => openEdit(s)} class="mr-2 text-muted-foreground hover:text-foreground"><Pencil class="inline h-3 w-3" /></button>
+								<button onclick={() => deleteItem(s)} class="text-red-400 hover:text-red-600"><Trash2 class="inline h-3 w-3" /></button>
+							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="4" class="px-4 py-8 text-center text-muted-foreground">No statuses registered</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+
+		<!-- Alarms Table -->
+		{:else}
+			<table class="w-full text-xs">
+				<thead class="bg-muted/50">
+					<tr>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Process</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Alarm Status</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Color</th>
+						<th class="px-4 py-2.5 text-right font-medium text-muted-foreground">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-border">
+					{#each filteredAlarms as a (`${a.process}-${a.status}`)}
+						<tr class="hover:bg-muted/30 transition-colors">
+							<td class="px-4 py-2.5 font-medium text-foreground">{a.process}</td>
+							<td class="px-4 py-2.5 text-muted-foreground">{a.status}</td>
+							<td class="px-4 py-2.5">
+								<div class="flex items-center gap-2">
+									<span class="inline-block h-3.5 w-3.5 rounded-full border border-border" style="background-color: {a.color}"></span>
+									<span class="font-mono text-muted-foreground">{a.color}</span>
+								</div>
+							</td>
+							<td class="px-4 py-2.5 text-right">
+								<button onclick={() => openEdit(a)} class="mr-2 text-muted-foreground hover:text-foreground"><Pencil class="inline h-3 w-3" /></button>
+								<button onclick={() => deleteItem(a)} class="text-red-400 hover:text-red-600"><Trash2 class="inline h-3 w-3" /></button>
+							</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="4" class="px-4 py-8 text-center text-muted-foreground">No alarms registered</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -438,6 +663,12 @@
 				{modalMode === 'add' ? 'Add' : 'Edit'} {activeTab.slice(0, -1)}
 			</h3>
 
+			{#if errorMsg}
+				<div class="mb-4 rounded bg-destructive/10 p-2.5 text-[11px] font-medium text-destructive">
+					{errorMsg}
+				</div>
+			{/if}
+
 			{#if activeTab === 'users'}
 				<div class="space-y-3">
 					<div>
@@ -457,6 +688,18 @@
 					</div>
 				</div>
 
+			{:else if activeTab === 'projects'}
+				<div class="space-y-3">
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Items Key</label>
+						<input bind:value={formProject.items} disabled class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary disabled:opacity-50" />
+					</div>
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Value</label>
+						<input bind:value={formProject.value} class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+					</div>
+				</div>
+
 			{:else if activeTab === 'devices'}
 				<div class="space-y-3">
 					<div>
@@ -469,7 +712,7 @@
 					</div>
 				</div>
 
-			{:else}
+			{:else if activeTab === 'columns'}
 				<div class="space-y-3">
 					<div>
 						<label class="mb-1 block text-xs text-muted-foreground">Process</label>
@@ -488,6 +731,58 @@
 							<option>Int32</option>
 							<option>UInt32</option>
 						</select>
+					</div>
+				</div>
+
+			{:else if activeTab === 'statuses'}
+				<div class="space-y-3">
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Process</label>
+						<input bind:value={formStatus.process} placeholder="e.g. demo1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+					</div>
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Status</label>
+						<input bind:value={formStatus.status} placeholder="e.g. run" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+					</div>
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Color</label>
+						<div class="flex items-center gap-2 mt-1">
+							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F'] as c}
+								<button
+									type="button"
+									onclick={() => (formStatus.color = c)}
+									class="h-6 w-6 rounded-full border-2 transition-all {formStatus.color === c ? 'border-primary scale-110 shadow-sm' : 'border-transparent hover:scale-105'}"
+									style="background-color: {c}"
+									title={c}
+								></button>
+							{/each}
+						</div>
+					</div>
+				</div>
+
+			{:else}
+				<div class="space-y-3">
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Process</label>
+						<input bind:value={formAlarm.process} placeholder="e.g. demo1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+					</div>
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Alarm Status</label>
+						<input bind:value={formAlarm.status} placeholder="e.g. alarm" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+					</div>
+					<div>
+						<label class="mb-1 block text-xs text-muted-foreground">Color</label>
+						<div class="flex items-center gap-2 mt-1">
+							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F'] as c}
+								<button
+									type="button"
+									onclick={() => (formAlarm.color = c)}
+									class="h-6 w-6 rounded-full border-2 transition-all {formAlarm.color === c ? 'border-primary scale-110 shadow-sm' : 'border-transparent hover:scale-105'}"
+									style="background-color: {c}"
+									title={c}
+								></button>
+							{/each}
+						</div>
 					</div>
 				</div>
 			{/if}
