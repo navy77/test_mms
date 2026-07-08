@@ -1,5 +1,6 @@
 <script lang="ts">
 	import './layout.css';
+	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth.svelte';
@@ -57,6 +58,28 @@
 		if (href === '/') return $page.url.pathname === '/';
 		return $page.url.pathname.startsWith(href);
 	}
+
+	let isLive = $state(true);
+
+	async function checkHealth() {
+		try {
+			const res = await fetch('http://localhost:8001/health');
+			if (res.ok) {
+				const data = await res.json();
+				isLive = data.status === 'healthy';
+			} else {
+				isLive = false;
+			}
+		} catch (err) {
+			isLive = false;
+		}
+	}
+
+	onMount(() => {
+		checkHealth();
+		const interval = setInterval(checkHealth, 10000);
+		return () => clearInterval(interval);
+	});
 </script>
 
 <svelte:head>
@@ -167,10 +190,17 @@
 							Logged in as: <strong class="text-foreground">{auth.user.username}</strong> ({auth.user.role})
 						</span>
 					{/if}
-					<span class="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-600 dark:text-green-400">
-						<span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span>
-						Live
-					</span>
+					{#if isLive}
+						<span class="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+							<span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span>
+							Live
+						</span>
+					{:else}
+						<span class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-pulse">
+							<span class="h-1.5 w-1.5 rounded-full bg-destructive"></span>
+							Offline
+						</span>
+					{/if}
 				</div>
 			</header>
 

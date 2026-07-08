@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS configdb.columns_register_tb(
     last_update DateTime('Asia/Bangkok') DEFAULT now(),
     process String,
     column_name String,
-    column_type String
+    column_type String,
+    column_group Bool;
  
 ) ENGINE = MergeTree()
 PARTITION BY toYYYYMM(last_update)

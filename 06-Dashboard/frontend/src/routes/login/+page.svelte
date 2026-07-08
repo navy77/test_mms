@@ -45,7 +45,7 @@
 				throw new Error('Authentication failed');
 			}
 		} catch (err: any) {
-			errorMsg = err.message || 'Connection failed. Please try again.';
+			errorMsg = 'Connection failed. Please try again.';
 		} finally {
 			loading = false;
 		}
