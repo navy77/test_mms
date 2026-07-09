@@ -1,8 +1,14 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
+
 	let { data } = $props();
 
 	const processesList = $derived(data.processes || []);
 	let selectedProcess = $state(data.initialProcess || '');
+
+	$effect(() => {
+		selectedProcess = data.initialProcess || '';
+	});
 
 	let statusMap = $state<Record<string, { status: string; timestamp: string }>>({});
 	let sse: EventSource | null = null;
@@ -128,6 +134,10 @@
 		};
 	});
 
+	onDestroy(() => {
+		if (sse) sse.close();
+	});
+
 	$effect(() => {
 		selectedProcess;
 		selectedDevices = [];
@@ -241,7 +251,7 @@
 				</p>
 
 				<!-- Timestamp -->
-				<p class="mt-2 text-[10px] text-muted-foreground whitespace-nowrap">
+				<p class="mt-2 text-[15px] text-muted-foreground whitespace-nowrap">
 					Last update: {formatTime(timestamp)}
 				</p>
 			</div>

@@ -1,8 +1,14 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
+
 	let { data } = $props();
 
 	const processesList = $derived(data.processes || []);
 	let selectedProcess = $state(data.initialProcess || '');
+
+	$effect(() => {
+		selectedProcess = data.initialProcess || '';
+	});
 	
 	let counts = $state(data.initialCounts || {
 		total: 0,
@@ -124,6 +130,10 @@
 		return () => {
 			if (sse) sse.close();
 		};
+	});
+
+	onDestroy(() => {
+		if (sse) sse.close();
 	});
 
 	// Reset page to 1 when filters change

@@ -546,3 +546,581 @@
 2026-07-09 09:46:45,296 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
 2026-07-09 09:47:21,277 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
 2026-07-09 09:47:42,277 [INFO] DashboardBackend.RegisterRouter: Deleting column registration: demo1/test_key_col
+2026-07-09 15:59:27,439 [INFO] DashboardBackend: Starting MMS Dashboard Backend Server at http://0.0.0.0:8001
+2026-07-09 15:59:32,540 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 15:59:32,644 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 15:59:39,066 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 15:59:39,115 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 15:59:39,193 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 15:59:40,838 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 15:59:40,864 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 15:59:40,917 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:15,009 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:15,016 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:15,017 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:15,028 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:15,037 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:15,045 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:15,193 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:15,198 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:15,198 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:15,199 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:15,199 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:15,199 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:16,012 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:16,096 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:16,714 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:16,715 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:16,715 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:16,715 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:16,728 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:16,742 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:16,862 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:16,866 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:16,867 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:16,867 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:16,867 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:16,867 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:17,760 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:17,761 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:17,790 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:17,790 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:17,790 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:17,790 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:18,278 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:18,284 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:18,284 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:18,284 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:18,284 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:18,284 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:18,946 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:18,946 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:08:18,946 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:08:18,954 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:18,966 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:08:18,997 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:08:19,984 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:08:20,028 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:08:20,061 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:09:09,936 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:09:10,035 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:09:10,295 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:09:10,345 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:09:10,391 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:09:55,693 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:09:55,720 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:09:55,747 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:13,117 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:13,238 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:13,527 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:13:13,558 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:13,560 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:13,560 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:13:13,570 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:13:13,576 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:14,815 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:13:14,815 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:14,847 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:13:14,847 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:13:14,848 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:14,848 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:15,816 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:13:15,823 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:13:15,823 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:15,824 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:15,828 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:13:15,828 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:16,321 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:13:16,321 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:13:16,323 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:16,323 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:16,329 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:16,331 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:13:16,916 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:13:16,916 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:13:16,924 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:13:16,925 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:16,925 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:13:16,925 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:23,534 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:13:23,564 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:13:23,603 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:14:44,846 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:14:44,963 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:14:48,278 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:14:48,339 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:14:48,381 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:15:06,460 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:15:06,516 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:15:06,566 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:15:11,091 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:15:11,140 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:15:11,190 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:15:32,641 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:15:32,693 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:15:32,746 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:18:27,335 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:18:27,383 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:18:27,444 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:23:02,853 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:23:02,881 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:23:02,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:23:03,273 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:23:03,386 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:23:26,591 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:23:26,657 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:23:26,691 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:23:33,846 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:23:33,881 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:23:33,949 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:23:50,439 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-09 16:23:57,057 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:23:57,114 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:23:57,159 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:24:47,653 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:24:47,839 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:24:48,526 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:24:48,588 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:24:48,598 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:24:48,599 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:24:48,599 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:24:48,599 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:24:49,017 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:24:49,022 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:24:49,026 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:24:49,026 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:24:49,027 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:24:49,058 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:24:50,629 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:24:50,629 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:24:50,632 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:24:50,633 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:24:50,633 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:24:50,633 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:24:53,866 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:24:53,895 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:24:53,938 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:25:01,443 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:25:01,443 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:25:01,448 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:25:01,449 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:25:01,458 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:25:01,464 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:25:01,992 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:25:02,041 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:25:02,102 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:25:03,184 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:25:03,222 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:25:03,286 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:25:03,691 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:25:03,719 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:25:03,779 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:26:36,205 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:26:36,316 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:26:37,549 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:26:37,579 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:26:37,634 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:46,726 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:46,730 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:30:46,732 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:46,732 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:46,732 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:30:46,806 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:30:46,934 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:46,945 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:46,945 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:46,945 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:30:46,946 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:30:46,947 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:30:48,330 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:48,330 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:30:48,334 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:30:48,335 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:30:48,337 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:48,350 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:49,484 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:30:49,493 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:49,493 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:49,494 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:30:49,528 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:30:49,531 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:50,436 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:30:50,436 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:50,436 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:50,445 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:30:50,445 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:30:50,446 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:58,113 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:58,246 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:58,761 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:30:58,807 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:30:58,873 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:30:59,952 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:31:00,049 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:40:47,962 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:40:48,015 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:40:48,104 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:41:07,622 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-09 16:41:13,713 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:41:13,746 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:41:13,797 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:43:05,959 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:06,090 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:11,584 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:43:11,587 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:11,589 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:11,589 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:43:11,613 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:43:11,613 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:43:12,115 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:12,115 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:43:12,115 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:43:12,118 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:43:12,119 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:12,123 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:43:21,990 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:21,991 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:21,994 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:43:21,994 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:43:22,001 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:43:22,035 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:43:48,541 [INFO] DashboardBackend.RegisterRouter: Registering alarm configuration: demo1/alarm_test (#FF0000)
+2026-07-09 16:43:49,819 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:43:49,820 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:43:49,837 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:49,843 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:43:49,844 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:43:49,844 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:55,826 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:43:55,881 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:43:55,924 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:44:07,012 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:44:07,045 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:44:07,095 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:44:24,061 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:44:24,126 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:44:24,177 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:44:29,500 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:44:29,501 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:44:29,504 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:44:29,504 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:44:29,506 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:44:29,524 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:44:29,830 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:44:29,830 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:44:29,831 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:44:29,831 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:44:29,831 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:44:29,831 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:44:40,659 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:44:40,678 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:44:40,683 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:44:40,684 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:44:40,684 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:44:40,684 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:45:07,078 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:45:07,131 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:45:07,180 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:45:11,359 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:45:11,412 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:45:11,472 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:45:12,685 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:45:12,787 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:45:19,160 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:45:19,216 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:45:19,257 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:46:48,587 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:46:48,640 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:46:48,691 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:46:49,976 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:46:50,030 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:46:50,082 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:47:47,374 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:47:47,407 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:47:47,454 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:47:55,055 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:47:55,175 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:47:55,827 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:47:55,888 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:47:55,939 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:47:56,255 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:47:56,286 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:47:56,365 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:48:05,104 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:05,208 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:09,166 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:09,222 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:09,276 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:48:17,617 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:17,669 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:17,716 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:48:20,917 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:20,948 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:20,990 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:48:33,918 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:33,951 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:34,003 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:48:37,980 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:38,014 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:38,051 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:48:38,535 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:38,566 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:38,623 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:48:47,504 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:47,538 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:47,589 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:48:50,226 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:48:50,272 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:48:50,329 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:20,543 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:20,634 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:21,277 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:21,327 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:21,380 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:22,522 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:22,549 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:22,628 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:50:23,992 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:24,109 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:24,851 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:50:24,875 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:24,884 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:50:24,884 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:50:24,890 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:24,899 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:35,190 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:35,245 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:35,292 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:35,589 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:35,681 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:40,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:41,054 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:42,631 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:42,678 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:42,749 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:43,028 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:43,124 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:43,851 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:50:43,853 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:43,980 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:43,983 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:44,007 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:50:44,008 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:50:49,175 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:49,209 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:50:49,264 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:50:49,761 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:50:49,858 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:05,061 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:05,119 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:05,192 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:51:06,056 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:06,187 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:14,294 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:14,342 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:14,414 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:51:14,810 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:14,937 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:15,225 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:15,253 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:15,313 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:51:15,722 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:15,763 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:15,821 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:51:17,926 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:51:17,957 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:51:18,008 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:09,751 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:09,784 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:09,823 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:52:10,555 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:10,584 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:10,640 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:33,138 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:33,170 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:33,232 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:52:33,851 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:33,900 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:33,951 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:34,404 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:34,506 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:35,179 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:35,211 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:35,245 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:40,148 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:40,225 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:44,583 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:44,636 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:44,685 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:52:44,907 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:44,971 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:45,023 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:45,350 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:45,449 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:47,447 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:47,528 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:47,825 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:47,933 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:47,980 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:48,208 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:48,256 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:48,310 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:49,353 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:49,517 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:51,679 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:51,732 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:51,767 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:52,087 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:52,114 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:52,172 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:52:52,648 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:52,681 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:52:52,805 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:52:53,202 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:52:53,290 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:54:17,774 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:54:17,830 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:54:17,882 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:54:33,926 [INFO] DashboardBackend.Auth: User 'admin' logged in successfully (role=admin)
+2026-07-09 16:54:45,318 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:54:45,390 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:54:45,441 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:54:55,233 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:54:55,348 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:55:07,144 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:55:07,188 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:55:07,226 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:56:34,646 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:56:34,695 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:56:34,738 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:56:56,783 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:56:56,895 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:05,321 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:57:05,358 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:05,419 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:57:35,033 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:57:35,056 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:57:35,088 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:35,129 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:57:35,180 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:39,351 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:57:39,384 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:39,422 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:57:59,038 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:57:59,098 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:57:59,147 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:58:04,542 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:58:04,690 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:58:09,512 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:58:09,581 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:58:09,640 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:58:14,466 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:58:14,513 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:58:14,552 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:59:15,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:15,927 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:15,927 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:59:15,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:59:15,927 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:59:15,934 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:59:16,769 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:16,845 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:16,907 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:59:17,482 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:17,580 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:18,306 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 16:59:18,307 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:59:18,307 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:18,313 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 16:59:18,313 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:59:18,314 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:18,453 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:18,518 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:18,573 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 16:59:18,828 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:18,870 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 16:59:18,932 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 16:59:59,458 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 16:59:59,590 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:00,309 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:00,352 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:00,406 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:00:01,236 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:01,261 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:01,305 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:02,120 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:02,240 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:03,855 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 17:00:03,856 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:03,856 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:03,856 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 17:00:03,882 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:00:03,882 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:04,049 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:04,055 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:04,055 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:04,055 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 17:00:04,055 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 17:00:04,055 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:00:04,329 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:04,414 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:05,285 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:05,324 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:05,372 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:10,838 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:10,937 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:30,889 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:30,928 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:30,985 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:00:36,824 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:36,858 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:36,915 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:37,439 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:37,538 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:38,325 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:38,361 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:38,422 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:00:40,571 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:00:40,611 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:00:40,654 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:01:34,805 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:34,844 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:34,888 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:01:38,346 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:38,400 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:38,449 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:01:41,968 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:42,005 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:42,048 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:01:42,443 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:42,480 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:42,519 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:01:43,020 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:43,132 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:44,099 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 17:01:44,108 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:44,134 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 17:01:44,134 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:44,136 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:01:44,150 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:01:44,423 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:44,423 [INFO] DashboardBackend.RegisterRouter: Fetching all users
+2026-07-09 17:01:44,425 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:44,428 [INFO] DashboardBackend.RegisterRouter: Fetching all project configuration items
+2026-07-09 17:01:44,428 [INFO] DashboardBackend.RegisterRouter: Fetching all registered status colors
+2026-07-09 17:01:44,437 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:01:44,692 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:44,789 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:45,269 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:01:45,330 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:01:45,383 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:02:33,503 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:02:33,597 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:02:35,819 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:02:35,867 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:02:35,916 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations
+2026-07-09 17:02:36,154 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:02:36,262 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:02:44,774 [INFO] DashboardBackend.RegisterRouter: Fetching all registered columns
+2026-07-09 17:02:44,829 [INFO] DashboardBackend.RegisterRouter: Fetching all devices
+2026-07-09 17:02:44,907 [INFO] DashboardBackend.RegisterRouter: Fetching all registered alarm configurations

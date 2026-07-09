@@ -1,0 +1,31 @@
+[
+    {
+        "id": "0c5464d4e33d5479",
+        "type": "inject",
+        "z": "f08c9f6c28fd14bf",
+        "name": "mqtt/mic/demo1/no_3",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "modbus",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "mqtt/mic/demo1/no_3",
+        "x": 200,
+        "y": 660,
+        "wires": [
+            [
+                "e0fb0f6578ed394c"
+            ]
+        ]
+    }
+]

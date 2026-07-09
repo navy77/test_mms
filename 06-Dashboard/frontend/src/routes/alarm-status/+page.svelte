@@ -1,127 +1,284 @@
 <script lang="ts">
-	import { alarms } from '$lib/stores/mock.svelte';
-	import type { AlarmSeverity, AlarmState } from '$lib/stores/mock.svelte';
+	import { onDestroy } from 'svelte';
 
-	let filter = $state<'all' | AlarmState>('all');
-	let severityFilter = $state<'all' | AlarmSeverity>('all');
+	let { data } = $props();
 
-	const filtered = $derived(
-		alarms.filter((a) => {
-			const stateOk = filter === 'all' || a.state === filter;
-			const sevOk = severityFilter === 'all' || a.severity === severityFilter;
-			return stateOk && sevOk;
-		})
+	const processesList = $derived(data.processes || []);
+	let selectedProcess = $state(data.initialProcess || '');
+
+	$effect(() => {
+		selectedProcess = data.initialProcess || '';
+	});
+
+	let alarmMap = $state<Record<string, { status: string; timestamp: string }>>({});
+	let sse: EventSource | null = null;
+
+	const defaultColors: Record<string, string> = {
+		alarm: '#ef4444',   // red-500
+		normal: '#22c55e'   // green-500
+	};
+
+	const statusLabels: Record<string, string> = {
+		alarm: 'Active Alarms',
+		normal: 'Normal'
+	};
+
+	const colorMap = $derived.by(() => {
+		const map: Record<string, string> = { ...defaultColors };
+		const activeAlarms = (data.alarms || []).filter((a: any) => a.process === selectedProcess);
+		for (const a of activeAlarms) {
+			map[a.status] = a.color;
+		}
+		return map;
+	});
+
+	function getStatusStyle(stat: string) {
+		const color = colorMap[stat] || '#22c55e';
+		return `--status-color: ${color}; border-color: color-mix(in srgb, ${color} 30%, transparent); background-color: color-mix(in srgb, ${color} 10%, transparent);`;
+	}
+
+	const activeDevices = $derived(
+		(data.registeredDevices || [])
+			.filter((d: any) => d.process === selectedProcess)
+			.sort((a: any, b: any) => a.device.localeCompare(b.device, undefined, { numeric: true }))
 	);
 
-	const activeCount = $derived(alarms.filter((a) => a.state === 'active').length);
-	const criticalCount = $derived(alarms.filter((a) => a.severity === 'critical' && a.state === 'active').length);
-
-	function acknowledge(id: string) {
-		const alarm = alarms.find((a) => a.id === id);
-		if (alarm) alarm.state = 'cleared';
+	function resolveAlarmStatus(rawStat: string | undefined) {
+		if (!rawStat || rawStat === 'normal') return 'normal';
+		if (rawStat.endsWith('_')) {
+			return 'normal';
+		}
+		if (rawStat.startsWith('alarm')) {
+			return 'alarm';
+		}
+		return 'normal';
 	}
 
-	function severityColor(s: AlarmSeverity) {
-		return s === 'critical' ? 'text-red-600 dark:text-red-400 bg-red-500/10'
-			: s === 'warning'  ? 'text-yellow-600 dark:text-yellow-400 bg-yellow-500/10'
-			:                    'text-blue-600 dark:text-blue-400 bg-blue-500/10';
-	}
+	const summary = $derived.by(() => {
+		let activeCount = 0;
+		for (const d of activeDevices) {
+			const record = alarmMap[d.device];
+			const rawStat = record ? record.status : 'normal';
+			const stat = resolveAlarmStatus(rawStat);
+			if (stat === 'alarm') {
+				activeCount++;
+			}
+		}
+		return {
+			alarm: activeCount,
+			normal: Math.max(0, activeDevices.length - activeCount)
+		};
+	});
 
-	function dotColor(s: AlarmSeverity) {
-		return s === 'critical' ? 'bg-red-500' : s === 'warning' ? 'bg-yellow-500' : 'bg-blue-500';
-	}
+	let selectedDevices = $state<string[]>([]);
+	let selectExpanded = $state(false);
+	let currentPage = $state(1);
+	const pageSize = 18;
+
+	const displayedDevices = $derived(
+		selectedDevices.length > 0
+			? activeDevices.filter((d: any) => selectedDevices.includes(d.device))
+			: activeDevices.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+	);
+
+	const totalPages = $derived(Math.ceil(activeDevices.length / pageSize) || 1);
 
 	function formatTime(ts: string) {
-		return new Date(ts).toLocaleString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+		if (!ts) return '—';
+		try {
+			return new Date(ts).toLocaleString('en-US', { 
+				hour: '2-digit', 
+				minute: '2-digit', 
+				day: '2-digit', 
+				month: 'short', 
+				hour12: false 
+			});
+		} catch {
+			return '—';
+		}
 	}
+
+	function connectSSE(proc: string) {
+		if (sse) {
+			sse.close();
+		}
+		if (!proc) return;
+		
+		sse = new EventSource(`http://localhost:8002/api/v1/realtime/alarm/${proc}`);
+		sse.onmessage = (event) => {
+			try {
+				const list = JSON.parse(event.data);
+				const newMap: Record<string, { status: string; timestamp: string }> = {};
+				for (const item of list) {
+					newMap[item.device] = {
+						status: item.status || 'normal',
+						timestamp: item.timestamp || ''
+					};
+				}
+				alarmMap = newMap;
+			} catch (err) {
+				console.error('Error parsing SSE alarm:', err);
+			}
+		};
+	}
+
+	$effect(() => {
+		if (selectedProcess) {
+			connectSSE(selectedProcess);
+		}
+		return () => {
+			if (sse) sse.close();
+		};
+	});
+
+	onDestroy(() => {
+		if (sse) sse.close();
+	});
+
+	$effect(() => {
+		selectedProcess;
+		selectedDevices = [];
+		currentPage = 1;
+	});
 </script>
 
-<div class="space-y-4">
-	<!-- Summary -->
-	<div class="grid grid-cols-3 gap-3">
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Active Alarms</p>
-			<p class="text-2xl font-semibold {activeCount > 0 ? 'text-red-500' : 'text-green-500'}">{activeCount}</p>
-		</div>
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Critical</p>
-			<p class="text-2xl font-semibold {criticalCount > 0 ? 'text-red-500' : 'text-green-500'}">{criticalCount}</p>
-		</div>
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Total Logged</p>
-			<p class="text-2xl font-semibold text-card-foreground">{alarms.length}</p>
+<div class="space-y-6">
+	<!-- Header with Dropdown -->
+	<div class="flex items-center justify-between">
+		<h1 class="text-sm font-semibold text-card-foreground">Alarm Status Overview</h1>
+		<div class="flex items-center gap-2">
+			<span class="text-xs text-muted-foreground font-medium">Process:</span>
+			{#if processesList.length > 0}
+				<select
+					bind:value={selectedProcess}
+					class="rounded border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
+				>
+					{#each processesList as p}
+						<option value={p}>{p}</option>
+					{/each}
+				</select>
+			{:else}
+				<span class="text-xs text-muted-foreground italic">Loading processes...</span>
+			{/if}
 		</div>
 	</div>
 
-	<!-- Filters -->
-	<div class="flex items-center gap-2">
-		<span class="text-xs text-muted-foreground">State:</span>
-		{#each ['all', 'active', 'cleared'] as f}
-			<button
-				onclick={() => (filter = f as typeof filter)}
-				class="rounded-full px-3 py-1 text-xs transition-colors {filter === f
-					? 'bg-primary text-primary-foreground'
-					: 'border border-border text-muted-foreground hover:bg-muted'}"
-			>{f}</button>
-		{/each}
-		<span class="ml-4 text-xs text-muted-foreground">Severity:</span>
-		{#each ['all', 'critical', 'warning', 'info'] as s}
-			<button
-				onclick={() => (severityFilter = s as typeof severityFilter)}
-				class="rounded-full px-3 py-1 text-xs transition-colors {severityFilter === s
-					? 'bg-primary text-primary-foreground'
-					: 'border border-border text-muted-foreground hover:bg-muted'}"
-			>{s}</button>
+	<!-- Summary Row -->
+	<div class="grid grid-cols-2 gap-3">
+		{#each Object.entries(summary) as [status, count]}
+			{@const label = statusLabels[status as keyof typeof statusLabels] || status}
+			<div class="rounded-lg border p-4 text-center transition-all duration-200" style={getStatusStyle(status)}>
+				<div class="flex items-center justify-center gap-1.5">
+					<span class="h-2 w-2 rounded-full {status === 'alarm' && count > 0 ? 'animate-pulse' : ''}" style="background-color: var(--status-color);"></span>
+					<span class="text-xs text-muted-foreground">{label}</span>
+				</div>
+				<p class="mt-1 text-3xl font-semibold" style="color: var(--status-color);">{count}</p>
+			</div>
 		{/each}
 	</div>
 
-	<!-- Table -->
+	<!-- Select Machine (Collapsible) -->
 	<div class="rounded-lg border border-border bg-card overflow-hidden">
-		<table class="w-full text-xs">
-			<thead class="border-b border-border bg-muted/50">
-				<tr>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Severity</th>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Process / Device</th>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Message</th>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Time</th>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">State</th>
-					<th class="px-4 py-2.5 text-left font-medium text-muted-foreground"></th>
-				</tr>
-			</thead>
-			<tbody class="divide-y divide-border">
-				{#each filtered as alarm (alarm.id)}
-					<tr class="hover:bg-muted/30 transition-colors">
-						<td class="px-4 py-2.5">
-							<div class="flex items-center gap-1.5">
-								<span class="h-1.5 w-1.5 rounded-full {dotColor(alarm.severity)}"></span>
-								<span class="rounded px-1.5 py-0.5 text-[10px] font-medium uppercase {severityColor(alarm.severity)}">
-									{alarm.severity}
-								</span>
-							</div>
-						</td>
-						<td class="px-4 py-2.5 font-medium text-foreground">{alarm.process} / {alarm.device}</td>
-						<td class="px-4 py-2.5 text-muted-foreground max-w-xs truncate">{alarm.message}</td>
-						<td class="px-4 py-2.5 text-muted-foreground whitespace-nowrap">{formatTime(alarm.timestamp)}</td>
-						<td class="px-4 py-2.5">
-							<span class="rounded-full px-2 py-0.5 text-[10px] font-medium {alarm.state === 'active' ? 'bg-red-500/10 text-red-600 dark:text-red-400' : 'bg-green-500/10 text-green-600 dark:text-green-400'}">
-								{alarm.state}
-							</span>
-						</td>
-						<td class="px-4 py-2.5">
-							{#if alarm.state === 'active'}
-								<button
-									onclick={() => acknowledge(alarm.id)}
-									class="rounded border border-border px-2 py-0.5 text-[10px] text-muted-foreground hover:bg-muted transition-colors"
-								>Ack</button>
-							{/if}
-						</td>
-					</tr>
-				{:else}
-					<tr>
-						<td colspan="6" class="px-4 py-8 text-center text-muted-foreground">No alarms found</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+		<button 
+			type="button"
+			onclick={() => (selectExpanded = !selectExpanded)}
+			class="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-card-foreground hover:bg-muted/30 transition-colors"
+		>
+			<span>Select Devices to Monitor (Max 18)</span>
+			<div class="flex items-center gap-2 text-muted-foreground font-normal">
+				<span>{selectedDevices.length} / 18 selected</span>
+				<span class="text-[10px]">{selectExpanded ? '▲' : '▼'}</span>
+			</div>
+		</button>
+		
+		{#if selectExpanded}
+			<div class="p-4 border-t border-border bg-card/50">
+				<div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1.5 border border-border/50 rounded bg-background/50">
+					{#each activeDevices as dev}
+						{@const isChecked = selectedDevices.includes(dev.device)}
+						<label 
+							class="flex items-center gap-1.5 px-2.5 py-1.5 rounded border text-xs cursor-pointer select-none transition-all
+							{isChecked ? 'bg-primary/10 border-primary text-primary font-medium' : 'bg-card border-border text-muted-foreground hover:bg-muted'}"
+						>
+							<input 
+								type="checkbox" 
+								checked={isChecked}
+								disabled={!isChecked && selectedDevices.length >= 18}
+								onchange={(e) => {
+									if (e.currentTarget.checked) {
+										if (selectedDevices.length < 18) {
+											selectedDevices = [...selectedDevices, dev.device];
+										}
+									} else {
+										selectedDevices = selectedDevices.filter(id => id !== dev.device);
+									}
+								}}
+								class="h-3.5 w-3.5 rounded border-border text-primary focus:ring-primary focus:ring-offset-background"
+							/>
+							<span>{dev.device}</span>
+						</label>
+					{/each}
+				</div>
+			</div>
+		{/if}
 	</div>
+
+	<!-- Machine Grid -->
+	<div class="grid grid-cols-2 gap-3 lg:grid-cols-6">
+		{#each displayedDevices as dev}
+			{@const record = alarmMap[dev.device]}
+			{@const rawStat = record ? record.status : 'normal'}
+			{@const stat = resolveAlarmStatus(rawStat)}
+			{@const timestamp = record ? record.timestamp : ''}
+			{@const label = stat === 'alarm' ? rawStat : 'Normal'}
+			<div class="rounded-lg border p-4 transition-all hover:shadow-sm" style={getStatusStyle(stat)}>
+				<!-- Header -->
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-2">
+						<span class="h-2.5 w-2.5 rounded-full {stat === 'alarm' ? 'animate-pulse' : ''}" style="background-color: var(--status-color);"></span>
+						<p class="text-md font-semibold text-foreground">{dev.device}</p>
+					</div>
+					<span class="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase text-muted-foreground">
+						{dev.process}
+					</span>
+				</div>
+
+				<!-- Status Badge -->
+				<p class="mt-1 text-md font-medium capitalize" style="color: var(--status-color);">
+					{label}
+				</p>
+
+				<!-- Timestamp -->
+				<p class="mt-2 text-[15px] text-muted-foreground whitespace-nowrap">
+					Last Update: {formatTime(timestamp)}
+				</p>
+			</div>
+		{/each}
+	</div>
+
+	<!-- Pagination Footer (Only shown when not filtering by specific selections) -->
+	{#if selectedDevices.length === 0}
+		<div class="flex items-center justify-between border-t border-border px-4 py-2.5 bg-muted/20 rounded-lg">
+			<p class="text-xs text-muted-foreground">
+				Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, activeDevices.length)} of {activeDevices.length} rows
+			</p>
+			<div class="flex items-center gap-1.5">
+				<button
+					onclick={() => (currentPage = Math.max(1, currentPage - 1))}
+					disabled={currentPage === 1}
+					class="rounded border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
+				>
+					Previous
+				</button>
+				<span class="text-xs text-muted-foreground px-2">Page {currentPage} of {totalPages}</span>
+				<button
+					onclick={() => (currentPage = Math.min(totalPages, currentPage + 1))}
+					disabled={currentPage === totalPages}
+					class="rounded border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
+				>
+					Next
+				</button>
+			</div>
+		</div>
+	{/if}
 </div>
