@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 			fetch('http://localhost:8001/api/v1/columns'),
 			fetch('http://localhost:8001/api/v1/projects'),
 			fetch('http://localhost:8001/api/v1/statuses'),
-			fetch('http://localhost:8001/api/v1/alarms')
+			fetch('http://localhost:8001/api/v1/alarms') 
 		]);
 
 		const users = usersRes.ok ? await usersRes.json() : [];

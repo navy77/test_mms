@@ -73,3 +73,11 @@ class MonthlyDeviceResponse(BaseModel):
     device: str
     data: List[DeviceSegment]
 
+
+class DeviceStatusCountResponse(BaseModel):
+    process: str
+    online: int
+    offline: int
+    communication_fail: int
+    total: int
+

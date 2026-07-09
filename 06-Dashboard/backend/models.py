@@ -42,6 +42,7 @@ class ColumnCreate(BaseModel):
     process: str = Field(..., min_length=1, description="Process name")
     column_name: str = Field(..., min_length=1, description="Column name")
     column_type: str = Field(..., min_length=1, description="Column data type (e.g. String, Float32)")
+    column_key: bool = Field(False, description="Is this a key/indexing column (True) or a data column (False)?")
 
 class ColumnUpdate(BaseModel):
     old_process: str = Field(..., min_length=1, description="Current process name")
@@ -49,12 +50,14 @@ class ColumnUpdate(BaseModel):
     new_process: str = Field(..., min_length=1, description="New process name")
     new_column_name: str = Field(..., min_length=1, description="New column name")
     new_column_type: str = Field(..., min_length=1, description="New column data type")
+    new_column_key: bool = Field(False, description="New column key status (True = key, False = data)")
 
 class ColumnResponse(BaseModel):
     last_update: Optional[datetime] = None
     process: str
     column_name: str
     column_type: str
+    column_key: bool
 
 
 # Project Config schemas

@@ -81,6 +81,7 @@ class DeviceChecker:
         try:
             # 2. Get latest data from Redis hash key (default: rt_mqtt)
             redis_data = self.redis_client.hgetall(self.redis_key)
+
             latest_device_data = {}
             for topic_bytes, msg_bytes in redis_data.items():
                 try:
@@ -218,7 +219,7 @@ def main():
     
     redis_host = os.getenv("REDIS_HOST", "redis").strip().strip("'\"")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
-    redis_queue_key = os.getenv("REDIS_QUEUE_KEY", "rt_mqtt").strip().strip("'\"")
+    redis_hash_key = os.getenv("REDIS_HASH_KEY", "rt_mqtt").strip().strip("'\"")
     
     period = int(os.getenv("PERIOD", 300))
     
@@ -231,7 +232,7 @@ def main():
     checker = DeviceChecker(
         redis_host=redis_host,
         redis_port=redis_port,
-        redis_key=redis_queue_key,
+        redis_key=redis_hash_key,
         mqtt_broker=mqtt_broker,
         mqtt_port=mqtt_port,
         mqtt_status_topic=mqtt_status_topic,

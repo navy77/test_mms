@@ -70,6 +70,7 @@ output:
             columns:
               - process
               - device
+              - model
               - data1
               - data2
               - data3
@@ -79,6 +80,7 @@ output:
               root = [ 
                 this.process,
                 this.device,
+                this.payload.parse_json().catch({}).model,
                 this.payload.parse_json().catch({}).data1.number().catch(0.0),
                 this.payload.parse_json().catch({}).data2.number().catch(0.0),
                 this.payload.parse_json().catch({}).data3.number().catch(0.0),

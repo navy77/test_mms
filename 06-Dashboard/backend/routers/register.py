@@ -81,7 +81,7 @@ def update_user(username: str, update_data: UserUpdate, client = Depends(get_ch_
         
         # Update user
         client.command(
-            "ALTER TABLE user_register_tb UPDATE password = %(pwd)s, role = %(role)s, last_update = now() WHERE user = %(u)s",
+            "ALTER TABLE user_register_tb UPDATE password = %(pwd)s, role = %(role)s WHERE user = %(u)s",
             parameters={'pwd': update_data.password, 'role': update_data.role, 'u': username}
         )
         return {"message": f"User '{username}' updated successfully"}
@@ -172,7 +172,7 @@ def update_device(update_data: DeviceUpdate, client = Depends(get_ch_client)):
         
         # Update device registration
         client.command(
-            "ALTER TABLE device_register_tb UPDATE process = %(np)s, device = %(nd)s, last_update = now() WHERE process = %(op)s AND device = %(od)s",
+            "ALTER TABLE device_register_tb UPDATE process = %(np)s, device = %(nd)s WHERE process = %(op)s AND device = %(od)s",
             parameters={'np': update_data.new_process, 'nd': update_data.new_device, 'op': update_data.old_process, 'od': update_data.old_device}
         )
         return {"message": "Device registration updated successfully"}
@@ -215,7 +215,7 @@ def delete_device(process: str, device: str, client = Depends(get_ch_client)):
 def get_columns(client = Depends(get_ch_client)):
     logger.info("Fetching all registered columns")
     try:
-        result = client.query("SELECT last_update, process, column_name, column_type FROM columns_register_tb ORDER BY last_update DESC")
+        result = client.query("SELECT last_update, process, column_name, column_type, column_key FROM columns_register_tb ORDER BY last_update DESC")
         return format_result(result)
     except Exception as e:
         logger.error(f"Error fetching columns: {e}")
@@ -223,7 +223,7 @@ def get_columns(client = Depends(get_ch_client)):
 
 @router.post("/columns", status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_admin)])
 def create_column(column_data: ColumnCreate, client = Depends(get_ch_client)):
-    logger.info(f"Registering column: {column_data.process}/{column_data.column_name} ({column_data.column_type})")
+    logger.info(f"Registering column: {column_data.process}/{column_data.column_name} ({column_data.column_type}, key={column_data.column_key})")
     try:
         # Check for duplicate
         dup_check = client.query(
@@ -236,8 +236,8 @@ def create_column(column_data: ColumnCreate, client = Depends(get_ch_client)):
         # Insert column
         client.insert(
             'columns_register_tb',
-            [[column_data.process, column_data.column_name, column_data.column_type]],
-            column_names=['process', 'column_name', 'column_type']
+            [[column_data.process, column_data.column_name, column_data.column_type, column_data.column_key]],
+            column_names=['process', 'column_name', 'column_type', 'column_key']
         )
         return {"message": f"Column '{column_data.column_name}' registered under process '{column_data.process}'"}
     except HTTPException:
@@ -269,11 +269,12 @@ def update_column(update_data: ColumnUpdate, client = Depends(get_ch_client)):
         
         # Update column registration
         client.command(
-            "ALTER TABLE columns_register_tb UPDATE process = %(np)s, column_name = %(nc)s, column_type = %(nt)s, last_update = now() WHERE process = %(op)s AND column_name = %(oc)s",
+            "ALTER TABLE columns_register_tb UPDATE process = %(np)s, column_name = %(nc)s, column_type = %(nt)s, column_key = %(nk)s WHERE process = %(op)s AND column_name = %(oc)s",
             parameters={
                 'np': update_data.new_process,
                 'nc': update_data.new_column_name,
                 'nt': update_data.new_column_type,
+                'nk': update_data.new_column_key,
                 'op': update_data.old_process,
                 'oc': update_data.old_column_name
             }
@@ -357,7 +358,7 @@ def update_project(items_key: str, update_data: ProjectUpdate, client = Depends(
         
         # Update item
         client.command(
-            "ALTER TABLE project_register_tb UPDATE value = %(val)s, last_update = now() WHERE items = %(k)s",
+            "ALTER TABLE project_register_tb UPDATE value = %(val)s WHERE items = %(k)s",
             parameters={'val': update_data.value, 'k': items_key}
         )
         return {"message": f"Configuration item '{items_key}' updated successfully"}
@@ -448,7 +449,7 @@ def update_status(update_data: StatusRegisterUpdate, client = Depends(get_ch_cli
         
         # Update status registration
         client.command(
-            "ALTER TABLE status_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s, last_update = now() WHERE process = %(op)s AND status = %(os)s",
+            "ALTER TABLE status_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
             parameters={
                 'np': update_data.new_process,
                 'ns': update_data.new_status,
@@ -551,7 +552,7 @@ def update_alarm(update_data: AlarmRegisterUpdate, client = Depends(get_ch_clien
         
         # Update alarm registration
         client.command(
-            "ALTER TABLE alarm_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s, last_update = now() WHERE process = %(op)s AND status = %(os)s",
+            "ALTER TABLE alarm_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
             parameters={
                 'np': update_data.new_process,
                 'ns': update_data.new_status,

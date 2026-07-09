@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Path, status
 from database import get_ch_client, format_result
-from models import DeviceResponse, DailyDeviceResponse, MonthlyDeviceResponse, DeviceSegment
+from models import DeviceResponse, DailyDeviceResponse, MonthlyDeviceResponse, DeviceSegment, DeviceStatusCountResponse
 
 logger = logging.getLogger("RESTBackend.Routers.Device")
 router = APIRouter(prefix="/api/v1/device", tags=["Device"])
@@ -317,6 +317,67 @@ def group_device_by_month(
     return results
 
 # 1. Currently Endpoints
+@router.get("/currently/status/{process}", response_model=DeviceStatusCountResponse)
+def get_currently_process_status(
+    process: str = Path(..., description="The process identifier")
+):
+    """
+    Get the count of devices in each status (online, offline, no data) currently for the given process.
+    """
+    client = get_ch_client()
+    try:
+        # 1. Get all registered devices for this process
+        registered_devices = get_registered_devices(client, process)
+        if not registered_devices:
+            return DeviceStatusCountResponse(
+                process=process,
+                online=0,
+                offline=0,
+                communication_fail=0,
+                total=0
+            )
+            
+        # 2. Get the latest status of each device in the process
+        query = """
+            SELECT device, status,modbus FROM device_tb
+            WHERE process = %(process)s
+            ORDER BY created_at DESC
+            LIMIT 1 BY device
+        """
+        result = client.query(query, parameters={"process": process})
+        latest_statuses = {row[0]: (row[1], row[2]) for row in result.result_rows}
+        # 3. Count statuses
+        online_count = 0
+        offline_count = 0
+        communication_fail = 0
+        
+        for dev in registered_devices:
+            dev_info = latest_statuses.get(dev)
+            if dev_info is None:
+                offline_count += 1
+            else:
+                stat, modbus = dev_info
+                if str(modbus) == "0" or modbus == 0:
+                    communication_fail += 1
+                elif stat.lower() == "online":
+                    online_count += 1
+                else:
+                    offline_count += 1
+                
+        return DeviceStatusCountResponse(
+            process=process,
+            online=online_count,
+            offline=offline_count,
+            communication_fail=communication_fail,
+            total=len(registered_devices)
+        )
+    except Exception as e:
+        logger.error(f"Error counting current device statuses: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
 @router.get("/currently/{process}", response_model=List[DeviceResponse])
 def get_currently_process(
     process: str = Path(..., description="The process identifier")
@@ -427,6 +488,7 @@ def get_currently_device(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
 
 # 2. Daily Endpoints
 @router.get("/daily/{process}", response_model=List[DailyDeviceResponse])
@@ -683,3 +745,4 @@ def get_monthly_device(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+

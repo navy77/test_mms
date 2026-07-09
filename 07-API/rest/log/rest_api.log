@@ -7428,3 +7428,52 @@
 2026-07-07 13:00:09,594 [INFO] RESTBackend.Routers.Data: Fetching daily data for process 'demo1' from 2026-07-01 07:00:00+07:00 to 2026-08-01 06:59:59.999999+07:00
 2026-07-07 13:33:02,670 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
 2026-07-08 14:14:10,320 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 08:23:22,875 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 10:59:07,993 [INFO] RESTBackend.Routers.Device: Fetching current device status for process 'demo1' from 2026-07-09 07:00:00+07:00 to 2026-07-09 10:59:07.993898+07:00
+2026-07-09 11:10:06,276 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:10:13,047 [INFO] RESTBackend.Routers.Device: Fetching current device status for device 'status/demo1' from 2026-07-09 07:00:00+07:00 to 2026-07-09 11:10:13.047532+07:00
+2026-07-09 11:10:33,372 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:32:02,265 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:32:59,143 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:33:01,168 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:02,800 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:03,751 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:05,093 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:06,162 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:31,630 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:32,639 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:41,559 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:33:45,173 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:33:46,135 [ERROR] RESTBackend.Routers.Device: Error counting current device statuses: 1 validation error for DeviceStatusCountResponse
+no_data
+  Field required [type=missing, input_value={'process': 'demo1', 'onl...fail': 0, 'total': 1000}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-07-09 11:34:13,430 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:43:12,490 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:45:32,427 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:46:37,632 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003
+2026-07-09 11:49:50,992 [INFO] RESTApi: Starting MMS REST API Server at http://0.0.0.0:8003

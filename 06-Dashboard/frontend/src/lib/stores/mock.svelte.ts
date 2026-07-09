@@ -61,6 +61,7 @@ export interface Column {
 	process: string;
 	column_name: string;
 	column_type: string;
+	column_key?: boolean;
 }
 
 // ─── Mock State ───────────────────────────────────────────────────────────────
@@ -111,13 +112,14 @@ export const registeredDevices = $state<RegisteredDevice[]>([
 ]);
 
 export const columns = $state<Column[]>([
-	{ id: 'c1', process: 'demo1', column_name: 'data1', column_type: 'Float32' },
-	{ id: 'c2', process: 'demo1', column_name: 'data2', column_type: 'Float32' },
-	{ id: 'c3', process: 'demo1', column_name: 'data3', column_type: 'Float32' },
-	{ id: 'c4', process: 'demo1', column_name: 'data4', column_type: 'Float32' },
-	{ id: 'c5', process: 'demo1', column_name: 'data5', column_type: 'Float32' },
-	{ id: 'c6', process: 'demo2', column_name: 'data1', column_type: 'Float32' },
-	{ id: 'c7', process: 'demo2', column_name: 'data2', column_type: 'Float32' },
+	{ id: 'c0', process: 'demo1', column_name: 'model', column_type: 'String', column_key: true },
+	{ id: 'c1', process: 'demo1', column_name: 'data1', column_type: 'Float32', column_key: false },
+	{ id: 'c2', process: 'demo1', column_name: 'data2', column_type: 'Float32', column_key: false },
+	{ id: 'c3', process: 'demo1', column_name: 'data3', column_type: 'Float32', column_key: false },
+	{ id: 'c4', process: 'demo1', column_name: 'data4', column_type: 'Float32', column_key: false },
+	{ id: 'c5', process: 'demo1', column_name: 'data5', column_type: 'Float32', column_key: false },
+	{ id: 'c6', process: 'demo2', column_name: 'data1', column_type: 'Float32', column_key: false },
+	{ id: 'c7', process: 'demo2', column_name: 'data2', column_type: 'Float32', column_key: false },
 ]);
 
 // ─── Derived Stats (computed) ─────────────────────────────────────────────────

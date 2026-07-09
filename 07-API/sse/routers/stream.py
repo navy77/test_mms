@@ -5,8 +5,49 @@ import asyncio
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import StreamingResponse
 from database import get_redis_client
+from datetime import datetime
 
 logger = logging.getLogger("SSEBackend.SSERouter")
+
+
+def get_device_status(timestamp_str: str) -> str:
+    """
+    Calculate device status ('online' or 'offline') based on timestamp age.
+    """
+    if not timestamp_str:
+        return "offline"
+    try:
+        try:
+            ts = datetime.fromisoformat(timestamp_str)
+        except ValueError:
+            if "." in timestamp_str:
+                ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S.%f")
+            else:
+                ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S")
+        
+        if ts.tzinfo is not None:
+            now_time = datetime.now(ts.tzinfo)
+        else:
+            now_time = datetime.now()
+            
+        diff = (now_time - ts).total_seconds()
+        return "online" if diff < 300 else "offline"
+    except Exception:
+        return "offline"
+
+def convert_device_status(payload_str: str) -> str:
+    """
+    Convert status from payload to stats key.
+    """
+    if not payload_str:
+        return "offline"
+    try:
+        data = json.loads(payload_str)
+        if isinstance(data, dict):
+            return str(data.get("status", payload_str))
+        return str(data)
+    except Exception:
+        return str(payload_str)
 
 class RealtimeCacheManager:
     def __init__(self):
@@ -54,6 +95,10 @@ class RealtimeCacheManager:
                     for topic, val_str in redis_data.items():
                         try:
                             msg = json.loads(val_str)
+                            if category == "mqtt":
+                                msg["status"] = get_device_status(msg.get("timestamp"))
+                            elif category == "status" or category == "alarm":
+                                msg["status"] = convert_device_status(msg.get("payload"))
                             parsed_data[topic] = msg
                         except Exception:
                             parts = topic.split('/')
@@ -64,7 +109,8 @@ class RealtimeCacheManager:
                                     "process": parts[2],
                                     "device": parts[3],
                                     "payload": val_str,
-                                    "timestamp": ""
+                                    "timestamp": "",
+                                    "status": "offline"
                                 }
                     self.cache[category] = parsed_data
                 except Exception as e:

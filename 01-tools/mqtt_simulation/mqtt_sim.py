@@ -175,8 +175,7 @@ class MQTTPublish:
             client.loop_stop()
             client.disconnect()
 
-    def run(self, msg_round):
-        qty_topic = 1000
+    def run(self, msg_round,qty_topic):
         print(f"Starting parallel MQTT simulation for {msg_round} rounds...")
         
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
@@ -191,4 +190,4 @@ class MQTTPublish:
 
 if __name__ == "__main__":
     publisher = MQTTPublish()
-    publisher.run(10)
+    publisher.run(10,1000)

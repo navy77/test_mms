@@ -120,11 +120,11 @@ VALUES ('demo1', 'model', 'String',true),
 
 INSERT INTO "configdb"."device_register_tb" (process, device) 
 SELECT 'demo1' AS process, concat('no_', toString(number + 1)) 
-AS device FROM numbers(500);
+AS device FROM numbers(1000);
 
-INSERT INTO "configdb"."device_register_tb" (process, device) 
-SELECT 'demo2' AS process, concat('no_', toString(number + 1)) 
-AS device FROM numbers(500);
+-- INSERT INTO "configdb"."device_register_tb" (process, device) 
+-- SELECT 'demo2' AS process, concat('no_', toString(number + 1)) 
+-- AS device FROM numbers(500);
 
 INSERT INTO "configdb"."user_register_tb" (user, password, role) 
 VALUES ('admin', 'admin', 'admin'),
@@ -132,6 +132,7 @@ VALUES ('admin', 'admin', 'admin'),
 
 INSERT INTO "configdb"."project_register_tb" (items, value) 
 VALUES ('division','mic'),
-('server_IP', '0.0.0.0');
+('server_IP', '0.0.0.0'),
+('record_period',60);
 
 

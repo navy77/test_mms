@@ -29,7 +29,7 @@
 	let formUser = $state({ user: '', password: '', role: 'user' as 'admin' | 'user' });
 	let formProject = $state({ items: '', value: '' });
 	let formDevice = $state({ process: '', device: '' });
-	let formColumn = $state({ process: '', column_name: '', column_type: 'Float32' });
+	let formColumn = $state({ process: '', column_name: '', column_type: 'Float32', column_key: false });
 	let formStatus = $state({ process: '', status: '', color: '#00cc00' });
 	let formAlarm = $state({ process: '', status: '', color: '#ff9933' });
 
@@ -123,8 +123,8 @@
 		formUser = { user: '', password: '', role: 'user' };
 		formProject = { items: '', value: '' };
 		formDevice = { process: '', device: '' };
-		formColumn = { process: '', column_name: '', column_type: 'Float32' };
-		formStatus = { process: '', status: '', color: '#00cc00' };
+		formColumn = { process: '', column_name: '', column_type: 'Float32', column_key: false };
+		formStatus = { process: '', status: 'run', color: '#00cc00' };
 		formAlarm = { process: '', status: '', color: '#ff9933' };
 		errorMsg = '';
 		modalOpen = true;
@@ -140,7 +140,7 @@
 		} else if (activeTab === 'devices') {
 			formDevice = { process: item.process, device: item.device };
 		} else if (activeTab === 'columns') {
-			formColumn = { process: item.process, column_name: item.column_name, column_type: item.column_type };
+			formColumn = { process: item.process, column_name: item.column_name, column_type: item.column_type, column_key: item.column_key || false };
 		} else if (activeTab === 'statuses') {
 			formStatus = { process: item.process, status: item.status, color: item.color };
 		} else if (activeTab === 'alarms') {
@@ -235,7 +235,8 @@
 							old_column_name: editTarget.column_name,
 							new_process: formColumn.process,
 							new_column_name: formColumn.column_name,
-							new_column_type: formColumn.column_type
+							new_column_type: formColumn.column_type,
+							new_column_key: formColumn.column_key
 						})
 					});
 					if (!res.ok) {
@@ -525,6 +526,7 @@
 						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Process</th>
 						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Column Name</th>
 						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Type</th>
+						<th class="px-4 py-2.5 text-left font-medium text-muted-foreground">Key Column</th>
 						<th class="px-4 py-2.5 text-right font-medium text-muted-foreground">Actions</th>
 					</tr>
 				</thead>
@@ -534,6 +536,13 @@
 							<td class="px-4 py-2.5 font-medium text-foreground">{c.process}</td>
 							<td class="px-4 py-2.5 text-muted-foreground">{c.column_name}</td>
 							<td class="px-4 py-2.5 font-mono text-muted-foreground">{c.column_type}</td>
+							<td class="px-4 py-2.5">
+								{#if c.column_key}
+									<span class="inline-flex items-center rounded-md bg-amber-500/10 px-2 py-1 text-[10px] font-medium text-amber-500 ring-1 ring-inset ring-amber-500/20">Key</span>
+								{:else}
+									<span class="inline-flex items-center rounded-md bg-blue-500/10 px-2 py-1 text-[10px] font-medium text-blue-500 ring-1 ring-inset ring-blue-500/20">Data</span>
+								{/if}
+							</td>
 							<td class="px-4 py-2.5 text-right">
 								<button onclick={() => openEdit(c)} class="mr-2 text-muted-foreground hover:text-foreground"><Pencil class="inline h-3 w-3" /></button>
 								<button onclick={() => deleteItem(c)} class="text-red-400 hover:text-red-600"><Trash2 class="inline h-3 w-3" /></button>
@@ -541,7 +550,7 @@
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="4" class="px-4 py-8 text-center text-muted-foreground">No columns registered</td>
+							<td colspan="5" class="px-4 py-8 text-center text-muted-foreground">No columns registered</td>
 						</tr>
 					{/each}
 				</tbody>
@@ -732,6 +741,10 @@
 							<option>UInt32</option>
 						</select>
 					</div>
+					<div class="flex items-center gap-2 pt-1">
+						<input type="checkbox" id="column_key" bind:checked={formColumn.column_key} class="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-background" />
+						<label for="column_key" class="text-xs font-medium text-muted-foreground cursor-pointer select-none">Is Key Column</label>
+					</div>
 				</div>
 
 			{:else if activeTab === 'statuses'}
@@ -742,7 +755,13 @@
 					</div>
 					<div>
 						<label class="mb-1 block text-xs text-muted-foreground">Status</label>
-						<input bind:value={formStatus.status} placeholder="e.g. run" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+						<select bind:value={formStatus.status} class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary cursor-pointer">
+							<option value="run">run</option>
+							<option value="alarm">alarm</option>
+							<option value="wait">wait</option>
+							<option value="stop">stop</option>
+							<option value="other">other</option>
+						</select>
 					</div>
 					<div>
 						<label class="mb-1 block text-xs text-muted-foreground">Color</label>
