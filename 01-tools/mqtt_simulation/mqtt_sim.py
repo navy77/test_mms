@@ -56,53 +56,7 @@ class MQTTPublish:
         client.loop_start()
         return client
 
-    # Original methods for backward compatibility
-    def pub_data(self, topic_col, qty_topic):
-        message_data = {}
-        for i in range(1, topic_col + 1):
-            key = f"data{i}"
-            message_data[key] = self.msg_loop
-
-        for j in range(1, qty_topic + 1):
-            topic = f"{self.topic_name1}no_{j}"
-            self.client.publish(topic, json.dumps(message_data))
-        self.msg_loop += 1
-
-    def pub_status(self, qty_topic):
-        for i in range(1, qty_topic + 1):
-            status = f"status_{random.randrange(5)}"
-            message_status = {"status": status}
-            topic = f"{self.topic_name2}no_{i}"
-            self.client.publish(topic, json.dumps(message_status))
-
-    def pub_alarm(self, qty_topic):
-        alarm = f"alarm_{random.randrange(10)}"
-        self.alarm_name = alarm
-        for i in range(1, qty_topic + 1):
-            message_alarm = {"status": self.alarm_name}
-            topic = f"{self.topic_name3}no_{i}"
-            self.client.publish(topic, json.dumps(message_alarm))
-
-    def pub_alarm_closed(self, qty_topic):
-        alarm_closed = f"{self.alarm_name}_"
-        for i in range(1, qty_topic + 1):
-            message_alarm = {"status": alarm_closed}
-            topic = f"{self.topic_name3}no_{i}"
-            self.client.publish(topic, json.dumps(message_alarm))
-
-    def pub_esp32(self, qty_topic):
-        for i in range(1, qty_topic + 1):
-            broker = 1
-            modbus = 1
-            mac_id = f"mac-{random.randrange(10)}"
-            message_esp32 = {
-                "broker": broker,
-                "modbus": modbus,
-                "mac_id": mac_id
-            }
-            topic = f"{self.topic_name4}no_{i}"
-            self.client.publish(topic, json.dumps(message_esp32))
-
+    
     # Parallel loop tasks
     def run_data_loop(self, msg_round, qty_topic):
         client = self._create_client("mqtt_pub_data")
@@ -111,26 +65,28 @@ class MQTTPublish:
             for i in range(1, msg_round + 1):
                 print(f"[Data] Publishing round {i}/{msg_round}...")
                 message_data = {f"data{k}": msg_loop for k in range(1, 6)}
+                message_data["model"] = "A"
                 for j in range(1, qty_topic + 1):
                     topic = f"{self.topic_name1}no_{j}"
                     client.publish(topic, json.dumps(message_data))
                 msg_loop += 1
-                time.sleep(0.5)
+                time.sleep(5)
         finally:
             client.loop_stop()
             client.disconnect()
 
     def run_status_loop(self, msg_round, qty_topic):
         client = self._create_client("mqtt_pub_status")
+        status_list = ["run","alarm","stop","wait"]
         try:
             for i in range(1, msg_round + 1):
                 print(f"[Status] Publishing round {i}/{msg_round}...")
                 for j in range(1, qty_topic + 1):
-                    status = f"status_{random.randrange(5)}"
+                    status = random.choice(status_list)
                     message_status = {"status": status}
                     topic = f"{self.topic_name2}no_{j}"
                     client.publish(topic, json.dumps(message_status))
-                time.sleep(0.5)
+                time.sleep(30)
         finally:
             client.loop_stop()
             client.disconnect()
@@ -140,18 +96,18 @@ class MQTTPublish:
         try:
             for i in range(1, msg_round + 1):
                 print(f"[Alarm] Publishing round {i}/{msg_round}...")
-                alarm_name = f"alarm_{random.randrange(10)}"
+                alarm_name = f"alarm_{random.randrange(1,5)}"
                 message_alarm = {"status": alarm_name}
                 for j in range(1, qty_topic + 1):
                     topic = f"{self.topic_name3}no_{j}"
                     client.publish(topic, json.dumps(message_alarm))
-                time.sleep(10.0)
+                time.sleep(30.0)
 
                 message_alarm_closed = {"status": f"{alarm_name}_"}
                 for j in range(1, qty_topic + 1):
                     topic = f"{self.topic_name3}no_{j}"
                     client.publish(topic, json.dumps(message_alarm_closed))
-                time.sleep(0.3)
+                time.sleep(1)
         finally:
             client.loop_stop()
             client.disconnect()
@@ -170,7 +126,7 @@ class MQTTPublish:
                     }
                     topic = f"{self.topic_name4}no_{j}"
                     client.publish(topic, json.dumps(message_esp32))
-                time.sleep(0.5)
+                time.sleep(300)
         finally:
             client.loop_stop()
             client.disconnect()
@@ -190,4 +146,4 @@ class MQTTPublish:
 
 if __name__ == "__main__":
     publisher = MQTTPublish()
-    publisher.run(10,1000)
+    publisher.run(10,100)

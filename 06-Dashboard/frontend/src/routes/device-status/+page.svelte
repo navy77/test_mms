@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import { LoaderCircle } from 'lucide-svelte';
 
 	let { data } = $props();
 
 	const processesList = $derived(data.processes || []);
-	let selectedProcess = $state(data.initialProcess || '');
+	let selectedProcess = $state('');
 
 	$effect(() => {
 		selectedProcess = data.initialProcess || '';
 	});
 	
-	let counts = $state(data.initialCounts || {
+	let counts = $state({
 		total: 0,
 		online: 0,
 		offline: 0,
@@ -184,7 +185,7 @@
 	<div class="grid grid-cols-4 gap-3 relative">
 		{#if loadingCounts}
 			<div class="absolute inset-0 bg-background/50 flex items-center justify-center z-10 rounded-lg">
-				<Loader2 class="h-5 w-5 animate-spin text-primary" />
+				<LoaderCircle class="h-5 w-5 animate-spin text-primary" />
 			</div>
 		{/if}
 		<div class="rounded-lg border border-border bg-card p-3">

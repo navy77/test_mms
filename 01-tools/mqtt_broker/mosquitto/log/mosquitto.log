@@ -395,3 +395,59 @@ To fix this, use `chmod 0700 /mosquitto/config/acl`.
 1783474219: New client connected from 172.21.0.1:35844 as auto-670D180D-9F55-FE92-9991-C873DD3D7C8D (p4, c1, k60).
 1783476016: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1783477817: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783600993: mosquitto version 2.1.2 starting
+1783600993: Config loaded from /mosquitto/config/mosquitto.conf.
+1783600993: Bridge support available.
+1783600993: Persistence support available.
+1783600993: TLS support available.
+1783600993: TLS-PSK support available.
+1783600993: Websockets support available.
+1783600993: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783600993: Warning: File /mosquitto/config/acl owner is not mosquitto. Future versions will refuse to load this file.To fix this, use `chown mosquitto /mosquitto/config/acl`.
+
+1783600993: Warning: File /mosquitto/config/acl group is not mosquitto. Future versions will refuse to load this file.
+
+1783600993: Plugin builtin-security has registered to receive 'acl-check' events.
+1783600993: Opening ipv4 listen socket on port 1883.
+1783600993: mosquitto version 2.1.2 running
+1783601187: New connection from 172.18.0.1:46528 on port 1883.
+1783601187: New client connected from 172.18.0.1:46528 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783601187: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783601206: New connection from 172.18.0.1:48526 on port 1883.
+1783601206: New client connected from 172.18.0.1:48526 as nodered_6354cbb3ab6e574b (p4, c1, k60).
+1783601245: Client nodered_6354cbb3ab6e574b [172.18.0.1:48526] disconnected.
+1783601600: New connection from 172.18.0.1:43052 on port 1883.
+1783601600: New client connected from 172.18.0.1:43052 as mqtt-explorer (p4, c1, k60).
+1783601966: New connection from 172.18.0.1:57720 on port 1883.
+1783601966: New connection from 172.18.0.1:57722 on port 1883.
+1783601966: New connection from 172.18.0.1:57732 on port 1883.
+1783601966: New connection from 172.18.0.1:57744 on port 1883.
+1783601966: New client connected from 172.18.0.1:57720 as mqtt_pub_alarm (p4, c1, k60).
+1783601966: New client connected from 172.18.0.1:57722 as mqtt_pub_status (p4, c1, k60).
+1783601966: New client connected from 172.18.0.1:57732 as mqtt_pub_esp32 (p4, c1, k60).
+1783601966: New client connected from 172.18.0.1:57744 as mqtt_pub_data (p4, c1, k60).
+1783601971: Client mqtt_pub_esp32 [172.18.0.1:57732] disconnected.
+1783602016: Client mqtt_pub_data [172.18.0.1:57744] disconnected.
+1783602229: Client mqtt_pub_alarm [172.18.0.1:57720] disconnected: connection closed by client.
+1783602229: Client mqtt_pub_status [172.18.0.1:57722] disconnected: connection closed by client.
+1783602307: Client mqtt-explorer [172.18.0.1:43052] disconnected.
+1783602307: New connection from 172.18.0.1:44292 on port 1883.
+1783602307: New client connected from 172.18.0.1:44292 as mqtt-explorer (p4, c1, k60).
+1783602321: New connection from 172.18.0.1:50764 on port 1883.
+1783602321: New client connected from 172.18.0.1:50764 as mqtt_sim_nodered (p4, c1, k60).
+1783602524: Client mqtt-explorer [172.18.0.1:44292] disconnected.
+1783602524: New connection from 172.18.0.1:51154 on port 1883.
+1783602524: New client connected from 172.18.0.1:51154 as mqtt-explorer (p4, c1, k60).
+1783602557: Client mqtt-explorer [172.18.0.1:51154] disconnected.
+1783602564: New connection from 172.18.0.1:45454 on port 1883.
+1783602564: New client connected from 172.18.0.1:45454 as mqtt-explorer (p4, c1, k60).
+1783602689: New connection from 172.18.0.1:34422 on port 1883.
+1783602689: New client connected from 172.18.0.1:34422 as auto-C2CEBCCC-9C65-6FDA-8562-94673089A1A5 (p4, c1, k60).
+1783602793: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783604594: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783606395: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783608196: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783609997: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783611798: Saving in-memory database to /mosquitto/data//mosquitto.db.

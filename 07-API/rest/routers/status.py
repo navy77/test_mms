@@ -1,11 +1,14 @@
 import os
 import logging
 import calendar
+import asyncio
+import json
 from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Path, status
+from fastapi.responses import StreamingResponse
 from database import get_ch_client, format_result
-from models import StatusResponse, DailyStatusResponse, MonthlyStatusResponse, StatusSegment
+from models import StatusResponse, DailyStatusResponse, MonthlyStatusResponse, StatusSegment, TimelineResponse, TimelineSegment
 
 logger = logging.getLogger("RESTBackend.Routers.Status")
 router = APIRouter(prefix="/api/v1/status", tags=["Status"])
@@ -154,6 +157,98 @@ def calculate_status_ratio(
         
     return results
 
+
+def calculate_utilization_percentage(segments: List[StatusSegment]) -> float:
+    """
+    Calculate utilization percentage, excluding 'stop' and 'no data' statuses.
+    Formula: run / (alarm + wait + other + run)
+    """
+    run_duration = sum(seg.duration for seg in segments if seg.status == "run")
+    active_duration = sum(seg.duration for seg in segments if seg.status not in ["stop", "no data"])
+    return round((run_duration / active_duration) * 100, 1) if active_duration > 0 else 0.0
+
+
+def calculate_status_timeline(
+    records: List[Dict[str, Any]], 
+    start_time: datetime, 
+    end_time: datetime,
+    initial_status: Optional[Dict[str, Any]],
+    device: str
+) -> List[TimelineSegment]:
+    """
+    Given status records for a device, calculates the sequential timeline of status states.
+    Consecutive status updates with the same status value are merged into a single segment.
+    """
+    if start_time.tzinfo is None:
+        start_time = start_time.replace(tzinfo=TZ_BANGKOK)
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=TZ_BANGKOK)
+
+    # Establish initial state at start_time
+    if initial_status:
+        init_val = initial_status.get("status", "unknown")
+    else:
+        init_val = "no data"
+        
+    raw_changes = [{"created_at": start_time, "status": init_val}]
+
+    # Parse and filter records to make sure they are within bounds
+    parsed_records = []
+    for r in records:
+        ca = r.get("created_at")
+        if isinstance(ca, str):
+            ca = datetime.fromisoformat(ca)
+        if ca.tzinfo is None:
+            ca = ca.replace(tzinfo=TZ_BANGKOK)
+            
+        if start_time <= ca <= end_time:
+            parsed_records.append({
+                "created_at": ca,
+                "status": str(r.get("status", "unknown"))
+            })
+
+    parsed_records.sort(key=lambda x: x["created_at"])
+    raw_changes.extend(parsed_records)
+
+    # Merge contiguous segments with same status
+    merged_changes = []
+    for change in raw_changes:
+        if not merged_changes:
+            merged_changes.append(change)
+        else:
+            if merged_changes[-1]["status"] == change["status"]:
+                continue
+            else:
+                merged_changes.append(change)
+
+    # Now generate the timeline segments
+    timeline = []
+    for i in range(len(merged_changes)):
+        curr = merged_changes[i]
+        curr_ts = curr["created_at"]
+        curr_status = curr["status"]
+
+        if i < len(merged_changes) - 1:
+            next_ts = merged_changes[i+1]["created_at"]
+        else:
+            next_ts = end_time
+
+        duration = max(0.0, (next_ts - curr_ts).total_seconds())
+        duration = round(duration, 1)
+
+        # Output segment if duration > 0 or if it's the only segment
+        if duration > 0 or len(merged_changes) == 1:
+            timeline.append(
+                TimelineSegment(
+                    status=curr_status,
+                    start_time=curr_ts.isoformat(),
+                    end_time=next_ts.isoformat(),
+                    duration=duration
+                )
+            )
+
+    return timeline
+
 def group_status_by_device(
     records: List[Dict[str, Any]],
     devices: List[str],
@@ -179,10 +274,12 @@ def group_status_by_device(
         dev_records = groups.get(dev, [])
         init_status = initial_statuses.get(dev)
         segments = calculate_status_ratio(dev_records, start_time, end_time, init_status, dev)
+        utilize = calculate_utilization_percentage(segments)
         results.append(
             StatusResponse(
                 device=dev,
-                data=segments
+                data=segments,
+                utilize=utilize
             )
         )
     return results
@@ -274,7 +371,8 @@ def group_status_by_prod_date(
                 DailyStatusResponse(
                     date=d_str,
                     device=dev,
-                    data=segments
+                    data=segments,
+                    utilize=calculate_utilization_percentage(segments)
                 )
             )
             
@@ -310,11 +408,13 @@ def group_status_by_month(
         dev_records = groups.get(dev, [])
         init_status = initial_statuses.get(dev)
         segments = calculate_status_ratio(dev_records, start_time, end_time, init_status, dev)
+        utilize = calculate_utilization_percentage(segments)
         results.append(
             MonthlyStatusResponse(
                 month=month_str,
                 device=dev,
-                data=segments
+                data=segments,
+                utilize=utilize
             )
         )
     return results
@@ -686,3 +786,272 @@ def get_monthly_device(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
         )
+
+# 4. State status
+@router.get("/state/{process}/{device}", response_model=TimelineResponse)
+def get_state_status(
+    process: str = Path(..., description="The process identifier"),
+    device: str = Path(..., description="The device identifier")
+):
+    """
+    Get sequential status states for a specific device from 07:00 of the current production day until now.
+    Suitable for timeline chart visualization.
+    """
+    now = get_now_bangkok()
+    start_time, _ = get_production_day_range(now)
+    
+    logger.info(f"Fetching state timeline for device '{process}/{device}' from {start_time} to {now}")
+    client = get_ch_client()
+    try:
+        # Fetch initial status of the device before start_time
+        initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
+        init_status = initial_statuses.get(device)
+
+        # Query all status records from start_time until now
+        query = """
+            SELECT process, device, status, created_at
+            FROM status_tb
+            WHERE process = %(process)s
+              AND device = %(device)s
+              AND created_at >= %(start_time)s
+              AND created_at <= %(end_time)s
+            ORDER BY created_at ASC
+        """
+        result = client.query(
+            query,
+            parameters={
+                "process": process,
+                "device": device,
+                "start_time": start_time,
+                "end_time": now
+            }
+        )
+        records = format_result(result)
+        
+        has_data = len(records) > 0 or init_status is not None
+        if not has_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Item not found"
+            )
+            
+        timeline_data = calculate_status_timeline(records, start_time, now, init_status, device)
+        return TimelineResponse(device=device, data=timeline_data)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching device state status: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+# 5. SSE currently status stream
+@router.get("/stream/currently/{process}/{device}")
+async def stream_currently_device(
+    process: str = Path(..., description="The process identifier"),
+    device: str = Path(..., description="The device identifier")
+):
+    """
+    SSE stream yielding currently status ratio segments for a specific device.
+    Fires every 10 seconds.
+    """
+    async def event_generator():
+        logger.info(f"SSE currently status stream started for device '{process}/{device}'")
+        try:
+            while True:
+                now = get_now_bangkok()
+                start_time, end_time = get_production_day_range(now)
+                client = get_ch_client()
+                
+                # Retrieve initial status of the device before start_time
+                initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
+                init_status = initial_statuses.get(device)
+
+                query = """
+                    SELECT process, device, status, created_at
+                    FROM status_tb
+                    WHERE process = %(process)s
+                      AND device = %(device)s
+                      AND created_at >= %(start_time)s
+                      AND created_at <= %(end_time)s
+                    ORDER BY created_at ASC
+                """
+                # Run query in executor since clickhouse_connect query is synchronous
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(
+                    None,
+                    lambda: client.query(
+                        query,
+                        parameters={
+                            "process": process,
+                            "device": device,
+                            "start_time": start_time,
+                            "end_time": now
+                        }
+                    )
+                )
+                records = format_result(result)
+                
+                # We calculate ratio segments
+                segments = calculate_status_ratio(records, start_time, now, init_status, device)
+                utilize = calculate_utilization_percentage(segments)
+                response_data = {
+                    "device": device,
+                    "data": [seg.dict() if hasattr(seg, "dict") else seg for seg in segments],
+                    "utilize": utilize
+                }
+                yield f"data: {json.dumps(response_data)}\n\n"
+                await asyncio.sleep(30)
+        except asyncio.CancelledError:
+            logger.info(f"SSE currently status stream cancelled for device '{process}/{device}'")
+            raise
+        except Exception as e:
+            logger.error(f"Error in SSE currently status stream: {e}")
+            yield f"event: error\ndata: {str(e)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+# 6. SSE state status stream
+@router.get("/stream/state/{process}/{device}")
+async def stream_state_device(
+    process: str = Path(..., description="The process identifier"),
+    device: str = Path(..., description="The device identifier")
+):
+    """
+    SSE stream yielding state timeline segments for a specific device.
+    Fires every 10 seconds.
+    """
+    async def event_generator():
+        logger.info(f"SSE state timeline stream started for device '{process}/{device}'")
+        try:
+            while True:
+                now = get_now_bangkok()
+                start_time, _ = get_production_day_range(now)
+                client = get_ch_client()
+                
+                # Fetch initial status of the device before start_time
+                initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
+                init_status = initial_statuses.get(device)
+
+                query = """
+                    SELECT process, device, status, created_at
+                    FROM status_tb
+                    WHERE process = %(process)s
+                      AND device = %(device)s
+                      AND created_at >= %(start_time)s
+                      AND created_at <= %(end_time)s
+                    ORDER BY created_at ASC
+                """
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(
+                    None,
+                    lambda: client.query(
+                        query,
+                        parameters={
+                            "process": process,
+                            "device": device,
+                            "start_time": start_time,
+                            "end_time": now
+                        }
+                    )
+                )
+                records = format_result(result)
+                
+                timeline_data = calculate_status_timeline(records, start_time, now, init_status, device)
+                response_data = {
+                    "device": device,
+                    "data": [seg.dict() if hasattr(seg, "dict") else seg for seg in timeline_data]
+                }
+                yield f"data: {json.dumps(response_data)}\n\n"
+                await asyncio.sleep(30)
+        except asyncio.CancelledError:
+            logger.info(f"SSE state timeline stream cancelled for device '{process}/{device}'")
+            raise
+        except Exception as e:
+            logger.error(f"Error in SSE state timeline stream: {e}")
+            yield f"event: error\ndata: {str(e)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+# 7. SSE daily status stream
+@router.get("/stream/daily/{process}/{device}")
+async def stream_daily_device(
+    process: str = Path(..., description="The process identifier"),
+    device: str = Path(..., description="The device identifier")
+):
+    """
+    SSE stream yielding daily status ratio segments for a specific device.
+    Fires every 10 seconds.
+    """
+    async def event_generator():
+        logger.info(f"SSE daily status stream started for device '{process}/{device}'")
+        try:
+            while True:
+                now = get_now_bangkok()
+                if now.hour < 7:
+                    prod_date = (now - timedelta(days=1)).date()
+                else:
+                    prod_date = now.date()
+                    
+                start_date = prod_date.replace(day=1)
+                last_day = calendar.monthrange(prod_date.year, prod_date.month)[1]
+                end_date = prod_date.replace(day=last_day)
+                
+                start_time = datetime.combine(start_date, datetime.min.time(), tzinfo=TZ_BANGKOK) + timedelta(hours=7)
+                end_time = datetime.combine(end_date, datetime.max.time(), tzinfo=TZ_BANGKOK)
+
+                client = get_ch_client()
+                initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
+
+                query = """
+                    SELECT process, device, status, created_at
+                    FROM status_tb
+                    WHERE process = %(process)s
+                      AND device = %(device)s
+                      AND created_at >= %(start_time)s
+                      AND created_at <= %(end_time)s
+                    ORDER BY created_at ASC
+                """
+                loop = asyncio.get_event_loop()
+                result = await loop.run_in_executor(
+                    None,
+                    lambda: client.query(
+                        query,
+                        parameters={
+                            "process": process,
+                            "device": device,
+                            "start_time": start_time,
+                            "end_time": end_time
+                        }
+                    )
+                )
+                records = format_result(result)
+                
+                daily_data = group_status_by_prod_date(records, [device], start_date, end_date, initial_statuses)
+                
+                response_list = []
+                for d in daily_data:
+                    response_list.append({
+                        "date": d.date,
+                        "device": d.device,
+                        "data": [seg.dict() if hasattr(seg, "dict") else seg for seg in d.data],
+                        "utilize": getattr(d, "utilize", 0.0)
+                    })
+                
+                yield f"data: {json.dumps(response_list)}\n\n"
+                await asyncio.sleep(30)
+        except asyncio.CancelledError:
+            logger.info(f"SSE daily status stream cancelled for device '{process}/{device}'")
+            raise
+        except Exception as e:
+            logger.error(f"Error in SSE daily status stream: {e}")
+            yield f"event: error\ndata: {str(e)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+

@@ -13,6 +13,7 @@
 		Settings,
 		ChevronLeft,
 		ChevronRight,
+		ChevronDown,
 		Moon,
 		Sun,
 		Activity,
@@ -23,12 +24,38 @@
 
 	let sidebarCollapsed = $state(false);
 	let darkMode = $state(false);
+	let subMenuOpen = $state<Record<string, boolean>>({
+		'Machine Status': true,
+		'Alarm Status': false
+	});
 
-	const navItems = $derived([
+	interface NavItem {
+		href?: string;
+		label: string;
+		icon: any;
+		subItems?: { href: string; label: string }[];
+	}
+
+	const navItems: NavItem[] = $derived([
 		{ href: '/', label: 'Home', icon: LayoutDashboard },
 		{ href: '/production', label: 'Production', icon: Factory },
-		{ href: '/machine-status', label: 'Machine Status', icon: Cpu },
-		{ href: '/alarm-status', label: 'Alarm Status', icon: Bell },
+		{   href: '/machine-status',
+			label: 'Machine Status', 
+			icon: Cpu,
+			subItems: [
+				{ href: '/machine-status', label: 'Overview' },
+				{ href: '/machine-status-timeline', label: 'Timeline' },
+				{ href: '/machine-status-history', label: 'History' }
+			]
+		},
+		{ 
+			label: 'Alarm Status', 
+			icon: Bell,
+			subItems: [
+				{ href: '/alarm-status', label: 'Overview' },
+				{ href: '/alarm-status/history', label: 'History' }
+			]
+		},
 		{ href: '/device-status', label: 'Device Status', icon: HardDrive },
 		...(auth.user?.role === 'admin' ? [{ href: '/setting', label: 'Setting', icon: Settings }] : [])
 	]);
@@ -54,9 +81,18 @@
 		}
 	});
 
-	function isActive(href: string) {
+	function isActive(href: string | undefined) {
+		if (!href) return false;
 		if (href === '/') return $page.url.pathname === '/';
 		return $page.url.pathname.startsWith(href);
+	}
+
+	function isParentActive(item: any) {
+		if (item.href) return isActive(item.href);
+		if (item.subItems) {
+			return item.subItems.some((sub: any) => isActive(sub.href));
+		}
+		return false;
 	}
 
 	let isLive = $state(true);
@@ -123,21 +159,71 @@
 			<!-- Nav Items -->
 			<nav class="flex flex-1 flex-col gap-1 p-2">
 				{#each navItems as item}
-					{@const active = isActive(item.href)}
-					<a
-						href={item.href}
-						class="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors
-							{active
-								? 'bg-sidebar-primary text-sidebar-primary-foreground'
-								: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
-							{sidebarCollapsed ? 'justify-center' : ''}"
-						title={sidebarCollapsed ? item.label : ''}
-					>
-						<item.icon class="h-4 w-4 shrink-0" />
-						{#if !sidebarCollapsed}
-							<span>{item.label}</span>
-						{/if}
-					</a>
+					{#if item.subItems}
+						{@const parentActive = isParentActive(item)}
+						<div class="flex flex-col gap-1">
+							<button
+								onclick={() => {
+									if (sidebarCollapsed) {
+										sidebarCollapsed = false;
+										subMenuOpen[item.label] = true;
+									} else {
+										subMenuOpen[item.label] = !subMenuOpen[item.label];
+									}
+								}}
+								class="flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors cursor-pointer
+									{parentActive && sidebarCollapsed
+										? 'bg-sidebar-primary text-sidebar-primary-foreground'
+										: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
+									{sidebarCollapsed ? 'justify-center' : ''}"
+								title={sidebarCollapsed ? item.label : ''}
+							>
+								<item.icon class="h-4 w-4 shrink-0" />
+								{#if !sidebarCollapsed}
+									<span>{item.label}</span>
+									<span class="ml-auto text-sidebar-foreground/50 transition-transform duration-200">
+										{#if subMenuOpen[item.label]}
+											<ChevronDown class="h-3.5 w-3.5" />
+										{:else}
+											<ChevronRight class="h-3.5 w-3.5" />
+										{/if}
+									</span>
+								{/if}
+							</button>
+							{#if subMenuOpen[item.label] && !sidebarCollapsed}
+								<div class="ml-4 flex flex-col gap-1 border-l border-border pl-3">
+									{#each item.subItems as sub}
+										{@const subActive = isActive(sub.href)}
+										<a
+											href={sub.href}
+											class="rounded-md px-2 py-1.5 text-xs transition-colors 
+												{subActive 
+													? 'bg-sidebar-primary/10 text-primary font-medium' 
+													: 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}"
+										>
+											{sub.label}
+										</a>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					{:else}
+						{@const active = isActive(item.href)}
+						<a
+							href={item.href}
+							class="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors
+								{active
+									? 'bg-sidebar-primary text-sidebar-primary-foreground'
+									: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
+								{sidebarCollapsed ? 'justify-center' : ''}"
+							title={sidebarCollapsed ? item.label : ''}
+						>
+							<item.icon class="h-4 w-4 shrink-0" />
+							{#if !sidebarCollapsed}
+								<span>{item.label}</span>
+							{/if}
+						</a>
+					{/if}
 				{/each}
 			</nav>
 

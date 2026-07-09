@@ -6,7 +6,7 @@ import sys
 # Ensure parent directory is in path so we can import routers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routers.status import calculate_status_ratio, StatusSegment, TZ_BANGKOK
+from routers.status import calculate_status_ratio, calculate_status_timeline, StatusSegment, TZ_BANGKOK
 
 # ==============================================================================
 # UNIT TESTS FOR STATUS CALCULATION RATIO
@@ -88,3 +88,56 @@ def test_status_calculation_no_events_with_initial():
     assert "status_1" in seg_dict
     assert seg_dict["status_1"].duration == 3600.0
     assert seg_dict["status_1"].ratio == 100.0
+
+
+# ==============================================================================
+# UNIT TESTS FOR STATUS TIMELINE (NEW)
+# ==============================================================================
+
+def test_status_timeline_simple_sequence():
+    start_time = datetime(2026, 7, 7, 10, 0, 0, tzinfo=TZ_BANGKOK)
+    end_time = datetime(2026, 7, 7, 11, 0, 0, tzinfo=TZ_BANGKOK)
+    records = [
+        {"created_at": datetime(2026, 7, 7, 10, 10, 0, tzinfo=TZ_BANGKOK), "status": "status_1"},
+        {"created_at": datetime(2026, 7, 7, 10, 30, 0, tzinfo=TZ_BANGKOK), "status": "status_2"},
+        {"created_at": datetime(2026, 7, 7, 10, 45, 0, tzinfo=TZ_BANGKOK), "status": "status_2"} # duplicate status, should merge
+    ]
+    initial = None
+    timeline = calculate_status_timeline(records, start_time, end_time, initial, "device_1")
+    
+    assert len(timeline) == 3
+    assert timeline[0].status == "no data"
+    assert timeline[0].start_time == start_time.isoformat()
+    assert timeline[0].end_time == datetime(2026, 7, 7, 10, 10, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[0].duration == 600.0
+
+    assert timeline[1].status == "status_1"
+    assert timeline[1].start_time == datetime(2026, 7, 7, 10, 10, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[1].end_time == datetime(2026, 7, 7, 10, 30, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[1].duration == 1200.0
+
+    assert timeline[2].status == "status_2"
+    assert timeline[2].start_time == datetime(2026, 7, 7, 10, 30, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[2].end_time == end_time.isoformat()
+    assert timeline[2].duration == 1800.0
+
+def test_status_timeline_with_initial():
+    start_time = datetime(2026, 7, 7, 10, 0, 0, tzinfo=TZ_BANGKOK)
+    end_time = datetime(2026, 7, 7, 11, 0, 0, tzinfo=TZ_BANGKOK)
+    records = [
+        {"created_at": datetime(2026, 7, 7, 10, 20, 0, tzinfo=TZ_BANGKOK), "status": "status_2"}
+    ]
+    initial = {"status": "status_1", "created_at": datetime(2026, 7, 7, 9, 30, 0, tzinfo=TZ_BANGKOK)}
+    timeline = calculate_status_timeline(records, start_time, end_time, initial, "device_1")
+    
+    assert len(timeline) == 2
+    assert timeline[0].status == "status_1"
+    assert timeline[0].start_time == start_time.isoformat()
+    assert timeline[0].end_time == datetime(2026, 7, 7, 10, 20, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[0].duration == 1200.0
+
+    assert timeline[1].status == "status_2"
+    assert timeline[1].start_time == datetime(2026, 7, 7, 10, 20, 0, tzinfo=TZ_BANGKOK).isoformat()
+    assert timeline[1].end_time == end_time.isoformat()
+    assert timeline[1].duration == 2400.0
+

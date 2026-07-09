@@ -23,16 +23,19 @@ class StatusSegment(BaseModel):
 class StatusResponse(BaseModel):
     device: str
     data: List[StatusSegment]
+    utilize: float
 
 class DailyStatusResponse(BaseModel):
     date: str
     device: str
     data: List[StatusSegment]
+    utilize: float
 
 class MonthlyStatusResponse(BaseModel):
     month: str
     device: str
     data: List[StatusSegment]
+    utilize: float
 
 class AlarmSegment(BaseModel):
     alarm: str
@@ -80,4 +83,17 @@ class DeviceStatusCountResponse(BaseModel):
     offline: int
     communication_fail: int
     total: int
+
+
+class TimelineSegment(BaseModel):
+    status: str
+    start_time: str
+    end_time: str
+    duration: float
+
+
+class TimelineResponse(BaseModel):
+    device: str
+    data: List[TimelineSegment]
+
 

@@ -4,7 +4,7 @@
 	let { data } = $props();
 
 	const processesList = $derived(data.processes || []);
-	let selectedProcess = $state(data.initialProcess || '');
+	let selectedProcess = $state('');
 
 	$effect(() => {
 		selectedProcess = data.initialProcess || '';
