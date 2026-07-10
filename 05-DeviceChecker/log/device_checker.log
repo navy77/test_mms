@@ -738,3 +738,59 @@
 2026-07-10 07:52:59,751 [INFO] DeviceChecker: Starting device check round...
 2026-07-10 07:52:59,887 [WARNING] clickhouse_connect.driver.httpclient: Unexpected Http Driver Exception
 2026-07-10 07:52:59,889 [ERROR] DeviceChecker: Error querying ClickHouse: Error ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')) executing HTTP request attempt 2 (http://192.168.0.191:8123)
+2026-07-10 07:57:59,878 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 07:57:59,929 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 07:57:59,963 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:02:59,951 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:02:59,965 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:02:59,985 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:07:59,971 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:07:59,983 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:07:59,989 [INFO] DeviceChecker: Device demo1/no_1 is back ONLINE.
+2026-07-10 08:07:59,990 [INFO] DeviceChecker: Device demo1/no_2 is back ONLINE.
+2026-07-10 08:07:59,990 [INFO] DeviceChecker: Device demo1/no_3 is back ONLINE.
+2026-07-10 08:07:59,990 [INFO] DeviceChecker: Device demo1/no_4 is back ONLINE.
+2026-07-10 08:07:59,991 [INFO] DeviceChecker: Device demo1/no_5 is back ONLINE.
+2026-07-10 08:07:59,991 [INFO] DeviceChecker: Device demo1/no_6 is back ONLINE.
+2026-07-10 08:07:59,991 [INFO] DeviceChecker: Device demo1/no_7 is back ONLINE.
+2026-07-10 08:07:59,992 [INFO] DeviceChecker: Device demo1/no_8 is back ONLINE.
+2026-07-10 08:07:59,992 [INFO] DeviceChecker: Device demo1/no_9 is back ONLINE.
+2026-07-10 08:07:59,992 [INFO] DeviceChecker: Device demo1/no_10 is back ONLINE.
+2026-07-10 08:07:59,992 [INFO] DeviceChecker: Device demo1/no_11 is back ONLINE.
+2026-07-10 08:07:59,993 [INFO] DeviceChecker: Device demo1/no_12 is back ONLINE.
+2026-07-10 08:07:59,994 [INFO] DeviceChecker: Device demo1/no_13 is back ONLINE.
+2026-07-10 08:07:59,994 [INFO] DeviceChecker: Device demo1/no_14 is back ONLINE.
+2026-07-10 08:07:59,995 [INFO] DeviceChecker: Device demo1/no_15 is back ONLINE.
+2026-07-10 08:07:59,996 [INFO] DeviceChecker: Device demo1/no_16 is back ONLINE.
+2026-07-10 08:07:59,996 [INFO] DeviceChecker: Device demo1/no_17 is back ONLINE.
+2026-07-10 08:07:59,997 [INFO] DeviceChecker: Device demo1/no_18 is back ONLINE.
+2026-07-10 08:07:59,998 [INFO] DeviceChecker: Device demo1/no_19 is back ONLINE.
+2026-07-10 08:07:59,998 [INFO] DeviceChecker: Device demo1/no_20 is back ONLINE.
+2026-07-10 08:08:00,024 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:13:00,008 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:13:00,028 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:13:00,045 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:18:00,027 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:18:00,040 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:18:00,052 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:23:00,033 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:23:00,049 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:23:00,065 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:28:00,047 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:28:00,069 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:28:00,080 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:33:00,062 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:33:00,082 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:33:00,101 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:38:00,083 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:38:00,096 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:38:00,112 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:43:00,093 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:43:00,104 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:43:00,121 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:48:00,101 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:48:00,123 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:48:00,136 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb
+2026-07-10 08:53:00,118 [INFO] DeviceChecker: Starting device check round...
+2026-07-10 08:53:00,133 [INFO] DeviceChecker: Retrieved 1000 master devices from ClickHouse configdb.device_register_tb
+2026-07-10 08:53:00,145 [INFO] DeviceChecker: Successfully inserted 1000 records to ClickHouse device_tb

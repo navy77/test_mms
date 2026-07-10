@@ -593,3 +593,29 @@
 2026-07-10 15:08:47,365 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
 2026-07-10 15:15:17,351 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task stopped.
 2026-07-10 15:26:54,058 [INFO] SSEApi: Starting MMS SSE API Server at http://0.0.0.0:8002
+2026-07-10 15:26:54,755 [INFO] SSEBackend.SSERouter: RealtimeCacheManager background polling task started (interval=5.0s).
+2026-07-10 15:36:36,830 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-10 15:36:39,381 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-10 15:37:02,941 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-10 15:37:04,222 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-10 15:39:33,207 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-10 15:39:36,526 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-10 15:39:37,536 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-10 15:39:39,096 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-10 15:39:39,099 [INFO] SSEBackend.SSERouter: Real-time stream started for category=alarm, process=demo1
+2026-07-10 15:39:46,864 [INFO] SSEBackend.SSERouter: Real-time stream started for category=alarm, process=demo1
+2026-07-10 15:39:47,993 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=alarm, process=demo1
+2026-07-10 15:39:47,996 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-10 15:40:10,462 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=status, process=demo1
+2026-07-10 15:40:32,261 [INFO] SSEBackend.SSERouter: Real-time stream started for category=status, process=demo1
+2026-07-10 15:40:44,732 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=alarm, process=demo1
+2026-07-10 15:45:05,136 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-10 15:45:06,588 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-10 15:45:28,619 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-10 15:45:34,272 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
+2026-07-10 15:45:34,278 [INFO] SSEBackend.SSERouter: Real-time stream started for category=alarm, process=demo1
+2026-07-10 15:45:41,283 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=alarm, process=demo1
+2026-07-10 15:46:27,175 [INFO] SSEBackend.SSERouter: Real-time stream started for category=alarm, process=demo1
+2026-07-10 15:46:38,783 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=alarm, process=demo1
+2026-07-10 15:46:40,116 [INFO] SSEBackend.SSERouter: Real-time stream started for category=mqtt, process=demo1
+2026-07-10 15:46:41,463 [INFO] SSEBackend.SSERouter: Client disconnected from stream for category=mqtt, process=demo1
