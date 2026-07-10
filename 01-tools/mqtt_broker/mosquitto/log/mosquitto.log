@@ -451,3 +451,21 @@ To fix this, use `chmod 0700 /mosquitto/config/acl`.
 1783608196: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1783609997: Saving in-memory database to /mosquitto/data//mosquitto.db.
 1783611798: Saving in-memory database to /mosquitto/data//mosquitto.db.
+1783669973: mosquitto version 2.1.2 starting
+1783669973: Config loaded from /mosquitto/config/mosquitto.conf.
+1783669973: Bridge support available.
+1783669973: Persistence support available.
+1783669973: TLS support available.
+1783669973: TLS-PSK support available.
+1783669973: Websockets support available.
+1783669973: Warning: File /mosquitto/config/acl has world readable permissions. Future versions will refuse to load this file.
+To fix this, use `chmod 0700 /mosquitto/config/acl`.
+
+1783669973: Plugin builtin-security has registered to receive 'acl-check' events.
+1783669973: Opening ipv4 listen socket on port 1883.
+1783669973: mosquitto version 2.1.2 running
+1783669977: New connection from 172.21.0.1:37008 on port 1883.
+1783669977: New client connected from 172.21.0.1:37008 as agent-mqtt-redis-benthos (p4, c1, k30).
+1783669977: Outgoing messages are being dropped for client agent-mqtt-redis-benthos.
+1783669979: New connection from 172.21.0.1:37012 on port 1883.
+1783669979: New client connected from 172.21.0.1:37012 as auto-F20CF1A7-86F1-9D16-89A3-446F6B6BF15A (p4, c1, k60).

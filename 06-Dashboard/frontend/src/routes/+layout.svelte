@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth.svelte';
@@ -25,7 +26,7 @@
 	let sidebarCollapsed = $state(false);
 	let darkMode = $state(false);
 	let subMenuOpen = $state<Record<string, boolean>>({
-		'Machine Status': true,
+		'Machine Status': false,
 		'Alarm Status': false
 	});
 
@@ -99,7 +100,8 @@
 
 	async function checkHealth() {
 		try {
-			const res = await fetch('http://localhost:8001/health');
+			const host = window.location.hostname;
+			const res = await fetch(`http://${host}:8001/health`);
 			if (res.ok) {
 				const data = await res.json();
 				isLive = data.status === 'healthy';
@@ -116,6 +118,7 @@
 		const interval = setInterval(checkHealth, 10000);
 		return () => clearInterval(interval);
 	});
+
 </script>
 
 <svelte:head>
@@ -191,7 +194,7 @@
 								{/if}
 							</button>
 							{#if subMenuOpen[item.label] && !sidebarCollapsed}
-								<div class="ml-4 flex flex-col gap-1 border-l border-border pl-3">
+								<div transition:slide={{ duration: 200 }} class="ml-4 flex flex-col gap-1 border-l border-border pl-3">
 									{#each item.subItems as sub}
 										{@const subActive = isActive(sub.href)}
 										<a

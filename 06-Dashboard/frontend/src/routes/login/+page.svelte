@@ -20,8 +20,8 @@
 		loading = true;
 
 		try {
-			// Connect to backend api at port 8001
-			const res = await fetch('http://localhost:8001/auth/login', {
+			const host = window.location.hostname;
+			const res = await fetch(`http://${host}:8001/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -53,9 +53,16 @@
 </script>
 
 <div class="flex min-h-screen items-center justify-center bg-background px-4">
-	<div in:fly={{ y: 50, duration: 1000 }} class="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-md transition-all duration-300">
+	<div
+		in:fly={{ y: 50, duration: 1000 }}
+		class="w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-md transition-all duration-300"
+	>
 		<div class="mb-6 text-center">
-			<div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-transform duration-500 {loading ? 'scale-110' : ''}">
+			<div
+				class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 transition-transform duration-500 {loading
+					? 'scale-110'
+					: ''}"
+			>
 				{#if loading}
 					<Loader2 class="h-6 w-6 text-primary animate-spin" />
 				{:else}
@@ -67,14 +74,19 @@
 		</div>
 
 		{#if errorMsg}
-			<div transition:fade={{ duration: 1000 }} class="mb-4 rounded-md bg-destructive/10 p-3 text-xs font-medium text-destructive">
+			<div
+				transition:fade={{ duration: 1000 }}
+				class="mb-4 rounded-md bg-destructive/10 p-3 text-xs font-medium text-destructive"
+			>
 				{errorMsg}
 			</div>
 		{/if}
 
 		<form onsubmit={handleLogin} class="space-y-4">
 			<div>
-				<label for="username" class="mb-1 block text-xs font-medium text-muted-foreground">Username</label>
+				<label for="username" class="mb-1 block text-xs font-medium text-muted-foreground"
+					>Username</label
+				>
 				<input
 					id="username"
 					bind:value={username}
@@ -87,7 +99,9 @@
 			</div>
 
 			<div>
-				<label for="password" class="mb-1 block text-xs font-medium text-muted-foreground">Password</label>
+				<label for="password" class="mb-1 block text-xs font-medium text-muted-foreground"
+					>Password</label
+				>
 				<input
 					id="password"
 					bind:value={password}

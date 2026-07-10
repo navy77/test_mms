@@ -4,6 +4,11 @@
 	import { auth } from '$lib/stores/auth.svelte';
 	import { Plus, Pencil, Trash2, Loader2 } from '@lucide/svelte';
 
+	let apiHost = $state('localhost');
+	onMount(() => {
+		apiHost = window.location.hostname;
+	});
+
 	type Tab = 'users' | 'projects' | 'devices' | 'columns' | 'statuses' | 'alarms';
 	let activeTab = $state<Tab>('users');
 
@@ -156,7 +161,7 @@
 		try {
 			if (activeTab === 'users') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/v1/users', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/users`, {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formUser)
@@ -167,7 +172,7 @@
 					}
 				} else {
 					// update user
-					const res = await fetch(`http://localhost:8001/api/v1/users/${editTarget.user}`, {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/users/${editTarget.user}`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({ password: formUser.password, role: formUser.role })
@@ -179,7 +184,7 @@
 				}
 			} else if (activeTab === 'projects') {
 				// update only
-				const res = await fetch(`http://localhost:8001/api/v1/projects/${editTarget.items}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/projects/${editTarget.items}`, {
 					method: 'PUT',
 					headers: getHeaders(),
 					body: JSON.stringify({ value: formProject.value })
@@ -190,7 +195,7 @@
 				}
 			} else if (activeTab === 'devices') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/v1/devices', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/devices`, {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formDevice)
@@ -200,7 +205,7 @@
 						throw new Error(details.detail || 'Failed to register device');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/v1/devices', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/devices`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -217,7 +222,7 @@
 				}
 			} else if (activeTab === 'columns') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/v1/columns', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/columns`, {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formColumn)
@@ -227,7 +232,7 @@
 						throw new Error(details.detail || 'Failed to register column');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/v1/columns', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/columns`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -246,7 +251,7 @@
 				}
 			} else if (activeTab === 'statuses') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/v1/statuses', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/statuses`, {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formStatus)
@@ -256,7 +261,7 @@
 						throw new Error(details.detail || 'Failed to register status');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/v1/statuses', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/statuses`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -274,7 +279,7 @@
 				}
 			} else if (activeTab === 'alarms') {
 				if (modalMode === 'add') {
-					const res = await fetch('http://localhost:8001/api/v1/alarms', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/alarms`, {
 						method: 'POST',
 						headers: getHeaders(),
 						body: JSON.stringify(formAlarm)
@@ -284,7 +289,7 @@
 						throw new Error(details.detail || 'Failed to register alarm');
 					}
 				} else {
-					const res = await fetch('http://localhost:8001/api/v1/alarms', {
+					const res = await fetch(`http://${apiHost}:8001/api/v1/alarms`, {
 						method: 'PUT',
 						headers: getHeaders(),
 						body: JSON.stringify({
@@ -316,7 +321,7 @@
 		loading = true;
 		try {
 			if (activeTab === 'users') {
-				const res = await fetch(`http://localhost:8001/api/v1/users/${item.user}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/users/${item.user}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -325,7 +330,7 @@
 					throw new Error(details.detail || 'Failed to delete user');
 				}
 			} else if (activeTab === 'devices') {
-				const res = await fetch(`http://localhost:8001/api/v1/devices?process=${encodeURIComponent(item.process)}&device=${encodeURIComponent(item.device)}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/devices?process=${encodeURIComponent(item.process)}&device=${encodeURIComponent(item.device)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -334,7 +339,7 @@
 					throw new Error(details.detail || 'Failed to delete device');
 				}
 			} else if (activeTab === 'columns') {
-				const res = await fetch(`http://localhost:8001/api/v1/columns?process=${encodeURIComponent(item.process)}&column_name=${encodeURIComponent(item.column_name)}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/columns?process=${encodeURIComponent(item.process)}&column_name=${encodeURIComponent(item.column_name)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -343,7 +348,7 @@
 					throw new Error(details.detail || 'Failed to delete column');
 				}
 			} else if (activeTab === 'statuses') {
-				const res = await fetch(`http://localhost:8001/api/v1/statuses?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/statuses?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});
@@ -352,7 +357,7 @@
 					throw new Error(details.detail || 'Failed to delete status');
 				}
 			} else if (activeTab === 'alarms') {
-				const res = await fetch(`http://localhost:8001/api/v1/alarms?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
+				const res = await fetch(`http://${apiHost}:8001/api/v1/alarms?process=${encodeURIComponent(item.process)}&status=${encodeURIComponent(item.status)}`, {
 					method: 'DELETE',
 					headers: getHeaders()
 				});

@@ -32,8 +32,8 @@
 		return map;
 	});
 
-	function getStatusStyle(stat: string) {
-		const color = colorMap[stat] || '#22c55e';
+	function getStatusStyle(rawStat: string, resolvedStat?: string) {
+		const color = colorMap[rawStat] || (resolvedStat ? colorMap[resolvedStat] : null) || colorMap['normal'] || '#22c55e';
 		return `--status-color: ${color}; border-color: color-mix(in srgb, ${color} 30%, transparent); background-color: color-mix(in srgb, ${color} 10%, transparent);`;
 	}
 
@@ -103,8 +103,8 @@
 			sse.close();
 		}
 		if (!proc) return;
-		
-		sse = new EventSource(`http://localhost:8002/api/v1/realtime/alarm/${proc}`);
+		const host = window.location.hostname;
+		sse = new EventSource(`http://${host}:8002/api/v1/realtime/alarm/${proc}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);
@@ -231,7 +231,7 @@
 			{@const stat = resolveAlarmStatus(rawStat)}
 			{@const timestamp = record ? record.timestamp : ''}
 			{@const label = stat === 'alarm' ? rawStat : 'Normal'}
-			<div class="rounded-lg border p-4 transition-all hover:shadow-sm" style={getStatusStyle(stat)}>
+			<div class="rounded-lg border p-4 transition-all hover:shadow-sm" style={getStatusStyle(rawStat, stat)}>
 				<!-- Header -->
 				<div class="flex items-center justify-between">
 					<div class="flex items-center gap-2">

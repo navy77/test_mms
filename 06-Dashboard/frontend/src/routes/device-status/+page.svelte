@@ -11,7 +11,7 @@
 		selectedProcess = data.initialProcess || '';
 	});
 	
-	let counts = $state({
+	let counts = $state(data.initialCounts || {
 		total: 0,
 		online: 0,
 		offline: 0,
@@ -68,7 +68,8 @@
 		}
 		if (!proc) return;
 		
-		sse = new EventSource(`http://localhost:8002/api/v1/realtime/mqtt/${proc}`);
+		const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+		sse = new EventSource(`http://${apiHost}:8002/api/v1/realtime/mqtt/${proc}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);
@@ -91,6 +92,27 @@
 					};
 				}
 				realtimeMap = newMap;
+
+				// Recalculate counts dynamically from real-time SSE stream
+				const processDevices = sortedDevices.filter((d: any) => d.process === proc);
+				let total = processDevices.length;
+				let online = 0;
+				let offline = 0;
+				let communication_fail = 0;
+				for (const d of processDevices) {
+					const rt = newMap[d.device];
+					const status = rt ? rt.status : 'offline';
+					const modbus = rt ? rt.modbus : '—';
+					
+					if (String(modbus) === '0' || modbus === 0) {
+						communication_fail++;
+					} else if (status.toLowerCase() === 'online') {
+						online++;
+					} else {
+						offline++;
+					}
+				}
+				counts = { total, online, offline, communication_fail };
 			} catch (err) {
 				console.error('Error parsing SSE data:', err);
 			}
@@ -101,7 +123,8 @@
 		if (!proc) return;
 		loadingCounts = true;
 		try {
-			const res = await fetch(`http://localhost:8003/api/v1/device/currently/status/${proc}`);
+			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
+			const res = await fetch(`http://${apiHost}:8003/api/v1/device/currently/status/${proc}`);
 			if (res.ok) {
 				const resData = await res.json();
 				counts = {
@@ -118,14 +141,9 @@
 		}
 	}
 
-	let isFirstRun = true;
 	$effect(() => {
 		if (selectedProcess) {
 			connectSSE(selectedProcess);
-			if (isFirstRun) {
-				isFirstRun = false;
-				return;
-			}
 			fetchCounts(selectedProcess);
 		}
 		return () => {

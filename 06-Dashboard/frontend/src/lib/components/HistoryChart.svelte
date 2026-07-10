@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount, onDestroy } from "svelte";
-	import { LoaderCircle, AlertCircle } from "lucide-svelte";
+	import { onMount, onDestroy } from 'svelte';
+	import { LoaderCircle, AlertCircle } from 'lucide-svelte';
 
 	interface StatusSegment {
 		status: string;
@@ -19,181 +19,193 @@
 		process: string;
 		device: string;
 		colorMap: Record<string, string>;
+		records: DailyRecord[];
+		loading: boolean;
+		error: string | null;
 	}
 
-	let { process, device, colorMap }: Props = $props();
+	let { process, device, colorMap, records = [], loading = true, error = null }: Props = $props();
 
 	let chartEl = $state<HTMLElement | null>(null);
-	let chartInstance: any = null;
-	let ApexChartsClass = $state<any>(null);
+	let chartInstance = $state<any>(null);
+	let echartsLib = $state<any>(null);
 
-	let dailyRecords = $state<DailyRecord[]>([]);
-	let loading = $state(true);
-	let error = $state<string | null>(null);
+	onMount(async () => {
+		echartsLib = await import('echarts');
+		if (typeof window !== 'undefined') {
+			window.addEventListener('resize', handleResize);
+		}
+	});
 
-	async function fetchData(p: string, d: string) {
-		loading = true;
-		error = null;
-		dailyRecords = [];
-
-		try {
-			const res = await fetch(`http://localhost:8003/api/v1/status/daily/${p}/${d}`);
-			if (!res.ok) {
-				error = `No data (${res.status})`;
-				loading = false;
-				return;
-			}
-			const json = await res.json();
-			dailyRecords = Array.isArray(json) ? json : [];
-			loading = false;
-		} catch (e) {
-			error = "Fetch error";
-			loading = false;
+	function handleResize() {
+		if (chartInstance) {
+			chartInstance.resize();
 		}
 	}
 
+	// 1. Initialize ECharts instance ONCE when the element and library are ready
 	$effect(() => {
-		if (process && device) {
-			fetchData(process, device);
-		}
+		if (!chartEl || !echartsLib) return;
+
+		chartInstance = echartsLib.init(chartEl);
+
+		return () => {
+			if (chartInstance) {
+				chartInstance.dispose();
+				chartInstance = null;
+			}
+		};
 	});
 
-	onMount(async () => {
-		const module = await import("apexcharts");
-		ApexChartsClass = module.default;
-	});
-
+	// 2. Dynamically update ECharts options in-place when records or colorMap changes
 	$effect(() => {
-		if (!chartEl || !ApexChartsClass || dailyRecords.length === 0) return;
+		if (!chartInstance || records.length === 0) return;
 
 		// All unique statuses — include 'no data' so full bar is shown on empty days
-		const priorityOrder = ["run", "alarm", "wait", "stop", "other", "offline", "no data"];
+		const priorityOrder = ['run', 'alarm', 'wait', 'stop', 'other', 'offline', 'no data'];
 		const rawStatuses = Array.from(
-			new Set(dailyRecords.flatMap((d) => d.data.map((s) => s.status)))
+			new Set(records.flatMap((d) => d.data.map((s) => s.status)))
 		);
 		const allStatuses = [
-			...priorityOrder.filter((s) => rawStatuses.includes(s)),
+			...priorityOrder.filter((s) => rawStatuses.includes(s) || s === 'no data'),
 			...rawStatuses.filter((s) => !priorityOrder.includes(s))
 		];
 
-		// Date labels
-		const categories = dailyRecords.map((r) => {
-			const d = new Date(r.date + "T00:00:00");
-			return d.getDate();
+		// Date labels (Day of Month)
+		const categories = records.map((r) => {
+			const d = new Date(r.date + 'T00:00:00');
+			return d.getDate().toString();
 		});
 
 		// Stacked bar series — ratio is already in % (e.g. 82.9 = 82.9%)
-		const stackedSeries = allStatuses.map((status) => ({
-			name: status === "no data" ? "No Data" : status.charAt(0).toUpperCase() + status.slice(1),
-			type: "bar",
-			color: colorMap[status] || "#374151",
-			data: dailyRecords.map((r) => {
+		const barSeries = allStatuses.map((status) => ({
+			name: status === 'no data' ? 'No Data' : status.charAt(0).toUpperCase() + status.slice(1),
+			type: 'bar',
+			stack: 'status', // Same stack ID to stack bars
+			color: colorMap[status] || '#374151',
+			barWidth: '80%',
+			data: records.map((r) => {
 				const seg = r.data.find((s) => s.status === status);
 				return seg ? Math.round(seg.ratio * 10) / 10 : 0;
 			})
 		}));
 
 		// Utilize % line — utilize is already in % (e.g. 29.9 = 29.9%)
-		const utilizeSeries = {
-			name: "Utilize %",
-			type: "line",
-			color: "#f472b6",
-			data: dailyRecords.map((r) => Math.round(r.utilize * 10) / 10)
+		const lineSeries = {
+			name: 'Utilize %',
+			type: 'line',
+			color: '#16537e',
+			symbol: 'circle',
+			symbolSize: 5,
+			showSymbol: false,
+			lineStyle: {
+				width: 2,
+				color: '#16537e'
+			},
+			data: records.map((r) => Math.round(r.utilize * 10) / 10)
 		};
 
-		const series = [...stackedSeries, utilizeSeries];
+		const series = [...barSeries, lineSeries];
 
+		// 3. ECharts options configuration
 		const options = {
-			chart: {
-				type: "bar",
-				height: 200,
-				stacked: true,
-				stackType: "normal",
-				toolbar: { show: false },
-				animations: { enabled: false },
-				zoom: { enabled: false },
-				background: "transparent",
-				sparkline: { enabled: false }
-			},
-			plotOptions: {
-				bar: {
-					columnWidth: "90%",
-					borderRadius: 0
-				}
-			},
-			stroke: {
-				width: series.map((s: any) => (s.type === "line" ? 2.5 : 0)),
-				curve: "smooth"
-			},
-			markers: {
-				size: series.map((s: any) => (s.type === "line" ? 0 : 0)),
-				hover: { size: 4 }
-			},
-			series,
-			xaxis: {
-				categories,
-				labels: {
-					style: { colors: "#6b7280", fontSize: "9px" },
-					rotate: 0
-				},
-				axisBorder: { show: false },
-				axisTicks: { show: false }
-			},
-			yaxis: [
-				{
-					min: 0,
-					max: 100,
-					tickAmount: 4,
-					labels: {
-						formatter: (v: number) => `${v}%`,
-						style: { colors: "#6b7280", fontSize: "9px" }
-					}
-				}
-			],
-			annotations: {},
-			legend: { show: false },
+			animation: false,
+			backgroundColor: 'transparent',
 			grid: {
-				borderColor: "rgba(255,255,255,0.06)",
-				strokeDashArray: 3,
-				padding: { top: -6, right: 10, bottom: 0, left: 0 }
+				top: 8,
+				right: 8,
+				bottom: 20,
+				left: 36,
+				containLabel: false
 			},
 			tooltip: {
-				shared: true,
-				intersect: false,
-				theme: "dark",
-				y: {
-					formatter: (v: number, opts: any) => {
-						if (opts?.seriesIndex === series.length - 1) return `${v}%`;
-						return `${v}%`;
+				trigger: 'axis',
+				axisPointer: {
+					type: 'shadow'
+				},
+				backgroundColor: 'rgba(15, 23, 42, 0.95)', // slate-900 with opacity
+				borderColor: 'rgba(51, 65, 85, 0.5)',     // slate-700/50
+				borderWidth: 1,
+				padding: [6, 10],
+				textStyle: {
+					color: '#f8fafc', // slate-50
+					fontSize: 10,
+					fontFamily: 'sans-serif'
+				},
+				formatter: function (params: any) {
+					if (!params || params.length === 0) return '';
+					const day = params[0].name;
+					let html = `<div style="font-family: sans-serif; line-height: 1.4;">`;
+					html += `<div style="font-weight: 600; color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 2px; margin-bottom: 4px;">Day ${day}</div>`;
+					
+					// Iterate through parameters to display values
+					params.forEach((p: any) => {
+						const name = p.seriesName;
+						const val = p.value !== undefined && p.value !== null ? p.value : 0;
+						const color = p.color;
+						html += `<div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+							<div style="display: flex; align-items: center; gap: 6px;">
+								<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${color};"></span>
+								<span>${name}</span>
+							</div>
+							<span style="font-weight: 500;">${val}%</span>
+						</div>`;
+					});
+					
+					html += `</div>`;
+					return html;
+				}
+			},
+			xAxis: {
+				type: 'category',
+				data: categories,
+				axisLine: { show: false },
+				axisTick: { show: false },
+				axisLabel: {
+					color: '#6b7280',
+					fontSize: 9,
+					interval: 4 // Avoid overlapping labels
+				}
+			},
+			yAxis: {
+				type: 'value',
+				min: 0,
+				max: 100,
+				splitNumber: 4,
+				axisLabel: {
+					color: '#6b7280',
+					fontSize: 9,
+					formatter: '{value}%'
+				},
+				splitLine: {
+					lineStyle: {
+						color: 'rgba(255, 255, 255, 0.05)',
+						type: 'dashed'
 					}
 				}
 			},
-			theme: { mode: "dark" },
-			dataLabels: { enabled: false },
-			fill: {
-				opacity: series.map((s: any) => (s.type === "line" ? 1 : 0.92))
-			}
+			series: series
 		};
 
-		if (chartInstance) {
-			chartInstance.destroy();
-		}
-		chartInstance = new ApexChartsClass(chartEl, options);
-		chartInstance.render();
+		chartInstance.setOption(options);
 	});
 
 	onDestroy(() => {
-		if (chartInstance) chartInstance.destroy();
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', handleResize);
+		}
 	});
 </script>
 
-<div class="w-full relative" style="height: 200px">
+<div class="w-full relative" style="height:150px">
 	{#if loading}
 		<div class="absolute inset-0 flex items-center justify-center z-10">
 			<LoaderCircle class="h-4 w-4 animate-spin text-muted-foreground" />
 		</div>
 	{:else if error}
-		<div class="absolute inset-0 flex items-center justify-center gap-1.5 text-muted-foreground z-10">
+		<div
+			class="absolute inset-0 flex items-center justify-center gap-1.5 text-muted-foreground z-10"
+		>
 			<AlertCircle class="h-3.5 w-3.5" />
 			<span class="text-[10px]">{error}</span>
 		</div>

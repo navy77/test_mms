@@ -106,8 +106,8 @@
 			sse.close();
 		}
 		if (!proc) return;
-		
-		sse = new EventSource(`http://localhost:8002/api/v1/realtime/status/${proc}`);
+		const host = window.location.hostname;
+		sse = new EventSource(`http://${host}:8002/api/v1/realtime/status/${proc}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);

@@ -81,7 +81,7 @@
         "type": "function",
         "z": "flow_tab_mqtt_simulation",
         "name": "Generate Status",
-        "func": "let qty_topic = 10;\nlet baseTopic = \"status/mic/demo1/\";\nlet statusList = [\"run\", \"alarm\", \"stop\", \"wait\"];\n\nfor (let j = 1; j <= qty_topic; j++) {\n    let randomStatus = statusList[Math.floor(Math.random() * statusList.length)];\n    node.send({\n        topic: baseTopic + \"no_\" + j,\n        payload: { status: randomStatus }\n    });\n}\nreturn null;",
+        "func": "let qty_topic = 10;\nlet baseTopic = \"status/mic/demo1/\";\nlet statusList = [\"run\", \"run\", \"run\", \"run\", \"run\", \"alarm\", \"stop\", \"wait\"];\n\nfor (let j = 1; j <= qty_topic; j++) {\n    let randomStatus = statusList[Math.floor(Math.random() * statusList.length)];\n    node.send({\n        topic: baseTopic + \"no_\" + j,\n        payload: { status: randomStatus }\n    });\n}\nreturn null;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,

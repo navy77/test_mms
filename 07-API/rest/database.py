@@ -5,20 +5,32 @@ import clickhouse_connect
 
 logger = logging.getLogger("RESTBackend.Database")
 
+_ch_client = None
+
 def get_ch_client():
+    global _ch_client
+    if _ch_client is not None:
+        try:
+            _ch_client.command("SELECT 1")
+            return _ch_client
+        except Exception:
+            logger.info("Clickhouse client connection lost, reconnecting...")
+            _ch_client = None
+
     host = os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\"")
     port = int(os.getenv("CLICKHOUSE_PORT", 8123))
     user = os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\"")
     password = os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\"")
     database = os.getenv("CLICKHOUSE_DATABASE", "default").strip().strip("'\"")
     try:
-        return clickhouse_connect.get_client(
+        _ch_client = clickhouse_connect.get_client(
             host=host,
             port=port,
             username=user,
             password=password,
             database=database
         )
+        return _ch_client
     except Exception as e:
         logger.error(f"Failed to connect to ClickHouse: {e}")
         raise HTTPException(

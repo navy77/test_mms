@@ -50,6 +50,7 @@ class DeviceChecker:
 
         # Initialize MQTT client
         self.mqtt_client = mqtt.Client()
+        self.ch_client = None
 
     def connect_mqtt(self):
         try:
@@ -64,13 +65,27 @@ class DeviceChecker:
         logger.info("Starting device check round...")
         try:
             # 1. Query registered devices from ClickHouse device_register_tb
-            ch_client = clickhouse_connect.get_client(
-                host=self.ch_host,
-                port=self.ch_port,
-                username=self.ch_user,
-                password=self.ch_pass,
-                database=self.ch_db
-            )
+            if self.ch_client is None:
+                self.ch_client = clickhouse_connect.get_client(
+                    host=self.ch_host,
+                    port=self.ch_port,
+                    username=self.ch_user,
+                    password=self.ch_pass,
+                    database=self.ch_db
+                )
+            else:
+                try:
+                    self.ch_client.command("SELECT 1")
+                except Exception:
+                    logger.info("ClickHouse client connection lost, reconnecting...")
+                    self.ch_client = clickhouse_connect.get_client(
+                        host=self.ch_host,
+                        port=self.ch_port,
+                        username=self.ch_user,
+                        password=self.ch_pass,
+                        database=self.ch_db
+                    )
+            ch_client = self.ch_client
             result = ch_client.query("SELECT process, device FROM configdb.device_register_tb")
             master_devices = result.result_rows  # list of tuples (process, device)
             logger.info(f"Retrieved {len(master_devices)} master devices from ClickHouse configdb.device_register_tb")
