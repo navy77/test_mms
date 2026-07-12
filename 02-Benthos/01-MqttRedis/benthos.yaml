@@ -1,0 +1,61 @@
+logger:
+  level: INFO
+  format: logfmt
+  add_timestamp: true
+
+metrics:
+  logger:
+    push_interval: 30s
+    flush_metrics: true
+
+input:
+  label: mqtt_input
+  batched:
+    child:
+      mqtt:
+        urls:
+          - "tcp://${MQTT_BROKER:localhost}:${MQTT_PORT:1883}"
+        topics:
+          - "data/#"
+          - "status/#"
+          - "alarm/#"
+          - "mqtt/#"
+        client_id: "agent-mqtt-redis-benthos"
+    policy:
+      count: 500
+      period: 200ms
+
+pipeline:
+  processors:
+    - mapping: |
+        root.topic = meta("mqtt_topic")
+        root.div = meta("mqtt_topic").split("/").index(1).catch("")
+        root.process = meta("mqtt_topic").split("/").index(2).catch("")
+        root.device = meta("mqtt_topic").split("/").index(3).catch("")
+        root.payload = content().string()
+        root.timestamp = now()
+
+output:
+  broker:
+    pattern: fan_out
+    outputs:
+      # Branch 1: Push the JSON serialized message to the Redis Queue (RPUSH)
+      - redis_list:
+          url: "redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}"
+          key: "${REDIS_QUEUE_KEY:mqtt_queue}"
+
+      # Branch 2: Update the real-time tracking Redis Hash (HSET)
+      - drop: {}
+        processors:
+          - parallel:
+              cap: 64
+              processors:
+                - redis:
+                    url: "redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}"
+                    command: hset
+                    args_mapping: |
+                      root = [
+                        "rt_" + meta("mqtt_topic").split("/").index(0).catch("mqtt"),
+                        meta("mqtt_topic"),
+                        content().string()
+                      ]

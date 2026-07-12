@@ -1,0 +1,51 @@
+logger:
+  level: INFO
+  format: logfmt
+  add_timestamp: true
+
+metrics:
+  logger:
+    push_interval: 30s
+    flush_metrics: true
+
+input:
+  redis_list:
+    url: "redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}"
+    key: "${REDIS_QUEUE_KEY:mqtt_queue}"
+
+pipeline:
+  processors:
+    - mapping: |
+        # 1. Parse category from MQTT topic
+        let topic = json("topic").catch("")
+        let category = $topic.split("/").index(0).catch("default")
+        
+        # 2. Determine target partition
+        let partition = match $category {
+          "data" => 0,
+          "status" => 1,
+          "alarm" => 2,
+          "mqtt" => 3,
+          _ => 4
+        }
+        
+        # 3. Store routing variables in metadata
+        meta kafka_topic = $category
+        meta kafka_partition = $partition.string()
+        
+        # 4. Construct target payload (excluding 'div' field to match Python logic)
+        root.topic = $topic
+        root.process = json("process").catch("")
+        root.device = json("device").catch("")
+        root.payload = json("payload").catch("")
+        root.timestamp = json("timestamp").catch(now())
+
+output:
+  kafka:
+    addresses: [ "${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}" ]
+    topic: "${! meta(\"kafka_topic\") }"
+    partitioner: manual
+    partition: "${! meta(\"kafka_partition\") }"
+    batching:
+      count: 5000
+      period: 200ms

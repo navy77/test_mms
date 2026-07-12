@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.log
-log/
-node_modules/
-dist/
-.svelte-kit/

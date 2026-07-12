@@ -1,0 +1,36 @@
+services:
+  redis-kafka:
+    image: jeffail/benthos:latest
+    container_name: redis-kafka
+    ports:
+      - 4196:4195
+    restart: always
+    environment:
+      - TZ=Asia/Bangkok
+    env_file:
+      - ../../.env
+    volumes:
+      - ./benthos.yaml:/benthos.yaml
+      - ./log:/app/log
+    entrypoint:
+      - "sh"
+      - "-c"
+      - |
+        (while true; do
+          sleep 3600
+          if [ -f /app/log/benthos.log ]; then
+            SIZE=$$(wc -c < /app/log/benthos.log)
+            if [ "$$SIZE" -gt 20971520 ]; then
+              tail -n 20000 /app/log/benthos.log > /app/log/benthos.log.tmp
+              cat /app/log/benthos.log.tmp > /app/log/benthos.log
+              rm -f /app/log/benthos.log.tmp
+            fi
+          fi
+        done) &
+        /benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log
+    networks:
+      - mms-network
+
+networks:
+  mms-network:
+    external: true
