@@ -1,12 +1,11 @@
-import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import os
 import sys
 
 # Ensure parent directory is in path so we can import routers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routers.status import calculate_status_ratio, calculate_status_timeline, StatusSegment, TZ_BANGKOK
+from routers.status import calculate_status_ratio, calculate_status_timeline, TZ_BANGKOK
 
 # ==============================================================================
 # UNIT TESTS FOR STATUS CALCULATION RATIO

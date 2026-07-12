@@ -42,7 +42,7 @@ def verify_admin(
 def get_users(client = Depends(get_ch_client)):
     logger.info("Fetching all users")
     try:
-        result = client.query("SELECT last_update, user, role FROM user_register_tb ORDER BY last_update DESC")
+        result = client.query('SELECT last_update, "user", role FROM user_register_tb ORDER BY last_update DESC')
         return format_result(result)
     except Exception as e:
         logger.error(f"Error fetching users: {e}")
@@ -53,7 +53,7 @@ def create_user(user_data: UserCreate, client = Depends(get_ch_client)):
     logger.info(f"Creating user: {user_data.user}")
     try:
         # Check if user already exists
-        dup_check = client.query("SELECT user FROM user_register_tb WHERE user = %(u)s", parameters={'u': user_data.user})
+        dup_check = client.query('SELECT "user" FROM user_register_tb WHERE "user" = %(u)s', parameters={'u': user_data.user})
         if dup_check.result_rows:
             raise HTTPException(status_code=400, detail=f"User '{user_data.user}' already registered")
         
@@ -75,13 +75,13 @@ def update_user(username: str, update_data: UserUpdate, client = Depends(get_ch_
     logger.info(f"Updating user: {username}")
     try:
         # Check if user exists
-        check = client.query("SELECT user FROM user_register_tb WHERE user = %(u)s", parameters={'u': username})
+        check = client.query('SELECT "user" FROM user_register_tb WHERE "user" = %(u)s', parameters={'u': username})
         if not check.result_rows:
             raise HTTPException(status_code=404, detail=f"User '{username}' not found")
         
         # Update user
         client.command(
-            "ALTER TABLE user_register_tb UPDATE password = %(pwd)s, role = %(role)s WHERE user = %(u)s",
+            'UPDATE user_register_tb SET password = %(pwd)s, role = %(role)s WHERE "user" = %(u)s',
             parameters={'pwd': update_data.password, 'role': update_data.role, 'u': username}
         )
         return {"message": f"User '{username}' updated successfully"}
@@ -96,12 +96,12 @@ def delete_user(username: str, client = Depends(get_ch_client)):
     logger.info(f"Deleting user: {username}")
     try:
         # Check if user exists
-        check = client.query("SELECT user FROM user_register_tb WHERE user = %(u)s", parameters={'u': username})
+        check = client.query('SELECT "user" FROM user_register_tb WHERE "user" = %(u)s', parameters={'u': username})
         if not check.result_rows:
             raise HTTPException(status_code=404, detail=f"User '{username}' not found")
         
         # Delete user
-        client.command("DELETE FROM user_register_tb WHERE user = %(u)s", parameters={'u': username})
+        client.command('DELETE FROM user_register_tb WHERE "user" = %(u)s', parameters={'u': username})
         return {"message": f"User '{username}' deleted successfully"}
     except HTTPException:
         raise
@@ -172,7 +172,7 @@ def update_device(update_data: DeviceUpdate, client = Depends(get_ch_client)):
         
         # Update device registration
         client.command(
-            "ALTER TABLE device_register_tb UPDATE process = %(np)s, device = %(nd)s WHERE process = %(op)s AND device = %(od)s",
+            "UPDATE device_register_tb SET process = %(np)s, device = %(nd)s WHERE process = %(op)s AND device = %(od)s",
             parameters={'np': update_data.new_process, 'nd': update_data.new_device, 'op': update_data.old_process, 'od': update_data.old_device}
         )
         return {"message": "Device registration updated successfully"}
@@ -269,7 +269,7 @@ def update_column(update_data: ColumnUpdate, client = Depends(get_ch_client)):
         
         # Update column registration
         client.command(
-            "ALTER TABLE columns_register_tb UPDATE process = %(np)s, column_name = %(nc)s, column_type = %(nt)s, column_key = %(nk)s WHERE process = %(op)s AND column_name = %(oc)s",
+            "UPDATE columns_register_tb SET process = %(np)s, column_name = %(nc)s, column_type = %(nt)s, column_key = %(nk)s WHERE process = %(op)s AND column_name = %(oc)s",
             parameters={
                 'np': update_data.new_process,
                 'nc': update_data.new_column_name,
@@ -358,7 +358,7 @@ def update_project(items_key: str, update_data: ProjectUpdate, client = Depends(
         
         # Update item
         client.command(
-            "ALTER TABLE project_register_tb UPDATE value = %(val)s WHERE items = %(k)s",
+            "UPDATE project_register_tb SET value = %(val)s WHERE items = %(k)s",
             parameters={'val': update_data.value, 'k': items_key}
         )
         return {"message": f"Configuration item '{items_key}' updated successfully"}
@@ -449,7 +449,7 @@ def update_status(update_data: StatusRegisterUpdate, client = Depends(get_ch_cli
         
         # Update status registration
         client.command(
-            "ALTER TABLE status_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
+            "UPDATE status_register_tb SET process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
             parameters={
                 'np': update_data.new_process,
                 'ns': update_data.new_status,
@@ -552,7 +552,7 @@ def update_alarm(update_data: AlarmRegisterUpdate, client = Depends(get_ch_clien
         
         # Update alarm registration
         client.command(
-            "ALTER TABLE alarm_register_tb UPDATE process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
+            "UPDATE alarm_register_tb SET process = %(np)s, status = %(ns)s, color = %(color)s WHERE process = %(op)s AND status = %(os)s",
             parameters={
                 'np': update_data.new_process,
                 'ns': update_data.new_status,

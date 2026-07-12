@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock, patch
 from datetime import datetime, date
@@ -42,7 +41,7 @@ def test_production_day_boundary_before_seven():
 # 2. INTEGRATION TEST FOR API ENDPOINTS (MOCKED CH)
 # ==========================================
 @patch('routers.data.get_ch_client')
-def test_get_hourly_process_success(mock_get_client):
+def test_get_currently_process_success(mock_get_client):
     # Mock Clickhouse database client
     mock_db = MagicMock()
     mock_result = MagicMock()
@@ -55,7 +54,7 @@ def test_get_hourly_process_success(mock_get_client):
     mock_get_client.return_value = mock_db
 
     # เรียกยิง API จริง
-    response = client.get("/api/v1/data/hourly/demo1")
+    response = client.get("/api/v1/data/currently/demo1")
     
     assert response.status_code == 200
     json_data = response.json()
@@ -64,7 +63,7 @@ def test_get_hourly_process_success(mock_get_client):
     assert json_data[0]["data"][0]["data1"] == 10.5
 
 @patch('routers.data.get_ch_client')
-def test_get_hourly_process_not_found(mock_get_client):
+def test_get_currently_process_not_found(mock_get_client):
     # จำลองว่าไม่มีข้อมูลใดๆ ใน Clickhouse เลย
     mock_db = MagicMock()
     mock_result = MagicMock()
@@ -72,7 +71,7 @@ def test_get_hourly_process_not_found(mock_get_client):
     mock_db.query.return_value = mock_result
     mock_get_client.return_value = mock_db
 
-    response = client.get("/api/v1/data/hourly/non_existent_process")
+    response = client.get("/api/v1/data/currently/non_existent_process")
     assert response.status_code == 400
     assert response.json()["detail"] == "Item not found"
 

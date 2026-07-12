@@ -1,12 +1,11 @@
-import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import os
 import sys
 
 # Ensure parent directory is in path so we can import routers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routers.alarm import calculate_alarm_ratio, AlarmSegment, TZ_BANGKOK
+from routers.alarm import calculate_alarm_ratio, TZ_BANGKOK
 
 # ==============================================================================
 # UNIT TESTS FOR ALARM CALCULATION RATIO

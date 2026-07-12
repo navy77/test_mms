@@ -1,12 +1,11 @@
-import pytest
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 import os
 import sys
 
 # Ensure parent directory is in path so we can import routers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routers.device import calculate_device_ratio, DeviceSegment, TZ_BANGKOK
+from routers.device import calculate_device_ratio, TZ_BANGKOK
 
 # ==============================================================================
 # UNIT TESTS FOR DEVICE STATUS CALCULATION RATIO

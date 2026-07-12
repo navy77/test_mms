@@ -1,7 +1,7 @@
 import os
 import sys
 import logging
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
 import dotenv
 
@@ -12,11 +12,12 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(script_dir)
 
-from database import get_ch_client
-from routers.register import router as register_router
-from routers.auth import router as auth_router
+from database import get_ch_client, init_db  # noqa: E402
+from routers.register import router as register_router  # noqa: E402
+from routers.auth import router as auth_router  # noqa: E402
+from routers.device import router as device_router  # noqa: E402
 
-from logging.handlers import RotatingFileHandler
+from logging.handlers import RotatingFileHandler  # noqa: E402
 
 # Configure logging
 log_dir = os.path.join(script_dir, "log")
@@ -53,11 +54,17 @@ app.add_middleware(
 # Include Routers
 app.include_router(auth_router)
 app.include_router(register_router)
+app.include_router(device_router)
+
+@app.on_event("startup")
+def startup_event():
+    logger.info("Initializing database...")
+    init_db()
 
 @app.get("/health", status_code=status.HTTP_200_OK)
-def health_check():
-    client = get_ch_client()
-    return {"status": "healthy", "clickhouse": "connected"}
+def health_check(client = Depends(get_ch_client)):
+    client.query("SELECT 1")
+    return {"status": "healthy", "postgres": "connected"}
 
 if __name__ == "__main__":
     import uvicorn

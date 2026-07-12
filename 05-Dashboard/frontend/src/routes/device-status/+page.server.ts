@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		let initialCounts = { total: 0, online: 0, offline: 0, communication_fail: 0 };
 		if (initialProcess) {
 			try {
-				const countsRes = await fetch(`http://localhost:8003/api/v1/device/currently/status/${initialProcess}`);
+				const countsRes = await fetch(`http://localhost:8001/api/v1/device/currently/status/${initialProcess}`);
 				if (countsRes.ok) {
 					const data = await countsRes.json();
 					initialCounts = {

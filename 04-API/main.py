@@ -12,10 +12,10 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(script_dir)
 
-from database import get_ch_client
-from routers import data_router, status_router, alarm_router, device_router
+from database import get_ch_client  # noqa: E402
+from routers import data_router, status_router, alarm_router, device_router  # noqa: E402
 
-from logging.handlers import RotatingFileHandler
+from logging.handlers import RotatingFileHandler  # noqa: E402
 
 # Configure logging
 log_dir = os.path.join(script_dir, "log")

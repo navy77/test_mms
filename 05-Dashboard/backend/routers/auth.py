@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel
-from database import get_ch_client
+from database import get_ch_client, format_result
 
 logger = logging.getLogger("DashboardBackend.Auth")
 
@@ -22,26 +22,29 @@ class LoginResponse(BaseModel):
 @router.post("/login", response_model=LoginResponse)
 def login(body: LoginRequest, client = Depends(get_ch_client)):
     """
-    Authenticate user against ClickHouse user_register_tb.
+    Authenticate user against PostgreSQL user_register_tb.
     Compares plain-text username and password (matching existing data schema).
     """
     try:
         result = client.query(
             """
-            SELECT user, password, role
+            SELECT "user", password, role
             FROM user_register_tb
-            WHERE user = {username:String}
+            WHERE "user" = %(username)s
             LIMIT 1
             """,
             parameters={"username": body.username},
         )
-        rows = result.result_rows
+        rows = format_result(result)
         if not rows:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username or password",
             )
-        db_user, db_password, db_role = rows[0]
+        row = rows[0]
+        db_user = row["user"]
+        db_password = row["password"]
+        db_role = row["role"]
         if db_password != body.password:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

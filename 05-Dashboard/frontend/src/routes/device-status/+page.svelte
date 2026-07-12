@@ -124,7 +124,7 @@
 		loadingCounts = true;
 		try {
 			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-			const res = await fetch(`http://${apiHost}:8003/api/v1/device/currently/status/${proc}`);
+			const res = await fetch(`http://${apiHost}:8001/api/v1/device/currently/status/${proc}`);
 			if (res.ok) {
 				const resData = await res.json();
 				counts = {

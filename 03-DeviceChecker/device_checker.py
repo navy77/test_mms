@@ -120,13 +120,11 @@ class DeviceChecker:
             broker = ""
             modbus = ""
             mac_id = ""
-            div = "div"  # default fallback if not found in Redis 
             
             # Look up device in Redis real-time data
             redis_entry = latest_device_data.get((proc, dev))
             if redis_entry:
                 try:
-                    div = redis_entry.get("div", "div")
                     timestamp_str = redis_entry.get("timestamp")
                     try:
                         ts = datetime.fromisoformat(timestamp_str)
