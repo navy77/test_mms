@@ -19,7 +19,7 @@
 * **`01-tools/`** : บริหารจัดการโครงสร้างพื้นฐาน (Docker Compose สำหรับ MQTT, Redis, Kafka, ClickHouse, PostgreSQL)
 * **`02-benthos/`** : Benthos Configuration ที่ใช้สำหรับดึงข้อมูลจาก MQTT มาใส่ใน Redis, ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka, และดึงข้อมูลจาก Kafka บันทึกลง ClickHouse
 * **`03-DeviceChecker/`** : ตรวจสอบสถานะอุปกรณ์ว่า online หรือ offline และบันทึกลง ClickHouse
-* **`04-API/`** : API Service ดึงข้อมูลประวัติย้อนหลังจาก ClickHouse
+* **`04-API/`** : API Service ดึงข้อมูลประวัติย้อนหลังจาก ClickHouse โดยใช้ หลักการ batch endpoint
 * **`05-Dashboard/`** : สร้าง Frontend และ Backend ของ Web Dashboard โดยใช้ PostgreSQL สำหรับเก็บข้อมูลของระบบ
 * **`06-DataStorage/`** : Python Aggregation Script ที่จะประมวลผลข้อมูลจาก ClickHouse เพื่อส่งต่อไปยัง PostgreSQL โดยทำงานภายใต้ Prefect Workflow
 
@@ -42,7 +42,8 @@
 * **หน้าที่:** ดึงข้อมูลจาก Redis hash `rt_mqtt` ที่เก็บข้อมูลล่าสุดของแต่ละอุปกรณ์ จากนั้นตรวจสอบเวลาล่าสุดของแต่ละอุปกรณ์ หากไม่มีข้อมูลส่งเข้ามาเกิน 300 วินาที ให้ส่งข้อความ MQTT offline เข้าไปยัง Topic `status/div/##`
 
 ### 4. APIService (`04-API`)
-* **หน้าที่:** ให้บริการ API สำหรับดึงข้อมูลเพื่อนำไปแสดงผล โดยเชื่อมต่อกับ **ClickHouse** เพื่อค้นหาและดึงข้อมูลประวัติย้อนหลัง (Historical Data) ตามช่วงเวลาและพารามิเตอร์ที่ระบุ
+* **หน้าที่:** ให้บริการ API สำหรับดึงข้อมูลเพื่อนำไปแสดงผล โดยเชื่อมต่อกับ **ClickHouse** เพื่อค้นหาและดึงข้อมูลประวัติย้อนหลัง (Historical Data) ตามช่วงเวลาและพารามิเตอร์ที่ระบุ 
+โดยจะทำงานแบบ batch endpoint
 * **โครงสร้างต้นแบบโฟลเดอร์ (FastAPI Folder Structure):**
     ```text
     04-API/

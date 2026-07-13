@@ -1,13 +1,23 @@
 import logging
 import calendar
 from datetime import datetime, timedelta, timezone
+from threading import Lock
 from typing import List, Any, Dict, Optional
-from fastapi import APIRouter, HTTPException, Path, status
+from fastapi import APIRouter, HTTPException, Path, Query, status
 from database import get_ch_client, format_result
 from models import StatusResponse, DailyStatusResponse, MonthlyStatusResponse, StatusSegment, TimelineResponse, TimelineSegment
 
 logger = logging.getLogger("RESTBackend.Routers.Status")
 router = APIRouter(prefix="/api/v1/status", tags=["Status"])
+
+# ── In-memory TTL Cache (60 sec) for state timeline ─────────────────────────
+try:
+    from cachetools import TTLCache
+    _state_cache: TTLCache = TTLCache(maxsize=500, ttl=60)
+except ImportError:
+    # Fallback: plain dict (no TTL) — install cachetools for full benefit
+    _state_cache = {}  # type: ignore
+_cache_lock = Lock()
 
 # Bangkok timezone (+07:00)
 TZ_BANGKOK = timezone(timedelta(hours=7))
@@ -783,63 +793,97 @@ def get_monthly_device(
             detail=str(e)
         )
 
-# 4. State status
-@router.get("/state/{process}/{device}", response_model=TimelineResponse)
-def get_state_status(
+# 4a. State status — BATCH (single ClickHouse query for multiple devices)
+@router.get("/state/{process}")
+def get_state_status_batch(
     process: str = Path(..., description="The process identifier"),
-    device: str = Path(..., description="The device identifier")
+    devices: str = Query(..., description="Comma-separated device names, e.g. no_1,no_2,no_3"),
 ):
     """
-    Get sequential status states for a specific device from 07:00 of the current production day until now.
-    Suitable for timeline chart visualization.
+    Batch endpoint: fetch state timelines for multiple devices in ONE ClickHouse query.
+    Per-device results are cached for 60 seconds (shared with single-device endpoint).
+    Response: { "no_1": [...segments], "no_2": [...segments], ... }
     """
+    from collections import defaultdict
+
+    device_list = [d.strip() for d in devices.split(",") if d.strip()]
+    if not device_list:
+        raise HTTPException(status_code=400, detail="devices query param is required")
+
     now = get_now_bangkok()
     start_time, _ = get_production_day_range(now)
-    
-    logger.info(f"Fetching state timeline for device '{process}/{device}' from {start_time} to {now}")
+
+    # ── 1. Check cache per device ────────────────────────────────────────────
+    result: Dict[str, Any] = {}
+    to_fetch: List[str] = []
+    for dev in device_list:
+        cache_key = (process, dev, start_time.date().isoformat())
+        with _cache_lock:
+            cached = _state_cache.get(cache_key)
+        if cached is not None:
+            logger.debug(f"Cache HIT (batch): state {process}/{dev}")
+            result[dev] = [seg.__dict__ if hasattr(seg, "__dict__") else seg for seg in cached]
+        else:
+            to_fetch.append(dev)
+
+    if not to_fetch:
+        return result
+
+    # ── 2. Single ClickHouse query for all uncached devices ──────────────────
+    logger.info(f"Batch fetching state timeline: {process}/{to_fetch} from {start_time} to {now}")
     client = get_ch_client()
     try:
-        # Fetch initial status of the device before start_time
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
-        init_status = initial_statuses.get(device)
+        initial_statuses = get_initial_statuses_batch(client, process, start_time, to_fetch)
 
-        # Query all status records from start_time until now
         query = """
-            SELECT process, device, status, created_at
+            SELECT device, status, created_at
             FROM status_tb
             WHERE process = %(process)s
-              AND device = %(device)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
-            ORDER BY created_at ASC
+            ORDER BY device, created_at ASC
         """
-        result = client.query(
+        ch_result = client.query(
             query,
             parameters={
                 "process": process,
-                "device": device,
+                "devices": to_fetch,
                 "start_time": start_time,
-                "end_time": now
-            }
+                "end_time": now,
+            },
         )
-        records = format_result(result)
-        
-        has_data = len(records) > 0 or init_status is not None
-        if not has_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Item not found"
+
+        # Group raw rows by device
+        records_by_device: Dict[str, List] = defaultdict(list)
+        for row in ch_result.result_rows:
+            records_by_device[row[0]].append(
+                {"device": row[0], "status": row[1], "created_at": row[2]}
             )
-            
-        timeline_data = calculate_status_timeline(records, start_time, now, init_status, device)
-        return TimelineResponse(device=device, data=timeline_data)
-        
-    except HTTPException:
-        raise
+
+        # ── 3. Calculate timeline per device and cache ───────────────────────
+        for dev in to_fetch:
+            init_status = initial_statuses.get(dev)
+            dev_records = records_by_device.get(dev, [])
+            timeline_data = calculate_status_timeline(
+                dev_records, start_time, now, init_status, dev
+            )
+            cache_key = (process, dev, start_time.date().isoformat())
+            with _cache_lock:
+                _state_cache[cache_key] = timeline_data
+            result[dev] = [
+                {
+                    "start_time": seg.start_time.isoformat() if hasattr(seg, "start_time") else seg["start_time"],
+                    "end_time": seg.end_time.isoformat() if hasattr(seg, "end_time") else seg["end_time"],
+                    "status": seg.status if hasattr(seg, "status") else seg["status"],
+                    "duration": seg.duration if hasattr(seg, "duration") else seg["duration"],
+                }
+                for seg in timeline_data
+            ]
+
+        return result
+
     except Exception as e:
-        logger.error(f"Error fetching device state status: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
+        logger.error(f"Error in batch state fetch for {process}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 

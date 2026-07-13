@@ -46,7 +46,8 @@
 			subItems: [
 				{ href: '/machine-status', label: 'Overview' },
 				{ href: '/machine-status-timeline', label: 'Timeline' },
-				{ href: '/machine-status-history', label: 'History' }
+				{ href: '/machine-status-utl-daily', label: 'Daily Utilization' },
+				{ href: '/machine-status-utl-monthly', label: 'Monthly Utilization' }
 			]
 		},
 		{ 
@@ -54,7 +55,7 @@
 			icon: Bell,
 			subItems: [
 				{ href: '/alarm-status', label: 'Overview' },
-				{ href: '/alarm-status/history', label: 'History' }
+				{ href: '/alarm-status-history', label: 'History' }
 			]
 		},
 		{ href: '/device-status', label: 'Device Status', icon: HardDrive },
