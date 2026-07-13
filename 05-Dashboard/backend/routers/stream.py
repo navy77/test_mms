@@ -2,13 +2,19 @@ import logging
 import os
 import json
 import asyncio
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, HTTPException, Query, Request, status
 from fastapi.responses import StreamingResponse
 import redis
 
 from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional
-from database import get_ch_client, get_clickhouse_client, format_result
+from database import (
+    PostgresClient,
+    format_result,
+    get_clickhouse_client,
+    get_db_connection,
+    release_db_connection,
+)
 
 
 logger = logging.getLogger("DashboardBackend.Stream")
@@ -161,6 +167,17 @@ router = APIRouter(prefix="/api/v1/device", tags=["DeviceRealtime"])
 _redis_client = None
 
 
+def parse_devices(devices: str) -> list[str]:
+    """Parse, deduplicate, and cap device IDs accepted by an SSE connection."""
+    device_list = list(dict.fromkeys(item.strip() for item in devices.split(",") if item.strip()))
+    max_devices = int(os.getenv("SSE_MAX_DEVICES", "100"))
+    if not device_list:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="devices is required")
+    if len(device_list) > max_devices:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=f"Maximum {max_devices} devices per stream")
+    return device_list
+
+
 def get_redis_client():
     global _redis_client
     if _redis_client is not None:
@@ -207,23 +224,32 @@ def get_division(postgres_client) -> str:
     return "mic"
 
 
+def get_stream_division() -> str:
+    """Read division without retaining a PostgreSQL connection for the SSE lifetime."""
+    connection = get_db_connection()
+    try:
+        return get_division(PostgresClient(connection))
+    finally:
+        release_db_connection(connection)
+
+
 @router.get("/realtime/status")
 async def get_realtime_status_stream(
+    request: Request,
     process: str = Query(..., description="The process identifier"),
     devices: str = Query(..., description="Comma-separated list of device IDs"),
-    db_client=Depends(get_ch_client),
 ):
     """
     SSE endpoint to fetch real-time device statuses from Redis 'rt_mqtt' hash.
     Streams only the requested devices to save bandwidth.
     """
-    division = get_division(db_client)
+    division = get_stream_division()
 
     async def event_generator():
         logger.info(
             f"SSE status stream started for process={process}, devices={devices}"
         )
-        device_list = [d.strip() for d in devices.split(",") if d.strip()]
+        device_list = parse_devices(devices)
 
         try:
             poll_interval = float(os.getenv("SSE_POLL_INTERVAL", 5.0))
@@ -232,12 +258,14 @@ async def get_realtime_status_stream(
 
         try:
             while True:
+                if await request.is_disconnected():
+                    break
                 try:
                     r_client = get_redis_client()
                     fields = [
                         f"mqtt/{division}/{process}/{dev_id}" for dev_id in device_list
                     ]
-                    values = r_client.hmget("rt_mqtt", fields)
+                    values = await asyncio.to_thread(r_client.hmget, "rt_mqtt", fields)
 
                     response_data = []
                     for dev_id, val in zip(device_list, values):
@@ -305,21 +333,21 @@ async def get_realtime_status_stream(
 
 @router.get("/realtime/machine-status")
 async def get_realtime_machine_status_stream(
+    request: Request,
     process: str = Query(..., description="The process identifier"),
     devices: str = Query(..., description="Comma-separated list of device IDs"),
-    db_client=Depends(get_ch_client),
 ):
     """
     SSE endpoint to fetch real-time machine statuses from Redis 'rt_status' hash.
     Streams only the requested devices to save bandwidth.
     """
-    division = get_division(db_client)
+    division = get_stream_division()
 
     async def event_generator():
         logger.info(
             f"SSE machine-status stream started for process={process}, devices={devices}"
         )
-        device_list = [d.strip() for d in devices.split(",") if d.strip()]
+        device_list = parse_devices(devices)
 
         try:
             poll_interval = float(os.getenv("SSE_POLL_INTERVAL", 5.0))
@@ -328,13 +356,15 @@ async def get_realtime_machine_status_stream(
 
         try:
             while True:
+                if await request.is_disconnected():
+                    break
                 try:
                     r_client = get_redis_client()
                     fields = [
                         f"status/{division}/{process}/{dev_id}"
                         for dev_id in device_list
                     ]
-                    values = r_client.hmget("rt_status", fields)
+                    values = await asyncio.to_thread(r_client.hmget, "rt_status", fields)
 
                     response_data = []
                     for dev_id, val in zip(device_list, values):
@@ -398,21 +428,21 @@ async def get_realtime_machine_status_stream(
 
 @router.get("/realtime/alarm-status")
 async def get_realtime_alarm_status_stream(
+    request: Request,
     process: str = Query(..., description="The process identifier"),
     devices: str = Query(..., description="Comma-separated list of device IDs"),
-    db_client=Depends(get_ch_client),
 ):
     """
     SSE endpoint to fetch real-time alarm statuses from Redis 'rt_alarm' hash.
     Streams only the requested devices to save bandwidth.
     """
-    division = get_division(db_client)
+    division = get_stream_division()
 
     async def event_generator():
         logger.info(
             f"SSE alarm-status stream started for process={process}, devices={devices}"
         )
-        device_list = [d.strip() for d in devices.split(",") if d.strip()]
+        device_list = parse_devices(devices)
 
         try:
             poll_interval = float(os.getenv("SSE_POLL_INTERVAL", 5.0))
@@ -421,12 +451,14 @@ async def get_realtime_alarm_status_stream(
 
         try:
             while True:
+                if await request.is_disconnected():
+                    break
                 try:
                     r_client = get_redis_client()
                     fields = [
                         f"alarm/{division}/{process}/{dev_id}" for dev_id in device_list
                     ]
-                    values = r_client.hmget("rt_alarm", fields)
+                    values = await asyncio.to_thread(r_client.hmget, "rt_alarm", fields)
 
                     response_data = []
                     for dev_id, val in zip(device_list, values):
@@ -490,6 +522,7 @@ async def get_realtime_alarm_status_stream(
 
 @router.get("/realtime/state-timeline")
 async def get_realtime_state_timeline_stream(
+    request: Request,
     process: str = Query(..., description="The process identifier"),
     devices: str = Query(..., description="Comma-separated list of device IDs"),
 ):
@@ -501,7 +534,7 @@ async def get_realtime_state_timeline_stream(
         logger.info(
             f"SSE state timeline stream started for process={process}, devices={devices}"
         )
-        device_list = [d.strip() for d in devices.split(",") if d.strip()]
+        device_list = parse_devices(devices)
 
         try:
             poll_interval = float(os.getenv("SSE_POLL_INTERVAL", 10.0))
@@ -510,19 +543,25 @@ async def get_realtime_state_timeline_stream(
 
         try:
             while True:
+                if await request.is_disconnected():
+                    break
                 try:
                     if not device_list:
                         yield f"data: {json.dumps({})}\n\n"
                         await asyncio.sleep(poll_interval)
                         continue
 
-                    client = get_clickhouse_client()
+                    client = await asyncio.to_thread(get_clickhouse_client)
                     now = get_now_bangkok()
                     start_time, _ = get_production_day_range(now)
 
                     # Fetch initial statuses for all requested devices at once
-                    initial_statuses = get_initial_statuses_batch(
-                        client, process, start_time, device_list
+                    initial_statuses = await asyncio.to_thread(
+                        get_initial_statuses_batch,
+                        client,
+                        process,
+                        start_time,
+                        device_list,
                     )
 
                     # Query all status records for all requested devices since start_time
@@ -535,7 +574,8 @@ async def get_realtime_state_timeline_stream(
                           AND created_at <= %(end_time)s
                         ORDER BY created_at ASC
                     """
-                    result = client.query(
+                    result = await asyncio.to_thread(
+                        client.query,
                         query,
                         parameters={
                             "process": process,

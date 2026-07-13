@@ -42,7 +42,7 @@
 	function getHeaders() {
 		return {
 			'Content-Type': 'application/json',
-			'X-Role': auth.user?.role || 'user'
+			Authorization: `Bearer ${auth.accessToken ?? ''}`
 		};
 	}
 

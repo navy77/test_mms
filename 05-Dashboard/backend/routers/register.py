@@ -1,7 +1,8 @@
 import logging
-from typing import List, Optional
-from fastapi import APIRouter, HTTPException, status, Depends, Header, Query
+from typing import List
+from fastapi import APIRouter, HTTPException, status, Depends, Query
 from database import get_ch_client, format_result
+from security import hash_password, verify_admin
 from models import (
     UserCreate, UserUpdate, UserResponse,
     DeviceCreate, DeviceUpdate, DeviceResponse,
@@ -17,18 +18,6 @@ router = APIRouter(
     prefix="/api/v1",
     tags=["register"]
 )
-
-# Permission Dependency to restrict write operations to admin role
-def verify_admin(
-    x_role: Optional[str] = Header(None, alias="X-Role"),
-    role: Optional[str] = Query(None)
-):
-    user_role = x_role or role
-    if not user_role or user_role.lower() != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Permission denied. Admin role required."
-        )
 
 # =====================================================================
 # API Endpoints
@@ -60,7 +49,7 @@ def create_user(user_data: UserCreate, client = Depends(get_ch_client)):
         # Insert user
         client.insert(
             'user_register_tb',
-            [[user_data.user, user_data.password, user_data.role]],
+            [[user_data.user, hash_password(user_data.password), user_data.role]],
             column_names=['user', 'password', 'role']
         )
         return {"message": f"User '{user_data.user}' created successfully"}
@@ -82,7 +71,7 @@ def update_user(username: str, update_data: UserUpdate, client = Depends(get_ch_
         # Update user
         client.command(
             'UPDATE user_register_tb SET password = %(pwd)s, role = %(role)s WHERE "user" = %(u)s',
-            parameters={'pwd': update_data.password, 'role': update_data.role, 'u': username}
+            parameters={'pwd': hash_password(update_data.password), 'role': update_data.role, 'u': username}
         )
         return {"message": f"User '{username}' updated successfully"}
     except HTTPException:

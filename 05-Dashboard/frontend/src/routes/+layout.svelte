@@ -47,7 +47,6 @@
 				{ href: '/machine-status', label: 'Overview' },
 				{ href: '/machine-status-timeline', label: 'Timeline' },
 				{ href: '/machine-status-utl-daily', label: 'Daily Utilization' },
-				{ href: '/machine-status-utl-monthly', label: 'Monthly Utilization' }
 			]
 		},
 		{ 

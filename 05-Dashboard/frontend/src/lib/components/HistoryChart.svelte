@@ -27,7 +27,8 @@
 	let { process, device, colorMap, records = [], loading = true, error = null }: Props = $props();
 
 	let chartEl = $state<HTMLElement | null>(null);
-	let chartInstance = $state<any>(null);
+	// ECharts owns this mutable instance; it must not be reactive state.
+	let chartInstance: any = null;
 	let echartsLib = $state<any>(null);
 
 	onMount(async () => {
@@ -59,7 +60,36 @@
 
 	// 2. Dynamically update ECharts options in-place when records or colorMap changes
 	$effect(() => {
-		if (!chartInstance || records.length === 0) return;
+		// Track the lazy-loaded library as a dependency.  Without this, this
+		// effect can run before the instance is initialized and never run again.
+		if (!echartsLib || !chartInstance) return;
+
+		if (records.length === 0) {
+			chartInstance.setOption(
+				{
+					animation: false,
+					backgroundColor: 'transparent',
+					grid: { top: 8, right: 8, bottom: 20, left: 36, containLabel: false },
+					xAxis: {
+						type: 'category',
+						data: [],
+						axisLine: { show: false },
+						axisTick: { show: false },
+						axisLabel: { show: false }
+					},
+					yAxis: {
+						type: 'value',
+						min: 0,
+						max: 100,
+						axisLabel: { show: false },
+						splitLine: { show: false }
+					},
+					series: []
+				},
+				true
+			);
+			return;
+		}
 
 		// All unique statuses — include 'no data' so full bar is shown on empty days
 		const priorityOrder = ['run', 'alarm', 'wait', 'stop', 'other', 'offline', 'no data'];
@@ -187,7 +217,8 @@
 			series: series
 		};
 
-		chartInstance.setOption(options);
+		chartInstance.setOption(options, true);
+		chartInstance.resize();
 	});
 
 	onDestroy(() => {

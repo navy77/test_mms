@@ -2,8 +2,8 @@ import logging
 import calendar
 from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional, Set, Tuple
-from fastapi import APIRouter, HTTPException, Path, status
-from database import get_ch_client, format_result
+from fastapi import APIRouter, HTTPException, Path, Query, status
+from database import format_result, get_ch_client, get_registered_devices as fetch_registered_devices
 from models import AlarmResponse, DailyAlarmResponse, MonthlyAlarmResponse, AlarmSegment
 
 logger = logging.getLogger("RESTBackend.Routers.Alarm")
@@ -34,13 +34,15 @@ def get_registered_devices(client, process: str) -> List[str]:
     """
     Retrieve registered device names for the given process from device_register_tb.
     """
-    try:
-        query = "SELECT device FROM configdb.device_register_tb WHERE process = %(process)s"
-        result = client.query(query, parameters={"process": process})
-        return [row[0] for row in result.result_rows]
-    except Exception as e:
-        logger.warning(f"Error querying configdb.device_register_tb for process '{process}': {e}")
-        return []
+    return fetch_registered_devices(process)
+
+def resolve_devices(client, process: str, devices: Optional[str]) -> List[str]:
+    """Return requested devices, or every registered device when none are supplied."""
+    requested = [item.strip() for item in (devices or "").split(",")]
+    device_list = [item for item in requested if item]
+    if not device_list:
+        device_list = get_registered_devices(client, process)
+    return list(dict.fromkeys(device_list))
 
 def get_initial_alarms_batch(client, process: str, start_time: datetime, devices: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
     """
@@ -352,7 +354,8 @@ def group_alarm_by_month(
 # 1. Currently Endpoint
 @router.get("/currently/{process}", response_model=List[AlarmResponse])
 def get_currently_process(
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(None, description="Optional comma-separated devices; omit for all devices."),
 ):
     """
     Get current alarm segments for all devices in a process from 07:00 of the current production day until now.
@@ -363,13 +366,16 @@ def get_currently_process(
     logger.info(f"Fetching current alarm for process '{process}' from {start_time} to {now}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_alarms = get_initial_alarms_batch(client, process, start_time, device_list)
         
         query = """
             SELECT process, device, status, created_at
             FROM alarm_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
             ORDER BY created_at ASC
@@ -378,6 +384,7 @@ def get_currently_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": now
             }
@@ -391,7 +398,7 @@ def get_currently_process(
                 detail="Item not found"
             )
             
-        return group_alarm_by_device(records, devices, start_time, now, initial_alarms)
+        return group_alarm_by_device(records, device_list, start_time, now, initial_alarms)
     except HTTPException:
         raise
     except Exception as e:
@@ -401,7 +408,6 @@ def get_currently_process(
             detail=str(e)
         )
 
-@router.get("/currently/{process}/{device}", response_model=AlarmResponse)
 def get_currently_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
@@ -464,7 +470,8 @@ def get_currently_device(
 # 2. Daily Endpoints
 @router.get("/daily/{process}", response_model=List[DailyAlarmResponse])
 def get_daily_process(
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(None, description="Optional comma-separated devices; omit for all devices."),
 ):
     """
     Get daily alarm segments for all devices in a process for the current production month.
@@ -485,13 +492,16 @@ def get_daily_process(
     logger.info(f"Fetching daily alarms for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_alarms = get_initial_alarms_batch(client, process, start_time, device_list)
         
         query = """
             SELECT process, device, status, created_at
             FROM alarm_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
             ORDER BY created_at ASC
@@ -500,6 +510,7 @@ def get_daily_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": end_time
             }
@@ -513,7 +524,7 @@ def get_daily_process(
                 detail="Item not found"
             )
             
-        return group_alarm_by_prod_date(records, devices, start_date, end_date, initial_alarms)
+        return group_alarm_by_prod_date(records, device_list, start_date, end_date, initial_alarms)
     except HTTPException:
         raise
     except Exception as e:
@@ -523,7 +534,6 @@ def get_daily_process(
             detail=str(e)
         )
 
-@router.get("/daily/{process}/{device}", response_model=List[DailyAlarmResponse])
 def get_daily_device(
     process: str = Path(..., description="The process identifier"),
     device: str = Path(..., description="The device identifier")
@@ -591,7 +601,8 @@ def get_daily_device(
 def get_monthly_process(
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(None, description="Optional comma-separated devices; omit for all devices."),
 ):
     """
     Get alarm segments for all devices in a process for a specific month.
@@ -613,13 +624,16 @@ def get_monthly_process(
     logger.info(f"Fetching monthly alarms for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_alarms = get_initial_alarms_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_alarms = get_initial_alarms_batch(client, process, start_time, device_list)
         
         query = """
             SELECT process, device, status, created_at
             FROM alarm_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at < %(end_time)s
             ORDER BY created_at ASC
@@ -628,6 +642,7 @@ def get_monthly_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": end_time
             }
@@ -641,7 +656,7 @@ def get_monthly_process(
                 detail="Item not found"
             )
             
-        return group_alarm_by_month(records, f"{year}-{month:02d}", devices, start_time, end_time, initial_alarms)
+        return group_alarm_by_month(records, f"{year}-{month:02d}", device_list, start_time, end_time, initial_alarms)
     except HTTPException:
         raise
     except Exception as e:
@@ -651,7 +666,6 @@ def get_monthly_process(
             detail=str(e)
         )
 
-@router.get("/monthly/{year}/{month}/{process}/{device}", response_model=List[MonthlyAlarmResponse])
 def get_monthly_device(
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),

@@ -1,23 +1,19 @@
 import logging
 import calendar
 from datetime import datetime, timedelta, timezone
-from threading import Lock
 from typing import List, Any, Dict, Optional
 from fastapi import APIRouter, HTTPException, Path, Query, status
-from database import get_ch_client, format_result
-from models import StatusResponse, DailyStatusResponse, MonthlyStatusResponse, StatusSegment, TimelineResponse, TimelineSegment
+from database import format_result, get_ch_client, get_registered_devices as fetch_registered_devices
+from models import (
+    DailyStatusResponse,
+    MonthlyStatusResponse,
+    StatusResponse,
+    StatusSegment,
+    TimelineSegment,
+)
 
 logger = logging.getLogger("RESTBackend.Routers.Status")
 router = APIRouter(prefix="/api/v1/status", tags=["Status"])
-
-# ── In-memory TTL Cache (60 sec) for state timeline ─────────────────────────
-try:
-    from cachetools import TTLCache
-    _state_cache: TTLCache = TTLCache(maxsize=500, ttl=60)
-except ImportError:
-    # Fallback: plain dict (no TTL) — install cachetools for full benefit
-    _state_cache = {}  # type: ignore
-_cache_lock = Lock()
 
 # Bangkok timezone (+07:00)
 TZ_BANGKOK = timezone(timedelta(hours=7))
@@ -44,13 +40,19 @@ def get_registered_devices(client, process: str) -> List[str]:
     """
     Retrieve registered device names for the given process from device_register_tb.
     """
-    try:
-        query = "SELECT device FROM configdb.device_register_tb WHERE process = %(process)s"
-        result = client.query(query, parameters={"process": process})
-        return [row[0] for row in result.result_rows]
-    except Exception as e:
-        logger.warning(f"Error querying configdb.device_register_tb for process '{process}': {e}")
-        return []
+    return fetch_registered_devices(process)
+
+
+def resolve_devices(
+    client, process: str, devices: Optional[str]
+) -> List[str]:
+    """Return requested devices, or every registered device when none are supplied."""
+    requested_devices = [item.strip() for item in (devices or "").split(",")]
+    device_list = [item for item in requested_devices if item]
+    if not device_list:
+        device_list = get_registered_devices(client, process)
+    return list(dict.fromkeys(device_list))
+
 
 def get_initial_statuses_batch(client, process: str, start_time: datetime, devices: Optional[List[str]] = None) -> Dict[str, Dict[str, Any]]:
     """
@@ -428,10 +430,14 @@ def group_status_by_month(
 # 1. currently Endpoints
 @router.get("/currently/{process}", response_model=List[StatusResponse])
 def get_currently_process(
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(
+        None,
+        description="Optional comma-separated device names; omit for all devices.",
+    ),
 ):
     """
-    Get currently status segments for all devices in a process from 07:00 of the current production day until now.
+    Get current status segments for requested or all devices from 07:00 until now.
     """
     now = get_now_bangkok()
     start_time, end_time = get_production_day_range(now)
@@ -439,13 +445,18 @@ def get_currently_process(
     logger.info(f"Fetching currently status for process '{process}' from {start_time} to {now}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_statuses = get_initial_statuses_batch(
+            client, process, start_time, device_list
+        )
         
         query = """
             SELECT process, device, status, created_at
             FROM status_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
             ORDER BY created_at ASC
@@ -454,6 +465,7 @@ def get_currently_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": now
             }
@@ -467,7 +479,9 @@ def get_currently_process(
                 detail="Item not found"
             )
             
-        return group_status_by_device(records, devices, start_time, now, initial_statuses)
+        return group_status_by_device(
+            records, device_list, start_time, now, initial_statuses
+        )
     except HTTPException:
         raise
     except Exception as e:
@@ -477,73 +491,17 @@ def get_currently_process(
             detail=str(e)
         )
 
-@router.get("/currently/{process}/{device}", response_model=StatusResponse)
-def get_currently_device(
-    process: str = Path(..., description="The process identifier"),
-    device: str = Path(..., description="The device identifier")
-):
-    """
-    Get currently status segments for a specific device from 07:00 of the current production day until now.
-    """
-    now = get_now_bangkok()
-    start_time, end_time = get_production_day_range(now)
-    
-    logger.info(f"Fetching currently status for device '{process}/{device}' from {start_time} to {now}")
-    client = get_ch_client()
-    try:
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
-        
-        query = """
-            SELECT process, device, status, created_at
-            FROM status_tb
-            WHERE process = %(process)s
-              AND device = %(device)s
-              AND created_at >= %(start_time)s
-              AND created_at <= %(end_time)s
-            ORDER BY created_at ASC
-        """
-        result = client.query(
-            query,
-            parameters={
-                "process": process,
-                "device": device,
-                "start_time": start_time,
-                "end_time": now
-            }
-        )
-        records = format_result(result)
-        
-        has_data = len(records) > 0 or len(initial_statuses) > 0
-        if not has_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Item not found"
-            )
-            
-        res = group_status_by_device(records, [device], start_time, now, initial_statuses)
-        if res:
-            return res[0]
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Item not found"
-            )
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching currently device status: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
-
 # 2. Daily Endpoints
 @router.get("/daily/{process}", response_model=List[DailyStatusResponse])
 def get_daily_process(
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(
+        None,
+        description="Optional comma-separated device names; omit for all devices.",
+    ),
 ):
     """
-    Get daily status segments for all devices in a process for the current production month.
+    Get daily status segments for requested or all devices for the current month.
     """
     now = get_now_bangkok()
     if now.hour < 7:
@@ -561,13 +519,18 @@ def get_daily_process(
     logger.info(f"Fetching daily status for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_statuses = get_initial_statuses_batch(
+            client, process, start_time, device_list
+        )
         
         query = """
             SELECT process, device, status, created_at
             FROM status_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at <= %(end_time)s
             ORDER BY created_at ASC
@@ -576,6 +539,7 @@ def get_daily_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": end_time
             }
@@ -589,74 +553,13 @@ def get_daily_process(
                 detail="Item not found"
             )
             
-        return group_status_by_prod_date(records, devices, start_date, end_date, initial_statuses)
+        return group_status_by_prod_date(
+            records, device_list, start_date, end_date, initial_statuses
+        )
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error fetching daily process status: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
-
-@router.get("/daily/{process}/{device}", response_model=List[DailyStatusResponse])
-def get_daily_device(
-    process: str = Path(..., description="The process identifier"),
-    device: str = Path(..., description="The device identifier")
-):
-    """
-    Get daily status segments for a specific device for the current production month.
-    """
-    now = get_now_bangkok()
-    if now.hour < 7:
-        prod_date = (now - timedelta(days=1)).date()
-    else:
-        prod_date = now.date()
-        
-    start_date = prod_date.replace(day=1)
-    last_day = calendar.monthrange(prod_date.year, prod_date.month)[1]
-    end_date = prod_date.replace(day=last_day)
-    
-    start_time = datetime.combine(start_date, datetime.min.time(), tzinfo=TZ_BANGKOK) + timedelta(hours=7)
-    end_time = datetime.combine(end_date, datetime.max.time(), tzinfo=TZ_BANGKOK)
-    
-    logger.info(f"Fetching daily status for device '{process}/{device}' from {start_time} to {end_time}")
-    client = get_ch_client()
-    try:
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
-        
-        query = """
-            SELECT process, device, status, created_at
-            FROM status_tb
-            WHERE process = %(process)s
-              AND device = %(device)s
-              AND created_at >= %(start_time)s
-              AND created_at <= %(end_time)s
-            ORDER BY created_at ASC
-        """
-        result = client.query(
-            query,
-            parameters={
-                "process": process,
-                "device": device,
-                "start_time": start_time,
-                "end_time": end_time
-            }
-        )
-        records = format_result(result)
-        
-        has_data = len(records) > 0 or len(initial_statuses) > 0
-        if not has_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Item not found"
-            )
-            
-        return group_status_by_prod_date(records, [device], start_date, end_date, initial_statuses)
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching daily device status: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=str(e)
@@ -667,10 +570,14 @@ def get_daily_device(
 def get_monthly_process(
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
-    process: str = Path(..., description="The process identifier")
+    process: str = Path(..., description="The process identifier"),
+    devices: Optional[str] = Query(
+        None,
+        description="Optional comma-separated device names; omit for all devices.",
+    ),
 ):
     """
-    Get status segments for all devices in a process for a specific month.
+    Get status segments for requested or all devices for a specific month.
     """
     start_time = datetime(year, month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
     
@@ -689,13 +596,18 @@ def get_monthly_process(
     logger.info(f"Fetching monthly status for process '{process}' from {start_time} to {end_time}")
     client = get_ch_client()
     try:
-        devices = get_registered_devices(client, process)
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, devices)
+        device_list = resolve_devices(client, process, devices)
+        if not device_list:
+            return []
+        initial_statuses = get_initial_statuses_batch(
+            client, process, start_time, device_list
+        )
         
         query = """
             SELECT process, device, status, created_at
             FROM status_tb
             WHERE process = %(process)s
+              AND device IN %(devices)s
               AND created_at >= %(start_time)s
               AND created_at < %(end_time)s
             ORDER BY created_at ASC
@@ -704,6 +616,7 @@ def get_monthly_process(
             query,
             parameters={
                 "process": process,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": end_time
             }
@@ -717,7 +630,14 @@ def get_monthly_process(
                 detail="Item not found"
             )
             
-        return group_status_by_month(records, f"{year}-{month:02d}", devices, start_time, end_time, initial_statuses)
+        return group_status_by_month(
+            records,
+            f"{year}-{month:02d}",
+            device_list,
+            start_time,
+            end_time,
+            initial_statuses,
+        )
     except HTTPException:
         raise
     except Exception as e:
@@ -727,113 +647,43 @@ def get_monthly_process(
             detail=str(e)
         )
 
-@router.get("/monthly/{year}/{month}/{process}/{device}", response_model=List[MonthlyStatusResponse])
-def get_monthly_device(
-    year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
-    month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
-    process: str = Path(..., description="The process identifier"),
-    device: str = Path(..., description="The device identifier")
-):
-    """
-    Get status segments for a specific device in a process for a specific month.
-    """
-    start_time = datetime(year, month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
-    
-    if month == 12:
-        next_year = year + 1
-        next_month = 1
-    else:
-        next_year = year
-        next_month = month + 1
-    end_time = datetime(next_year, next_month, 1, 7, 0, 0, tzinfo=TZ_BANGKOK)
-    
-    now = get_now_bangkok()
-    if end_time > now:
-        end_time = max(start_time, now)
-    
-    logger.info(f"Fetching monthly status for device '{process}/{device}' from {start_time} to {end_time}")
-    client = get_ch_client()
-    try:
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, [device])
-        
-        query = """
-            SELECT process, device, status, created_at
-            FROM status_tb
-            WHERE process = %(process)s
-              AND device = %(device)s
-              AND created_at >= %(start_time)s
-              AND created_at < %(end_time)s
-            ORDER BY created_at ASC
-        """
-        result = client.query(
-            query,
-            parameters={
-                "process": process,
-                "device": device,
-                "start_time": start_time,
-                "end_time": end_time
-            }
-        )
-        records = format_result(result)
-        
-        has_data = len(records) > 0 or len(initial_statuses) > 0
-        if not has_data:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Item not found"
-            )
-            
-        return group_status_by_month(records, f"{year}-{month:02d}", [device], start_time, end_time, initial_statuses)
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching monthly device status: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
-        )
-
 # 4a. State status — BATCH (single ClickHouse query for multiple devices)
-@router.get("/state/{process}")
+@router.get("/state/{process}", response_model=Dict[str, List[TimelineSegment]])
 def get_state_status_batch(
     process: str = Path(..., description="The process identifier"),
-    devices: str = Query(..., description="Comma-separated device names, e.g. no_1,no_2,no_3"),
+    devices: Optional[str] = Query(
+        None,
+        description=(
+            "Optional comma-separated device names, e.g. no_1,no_2,no_3. "
+            "When omitted, returns all registered devices for the process."
+        ),
+    ),
 ):
     """
-    Batch endpoint: fetch state timelines for multiple devices in ONE ClickHouse query.
-    Per-device results are cached for 60 seconds (shared with single-device endpoint).
+    Fetch state timelines for requested or all registered devices in one batch query.
+
+    When ``devices`` is omitted, every device registered for ``process`` is queried.
+    Data is queried from ClickHouse on every request; no in-memory cache is used.
+
     Response: { "no_1": [...segments], "no_2": [...segments], ... }
     """
     from collections import defaultdict
 
-    device_list = [d.strip() for d in devices.split(",") if d.strip()]
-    if not device_list:
-        raise HTTPException(status_code=400, detail="devices query param is required")
-
     now = get_now_bangkok()
     start_time, _ = get_production_day_range(now)
-
-    # ── 1. Check cache per device ────────────────────────────────────────────
-    result: Dict[str, Any] = {}
-    to_fetch: List[str] = []
-    for dev in device_list:
-        cache_key = (process, dev, start_time.date().isoformat())
-        with _cache_lock:
-            cached = _state_cache.get(cache_key)
-        if cached is not None:
-            logger.debug(f"Cache HIT (batch): state {process}/{dev}")
-            result[dev] = [seg.__dict__ if hasattr(seg, "__dict__") else seg for seg in cached]
-        else:
-            to_fetch.append(dev)
-
-    if not to_fetch:
-        return result
-
-    # ── 2. Single ClickHouse query for all uncached devices ──────────────────
-    logger.info(f"Batch fetching state timeline: {process}/{to_fetch} from {start_time} to {now}")
     client = get_ch_client()
     try:
-        initial_statuses = get_initial_statuses_batch(client, process, start_time, to_fetch)
+        device_list = resolve_devices(client, process, devices)
+
+        if not device_list:
+            return {}
+
+        result: Dict[str, Any] = {}
+        logger.info(
+            f"Batch fetching state timeline: {process}/{device_list} "
+            f"from {start_time} to {now}"
+        )
+        initial_statuses = get_initial_statuses_batch(client, process, start_time, device_list)
 
         query = """
             SELECT device, status, created_at
@@ -848,7 +698,7 @@ def get_state_status_batch(
             query,
             parameters={
                 "process": process,
-                "devices": to_fetch,
+                "devices": device_list,
                 "start_time": start_time,
                 "end_time": now,
             },
@@ -861,20 +711,17 @@ def get_state_status_batch(
                 {"device": row[0], "status": row[1], "created_at": row[2]}
             )
 
-        # ── 3. Calculate timeline per device and cache ───────────────────────
-        for dev in to_fetch:
+        # Calculate a timeline for every requested device.
+        for dev in device_list:
             init_status = initial_statuses.get(dev)
             dev_records = records_by_device.get(dev, [])
             timeline_data = calculate_status_timeline(
                 dev_records, start_time, now, init_status, dev
             )
-            cache_key = (process, dev, start_time.date().isoformat())
-            with _cache_lock:
-                _state_cache[cache_key] = timeline_data
             result[dev] = [
                 {
-                    "start_time": seg.start_time.isoformat() if hasattr(seg, "start_time") else seg["start_time"],
-                    "end_time": seg.end_time.isoformat() if hasattr(seg, "end_time") else seg["end_time"],
+                    "start_time": seg.start_time if hasattr(seg, "start_time") else seg["start_time"],
+                    "end_time": seg.end_time if hasattr(seg, "end_time") else seg["end_time"],
                     "status": seg.status if hasattr(seg, "status") else seg["status"],
                     "duration": seg.duration if hasattr(seg, "duration") else seg["duration"],
                 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import HistoryChart from "$lib/components/HistoryChart.svelte";
 
 	let { data } = $props();
@@ -65,13 +66,20 @@
 	let error = $state<string | null>(null);
 	let pollInterval: any = null;
 
-	async function fetchProcessDailyData(processName: string) {
-		if (!processName) return;
+	async function fetchProcessDailyData(processName: string, devices: string[]) {
+		if (!processName || devices.length === 0) {
+			dailyRecords = [];
+			loading = false;
+			return;
+		}
 		loading = dailyRecords.length === 0;
 		error = null;
 		try {
 			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-			const res = await fetch(`http://${apiHost}:8003/api/v1/status/daily/${processName}`);
+			const params = new URLSearchParams({ devices: devices.join(',') });
+			const res = await fetch(
+				`http://${apiHost}:8003/api/v1/status/daily/${encodeURIComponent(processName)}?${params}`
+			);
 			if (!res.ok) {
 				throw new Error(`Failed to fetch daily process status (${res.status})`);
 			}
@@ -88,12 +96,19 @@
 		}
 	}
 	$effect(() => {
-		if (selectedProcess) {
-			fetchProcessDailyData(selectedProcess);
+		if (selectedProcess && selectedDevices.length > 0) {
+			const processName = selectedProcess;
+			const devices = [...selectedDevices];
+			// Fetch reads/writes dailyRecords. Keep those out of this effect's
+			// dependency graph so a completed request cannot start another request.
+			untrack(() => void fetchProcessDailyData(processName, devices));
 			if (pollInterval) clearInterval(pollInterval);
 			pollInterval = setInterval(() => {
-				fetchProcessDailyData(selectedProcess);
+				void fetchProcessDailyData(processName, devices);
 			}, 30000); // 30 seconds interval
+		} else if (selectedProcess) {
+			dailyRecords = [];
+			loading = false;
 		}
 		return () => {
 			if (pollInterval) {

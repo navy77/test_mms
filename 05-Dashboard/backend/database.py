@@ -4,6 +4,7 @@ import psycopg2
 from psycopg2 import pool
 from fastapi import HTTPException, status
 import clickhouse_connect
+from security import hash_password
 
 logger = logging.getLogger("DashboardBackend.Database")
 
@@ -130,12 +131,7 @@ _ch_client = None
 def get_clickhouse_client():
     global _ch_client
     if _ch_client is not None:
-        try:
-            _ch_client.command("SELECT 1")
-            return _ch_client
-        except Exception:
-            logger.info("Clickhouse client connection lost in DashboardBackend, reconnecting...")
-            _ch_client = None
+        return _ch_client
 
     host = os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\"")
     port = int(os.getenv("CLICKHOUSE_PORT", 8123))
@@ -239,10 +235,8 @@ def init_db():
                 logger.info("Initializing default users in user_register_tb...")
                 cur.execute("""
                     INSERT INTO user_register_tb ("user", password, role)
-                    VALUES 
-                        ('admin', 'admin', 'admin'),
-                        ('user', 'user', 'user');
-                """)
+                    VALUES (%s, %s, 'admin'), (%s, %s, 'user');
+                """, ("admin", hash_password("admin"), "user", hash_password("user")))
 
             # 3. Insert default project configurations if empty
             cur.execute("SELECT COUNT(*) FROM project_register_tb;")

@@ -36,16 +36,17 @@
 
 			const data = await res.json();
 			if (data.success) {
-				auth.login({
+				 auth.login({
 					username: data.username,
-					role: data.role
+					role: data.role,
+					accessToken: data.access_token
 				});
 				goto('/');
 			} else {
 				throw new Error('Authentication failed');
 			}
-		} catch (err: any) {
-			errorMsg = 'Connection failed. Please try again.';
+		} catch (err: unknown) {
+			errorMsg = err instanceof Error ? err.message : 'Connection failed. Please try again.';
 		} finally {
 			loading = false;
 		}

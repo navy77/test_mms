@@ -4,6 +4,7 @@
 export interface AuthUser {
 	username: string;
 	role: 'admin' | 'user';
+	accessToken: string;
 }
 
 function createAuthStore() {
@@ -18,6 +19,7 @@ function createAuthStore() {
 		get user() { return user; },
 		get isLoggedIn() { return user !== null; },
 		get isAdmin() { return user?.role === 'admin'; },
+		get accessToken() { return user?.accessToken ?? null; },
 
 		login(u: AuthUser) {
 			user = u;

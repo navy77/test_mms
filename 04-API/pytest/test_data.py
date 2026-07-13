@@ -40,8 +40,10 @@ def test_production_day_boundary_before_seven():
 # ==========================================
 # 2. INTEGRATION TEST FOR API ENDPOINTS (MOCKED CH)
 # ==========================================
+@patch('routers.data.fetch_registered_columns', return_value=['data1'])
+@patch('routers.data.fetch_registered_devices', return_value=['no_1'])
 @patch('routers.data.get_ch_client')
-def test_get_currently_process_success(mock_get_client):
+def test_get_currently_process_success(mock_get_client, mock_fetch_devices, mock_fetch_columns):
     # Mock Clickhouse database client
     mock_db = MagicMock()
     mock_result = MagicMock()
@@ -61,19 +63,20 @@ def test_get_currently_process_success(mock_get_client):
     assert len(json_data) == 1
     assert json_data[0]["device"] == "no_1"
     assert json_data[0]["data"][0]["data1"] == 10.5
+    mock_fetch_devices.assert_called_once_with('demo1')
+    mock_fetch_columns.assert_called_once_with('demo1')
 
+@patch('routers.data.fetch_registered_devices', return_value=[])
 @patch('routers.data.get_ch_client')
-def test_get_currently_process_not_found(mock_get_client):
+def test_get_currently_process_not_found(mock_get_client, mock_fetch_devices):
     # จำลองว่าไม่มีข้อมูลใดๆ ใน Clickhouse เลย
     mock_db = MagicMock()
-    mock_result = MagicMock()
-    mock_result.result_rows = []
-    mock_db.query.return_value = mock_result
     mock_get_client.return_value = mock_db
 
     response = client.get("/api/v1/data/currently/non_existent_process")
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Item not found"
+    assert response.status_code == 200
+    assert response.json() == []
+    mock_fetch_devices.assert_called_once_with('non_existent_process')
 
 def test_get_monthly_invalid_params():
     # ส่งตัวแปรผิดรูปแบบ (เดือน 13)

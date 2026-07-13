@@ -1,11 +1,62 @@
 from datetime import datetime
 import os
 import sys
+from unittest.mock import MagicMock, patch
 
 # Ensure parent directory is in path so we can import routers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from routers.status import calculate_status_ratio, calculate_status_timeline, TZ_BANGKOK
+from routers.status import (
+    TZ_BANGKOK,
+    calculate_status_ratio,
+    calculate_status_timeline,
+    get_state_status_batch,
+    resolve_devices,
+)
+
+
+class _QueryResult:
+    def __init__(self, rows):
+        self.result_rows = rows
+
+
+class _RegisteredDevicesClient:
+    def query(self, query, parameters):
+        assert parameters == {"process": "demo1"}
+        return _QueryResult([("no_1",), ("no_2",), ("no_3",)])
+
+
+def test_resolve_devices_uses_requested_devices():
+    devices = resolve_devices(_RegisteredDevicesClient(), "demo1", "no_2, no_1,no_2")
+
+    assert devices == ["no_2", "no_1"]
+
+
+@patch("routers.status.fetch_registered_devices", return_value=["no_1", "no_2", "no_3"])
+def test_resolve_devices_uses_all_registered_devices_when_omitted(mock_fetch_devices):
+    devices = resolve_devices(_RegisteredDevicesClient(), "demo1", None)
+
+    assert devices == ["no_1", "no_2", "no_3"]
+    mock_fetch_devices.assert_called_once_with("demo1")
+
+
+@patch("routers.status.get_ch_client")
+def test_state_batch_serializes_timeline_strings(mock_get_client):
+    initial_result = MagicMock()
+    initial_result.result_rows = [
+        ("no_1", "run", datetime(2026, 7, 7, 6, 30, tzinfo=TZ_BANGKOK))
+    ]
+    timeline_result = MagicMock()
+    timeline_result.result_rows = []
+    mock_client = MagicMock()
+    mock_client.query.side_effect = [initial_result, timeline_result]
+    mock_get_client.return_value = mock_client
+
+    response = get_state_status_batch("demo1", "no_1")
+
+    assert response["no_1"][0]["status"] == "run"
+    assert isinstance(response["no_1"][0]["start_time"], str)
+    assert isinstance(response["no_1"][0]["end_time"], str)
 
 # ==============================================================================
 # UNIT TESTS FOR STATUS CALCULATION RATIO
