@@ -23,17 +23,37 @@
 		normal: 'Normal'
 	};
 
+	function normalizeStatusKey(value: unknown) {
+		return String(value ?? '')
+			.trim()
+			.toLowerCase()
+			.replace(/\s+/g, '_');
+	}
+
+	function normalizeProcessKey(value: unknown) {
+		return String(value ?? '').trim().toLowerCase();
+	}
+
+	function getAlarmColorKey(value: unknown) {
+		return normalizeStatusKey(value).replace(/_+$/g, '');
+	}
+
 	const colorMap = $derived.by(() => {
 		const map: Record<string, string> = { ...defaultColors };
-		const activeAlarms = (data.alarms || []).filter((a: any) => a.process === selectedProcess);
+		const selectedProcessKey = normalizeProcessKey(selectedProcess);
+		const activeAlarms = (data.alarms || []).filter(
+			(a: any) => normalizeProcessKey(a.process) === selectedProcessKey
+		);
 		for (const a of activeAlarms) {
-			map[a.status] = a.color;
+			map[getAlarmColorKey(a.status)] = a.color;
 		}
 		return map;
 	});
 
 	function getStatusStyle(rawStat: string, resolvedStat?: string) {
-		const color = colorMap[rawStat] || (resolvedStat ? colorMap[resolvedStat] : null) || colorMap['normal'] || '#22c55e';
+		const rawKey = getAlarmColorKey(rawStat);
+		const resolvedKey = resolvedStat ? getAlarmColorKey(resolvedStat) : '';
+		const color = colorMap[rawKey] || (resolvedKey ? colorMap[resolvedKey] : null) || colorMap['normal'] || '#22c55e';
 		return `--status-color: ${color}; border-color: color-mix(in srgb, ${color} 30%, transparent); background-color: color-mix(in srgb, ${color} 10%, transparent);`;
 	}
 
@@ -44,11 +64,12 @@
 	);
 
 	function resolveAlarmStatus(rawStat: string | undefined) {
-		if (!rawStat || rawStat === 'normal') return 'normal';
-		if (rawStat.endsWith('_')) {
+		const key = normalizeStatusKey(rawStat);
+		if (!key || key === 'normal') return 'normal';
+		if (key.endsWith('_')) {
 			return 'normal';
 		}
-		if (rawStat.startsWith('alarm')) {
+		if (key.startsWith('alarm') || colorMap[key]) {
 			return 'alarm';
 		}
 		return 'normal';
@@ -108,7 +129,11 @@
 		}
 		if (!proc || !devicesStr) return;
 		const host = window.location.hostname;
-		sse = new EventSource(`http://${host}:8001/api/v1/device/realtime/alarm-status?process=${proc}&devices=${devicesStr}`);
+		const params = new URLSearchParams({
+			process: proc,
+			devices: devicesStr
+		});
+		sse = new EventSource(`http://${host}:8001/api/v1/device/realtime/alarm-status?${params}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);

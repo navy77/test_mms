@@ -616,3 +616,97 @@ async def get_realtime_state_timeline_stream(
             raise
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+@router.get("/realtime/data")
+async def get_realtime_data_stream(
+    request: Request,
+    process: str = Query(..., description="The process identifier"),
+    devices: str = Query(..., description="Comma-separated list of device IDs"),
+):
+    """
+    SSE endpoint to fetch real-time production data from Redis 'rt_data' hash.
+    Streams only the requested devices to save bandwidth.
+    """
+    division = get_stream_division()
+
+    async def event_generator():
+        logger.info(f"SSE data stream started for process={process}, devices={devices}")
+        device_list = parse_devices(devices)
+
+        try:
+            poll_interval = float(os.getenv("SSE_POLL_INTERVAL", 5.0))
+        except ValueError:
+            poll_interval = 5.0
+
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+
+                try:
+                    r_client = get_redis_client()
+                    fields = [
+                        f"data/{division}/{process}/{dev_id}" for dev_id in device_list
+                    ]
+                    values = await asyncio.to_thread(r_client.hmget, "rt_data", fields)
+
+                    response_data = []
+                    for dev_id, val in zip(device_list, values):
+                        if val:
+                            try:
+                                msg = json.loads(val)
+                                payload = msg.get("payload")
+                                if isinstance(payload, str):
+                                    try:
+                                        payload = json.loads(payload)
+                                    except json.JSONDecodeError:
+                                        pass
+
+                                response_data.append(
+                                    {
+                                        "device": dev_id,
+                                        "status": "online",
+                                        "payload": payload,
+                                        "timestamp": msg.get("timestamp", ""),
+                                    }
+                                )
+                            except Exception:
+                                response_data.append(
+                                    {
+                                        "device": dev_id,
+                                        "status": "online",
+                                        "payload": {},
+                                        "timestamp": "",
+                                    }
+                                )
+                        else:
+                            response_data.append(
+                                {
+                                    "device": dev_id,
+                                    "status": "no_data",
+                                    "payload": {},
+                                    "timestamp": "",
+                                }
+                            )
+
+                    yield f"data: {json.dumps(response_data)}\n\n"
+                except Exception as e:
+                    logger.error(f"Error in SSE iteration for data stream: {e}")
+                    fallback = [
+                        {
+                            "device": dev_id,
+                            "status": "no_data",
+                            "payload": {},
+                            "timestamp": "",
+                        }
+                        for dev_id in device_list
+                    ]
+                    yield f"data: {json.dumps(fallback)}\n\n"
+
+                await asyncio.sleep(poll_interval)
+        except asyncio.CancelledError:
+            logger.info(f"SSE data client disconnected for process={process}")
+            raise
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

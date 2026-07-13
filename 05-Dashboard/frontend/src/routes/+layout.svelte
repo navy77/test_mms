@@ -18,7 +18,8 @@
 		Moon,
 		Sun,
 		Activity,
-		LogOut
+		LogOut,
+		BookText
 	} from '@lucide/svelte';
 
 	let { children } = $props();
@@ -55,7 +56,7 @@
 			icon: Bell,
 			subItems: [
 				{ href: '/alarm-status', label: 'Overview' },
-				{ href: '/alarm-status-history', label: 'History' }
+				{ href: '/alarm-status-daily', label: 'Daily Ratio' }
 			]
 		},
 		{ 
@@ -63,9 +64,10 @@
 			icon: HardDrive,
 			subItems: [
 				{ href: '/device-status', label: 'Overview' },
-				{ href: '/device-status-history', label: 'History' }
+				{ href: '/device-status-utl-daily', label: 'Daily Utilization' }
 			]
 		},
+		{ href: 'http://localhost:8003/docs', label: 'Documents', icon: BookText },
 		...(auth.user?.role === 'admin' ? [{ href: '/setting', label: 'Setting', icon: Settings }] : [])
 	]);
 

@@ -22,9 +22,20 @@
 		records: DailyRecord[];
 		loading: boolean;
 		error: string | null;
+		statusOrder?: string[];
+		showUtilizeLine?: boolean;
 	}
 
-	let { process, device, colorMap, records = [], loading = true, error = null }: Props = $props();
+	let {
+		process,
+		device,
+		colorMap,
+		records = [],
+		loading = true,
+		error = null,
+		statusOrder = ['run', 'alarm', 'wait', 'stop', 'other', 'offline', 'no data'],
+		showUtilizeLine = true
+	}: Props = $props();
 
 	let chartEl = $state<HTMLElement | null>(null);
 	// ECharts owns this mutable instance; it must not be reactive state.
@@ -92,13 +103,12 @@
 		}
 
 		// All unique statuses — include 'no data' so full bar is shown on empty days
-		const priorityOrder = ['run', 'alarm', 'wait', 'stop', 'other', 'offline', 'no data'];
 		const rawStatuses = Array.from(
 			new Set(records.flatMap((d) => d.data.map((s) => s.status)))
 		);
 		const allStatuses = [
-			...priorityOrder.filter((s) => rawStatuses.includes(s) || s === 'no data'),
-			...rawStatuses.filter((s) => !priorityOrder.includes(s))
+			...statusOrder.filter((s) => rawStatuses.includes(s) || s === 'no data'),
+			...rawStatuses.filter((s) => !statusOrder.includes(s))
 		];
 
 		// Date labels (Day of Month)
@@ -135,7 +145,7 @@
 			data: records.map((r) => Math.round(r.utilize * 10) / 10)
 		};
 
-		const series = [...barSeries, lineSeries];
+		const series = showUtilizeLine ? [...barSeries, lineSeries] : barSeries;
 
 		// 3. ECharts options configuration
 		const options = {

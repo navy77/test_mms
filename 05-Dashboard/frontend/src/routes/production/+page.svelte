@@ -1,98 +1,318 @@
 <script lang="ts">
-	import { machines } from '$lib/stores/mock.svelte';
-	import { BarChart2 } from '@lucide/svelte';
+	import { onDestroy } from 'svelte';
 
-	// Simulated hourly production data
-	const hourlyData = [
-		{ hour: '07:00', output: 480 },
-		{ hour: '08:00', output: 512 },
-		{ hour: '09:00', output: 498 },
-		{ hour: '10:00', output: 531 },
-		{ hour: '11:00', output: 520 },
-		{ hour: '12:00', output: 310 },
-		{ hour: '13:00', output: 488 },
-		{ hour: '14:00', output: 505 },
-		{ hour: '15:00', output: 516 },
-		{ hour: '16:00 (now)', output: 200 }
-	];
+	let { data } = $props();
 
-	const maxOutput = Math.max(...hourlyData.map((d) => d.output));
-	const totalToday = hourlyData.reduce((s, d) => s + d.output, 0);
-	const target = 4800;
-	const efficiency = Math.round((totalToday / target) * 100);
+	interface DataRecord {
+		status: string;
+		payload: Record<string, unknown>;
+		timestamp: string;
+	}
 
-	const runningMachines = $derived(machines.filter((m) => m.status === 'running'));
+	const processesList = $derived(data.processes || []);
+	let selectedProcess = $state('');
+
+	$effect(() => {
+		selectedProcess = data.initialProcess || '';
+	});
+
+	let dataMap = $state<Record<string, DataRecord>>({});
+	let sse: EventSource | null = null;
+
+	const activeDevices = $derived(
+		(data.registeredDevices || [])
+			.filter((d: any) => d.process === selectedProcess)
+			.sort((a: any, b: any) => a.device.localeCompare(b.device, undefined, { numeric: true }))
+	);
+
+	const payloadColumns = $derived(
+		(data.columns || [])
+			.filter((c: any) => c.process === selectedProcess)
+			.map((c: any) => c.column_name)
+			.filter((name: string, index: number, list: string[]) => name && list.indexOf(name) === index)
+	);
+
+	let selectedDevices = $state<string[]>([]);
+	let selectedPayloads = $state<string[]>([]);
+	let selectExpanded = $state(false);
+	let payloadExpanded = $state(false);
+	let currentPage = $state(1);
+	const pageSize = 18;
+
+	const displayedDevices = $derived(
+		selectedDevices.length > 0
+			? activeDevices.filter((d: any) => selectedDevices.includes(d.device))
+			: activeDevices.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+	);
+
+	const totalPages = $derived(Math.ceil(activeDevices.length / pageSize) || 1);
+
+	const visibleDevicesStr = $derived(displayedDevices.map((d: any) => d.device).join(','));
+
+	$effect(() => {
+		if (selectedProcess) {
+			selectedDevices = [];
+			currentPage = 1;
+			dataMap = {};
+		}
+	});
+
+	$effect(() => {
+		if (payloadColumns.length > 0) {
+			selectedPayloads = payloadColumns.slice(0, 2);
+		} else {
+			selectedPayloads = [];
+		}
+	});
+
+	function formatTime(ts: string) {
+		if (!ts) return '—';
+		try {
+			return new Date(ts).toLocaleString('en-US', {
+				hour: '2-digit',
+				minute: '2-digit',
+				day: '2-digit',
+				month: 'short',
+				hour12: false
+			});
+		} catch {
+			return '—';
+		}
+	}
+
+	function formatValue(value: unknown) {
+		if (value === null || value === undefined || value === '') return '—';
+		if (typeof value === 'number') return Number.isInteger(value) ? value.toString() : value.toFixed(2);
+		if (typeof value === 'object') return JSON.stringify(value);
+		return String(value);
+	}
+
+	function getPayloadValue(payload: Record<string, unknown>, key: string) {
+		return payload?.[key];
+	}
+
+	function connectSSE(proc: string, devicesStr: string) {
+		if (sse) {
+			sse.close();
+		}
+		if (!proc || !devicesStr) return;
+
+		const host = window.location.hostname;
+		const params = new URLSearchParams({
+			process: proc,
+			devices: devicesStr
+		});
+
+		sse = new EventSource(`http://${host}:8001/api/v1/device/realtime/data?${params}`);
+		sse.onmessage = (event) => {
+			try {
+				const list = JSON.parse(event.data);
+				const newMap: Record<string, DataRecord> = {};
+				for (const item of list) {
+					newMap[item.device] = {
+						status: item.status || 'no_data',
+						payload: item.payload && typeof item.payload === 'object' ? item.payload : {},
+						timestamp: item.timestamp || ''
+					};
+				}
+				dataMap = { ...dataMap, ...newMap };
+			} catch (err) {
+				console.error('Error parsing SSE production data:', err);
+			}
+		};
+	}
+
+	$effect(() => {
+		if (selectedProcess && visibleDevicesStr) {
+			connectSSE(selectedProcess, visibleDevicesStr);
+		} else if (sse) {
+			sse.close();
+		}
+	});
+
+	onDestroy(() => {
+		if (sse) sse.close();
+	});
 </script>
 
 <div class="space-y-6">
-	<!-- Summary Cards -->
-	<div class="grid grid-cols-3 gap-4">
-		<div class="rounded-lg border border-border bg-card p-4">
-			<p class="text-xs text-muted-foreground">Total Output Today</p>
-			<p class="mt-1 text-2xl font-semibold text-card-foreground">{totalToday.toLocaleString()}</p>
-			<p class="text-xs text-muted-foreground">units</p>
-		</div>
-		<div class="rounded-lg border border-border bg-card p-4">
-			<p class="text-xs text-muted-foreground">Target</p>
-			<p class="mt-1 text-2xl font-semibold text-card-foreground">{target.toLocaleString()}</p>
-			<p class="text-xs text-muted-foreground">units / shift</p>
-		</div>
-		<div class="rounded-lg border border-border bg-card p-4">
-			<p class="text-xs text-muted-foreground">Efficiency</p>
-			<p class="mt-1 text-2xl font-semibold {efficiency >= 90 ? 'text-green-500' : efficiency >= 70 ? 'text-yellow-500' : 'text-red-500'}">{efficiency}%</p>
-			<div class="mt-2 h-1.5 w-full rounded-full bg-muted">
-				<div class="h-1.5 rounded-full bg-primary transition-all" style="width: {efficiency}%"></div>
-			</div>
+	<div class="flex items-center justify-between">
+		<h1 class="text-sm font-semibold text-card-foreground">Production Realtime</h1>
+		<div class="flex items-center gap-2">
+			<span class="text-xs text-muted-foreground font-medium">Process:</span>
+			{#if processesList.length > 0}
+				<select
+					bind:value={selectedProcess}
+					class="rounded border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
+				>
+					{#each processesList as p}
+						<option value={p}>{p}</option>
+					{/each}
+				</select>
+			{:else}
+				<span class="text-xs text-muted-foreground italic">Loading processes...</span>
+			{/if}
 		</div>
 	</div>
 
-	<!-- Hourly Output Chart -->
-	<div class="rounded-lg border border-border bg-card p-4">
-		<div class="mb-4 flex items-center gap-2">
-			<BarChart2 class="h-4 w-4 text-primary" />
-			<h2 class="text-sm font-semibold text-card-foreground">Hourly Output (07:00 – now)</h2>
+	<div class="rounded-lg border border-border bg-card overflow-hidden">
+		<button
+			type="button"
+			onclick={() => (payloadExpanded = !payloadExpanded)}
+			class="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-card-foreground hover:bg-muted/30 transition-colors"
+		>
+			<span>Select Payload to Display (Max 2)</span>
+			<div class="flex items-center gap-2 text-muted-foreground font-normal">
+				<span>{selectedPayloads.length} / 2 selected</span>
+				<span class="text-[10px]">{payloadExpanded ? '▲' : '▼'}</span>
+			</div>
+		</button>
+
+		{#if payloadExpanded}
+			<div class="p-4 border-t border-border bg-card/50">
+				{#if payloadColumns.length === 0}
+					<p class="text-xs text-muted-foreground">No payload columns registered for this process.</p>
+				{:else}
+					<div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1.5 border border-border/50 rounded bg-background/50">
+						{#each payloadColumns as column}
+							{@const isChecked = selectedPayloads.includes(column)}
+							<label
+								class="flex items-center gap-1.5 px-2.5 py-1.5 rounded border text-xs cursor-pointer select-none transition-all
+								{isChecked ? 'bg-primary/10 border-primary text-primary font-medium' : 'bg-card border-border text-muted-foreground hover:bg-muted'}"
+							>
+								<input
+									type="checkbox"
+									checked={isChecked}
+									disabled={!isChecked && selectedPayloads.length >= 2}
+									onchange={(e) => {
+										if (e.currentTarget.checked) {
+											if (selectedPayloads.length < 2) selectedPayloads = [...selectedPayloads, column];
+										} else {
+											selectedPayloads = selectedPayloads.filter((id) => id !== column);
+										}
+									}}
+									class="h-3.5 w-3.5 rounded border-border text-primary focus:ring-primary focus:ring-offset-background"
+								/>
+								<span>{column}</span>
+							</label>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		{/if}
+	</div>
+
+	<div class="rounded-lg border border-border bg-card overflow-hidden">
+		<button
+			type="button"
+			onclick={() => (selectExpanded = !selectExpanded)}
+			class="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-card-foreground hover:bg-muted/30 transition-colors"
+		>
+			<span>Select Devices to Monitor (Max 18)</span>
+			<div class="flex items-center gap-2 text-muted-foreground font-normal">
+				<span>{selectedDevices.length} / 18 selected</span>
+				<span class="text-[10px]">{selectExpanded ? '▲' : '▼'}</span>
+			</div>
+		</button>
+
+		{#if selectExpanded}
+			<div class="p-4 border-t border-border bg-card/50">
+				<div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1.5 border border-border/50 rounded bg-background/50">
+					{#each activeDevices as dev}
+						{@const isChecked = selectedDevices.includes(dev.device)}
+						<label
+							class="flex items-center gap-1.5 px-2.5 py-1.5 rounded border text-xs cursor-pointer select-none transition-all
+							{isChecked ? 'bg-primary/10 border-primary text-primary font-medium' : 'bg-card border-border text-muted-foreground hover:bg-muted'}"
+						>
+							<input
+								type="checkbox"
+								checked={isChecked}
+								disabled={!isChecked && selectedDevices.length >= 18}
+								onchange={(e) => {
+									if (e.currentTarget.checked) {
+										if (selectedDevices.length < 18) selectedDevices = [...selectedDevices, dev.device];
+									} else {
+										selectedDevices = selectedDevices.filter((id) => id !== dev.device);
+									}
+								}}
+								class="h-3.5 w-3.5 rounded border-border text-primary focus:ring-primary focus:ring-offset-background"
+							/>
+							<span>{dev.device}</span>
+						</label>
+					{/each}
+				</div>
+			</div>
+		{/if}
+	</div>
+
+	{#if activeDevices.length === 0}
+		<div class="rounded-lg border border-dashed p-12 text-center">
+			<p class="text-sm text-muted-foreground">No devices registered for this process.</p>
 		</div>
-		<div class="flex h-40 items-end gap-2">
-			{#each hourlyData as d}
-				{@const pct = (d.output / maxOutput) * 100}
-				<div class="group flex flex-1 flex-col items-center gap-1">
-					<span class="hidden text-[9px] text-muted-foreground group-hover:block">{d.output}</span>
-					<div
-						class="w-full rounded-t bg-primary/80 hover:bg-primary transition-all duration-300"
-						style="height: {pct}%"
-					></div>
-					<span class="text-[9px] text-muted-foreground" style="writing-mode: vertical-lr; transform: rotate(180deg); height: 36px;">{d.hour}</span>
+	{:else}
+		<div class="grid grid-cols-2 gap-3 lg:grid-cols-6">
+			{#each displayedDevices as dev}
+				{@const record = dataMap[dev.device]}
+				{@const payload = record?.payload || {}}
+				{@const hasData = record?.status === 'online'}
+				<div class="rounded-lg border p-4 transition-all hover:shadow-sm {hasData ? 'border-emerald-500/30 bg-emerald-500/[0.04]' : 'border-border bg-card'}">
+					<div class="flex items-center justify-between">
+						<div class="flex items-center gap-2 min-w-0">
+							<span class="h-2.5 w-2.5 rounded-full {hasData ? 'animate-pulse bg-emerald-500' : 'bg-muted-foreground/50'}"></span>
+							<p class="text-md font-semibold text-foreground truncate">{dev.device}</p>
+						</div>
+						<span class="rounded-full border border-border px-2 py-0.5 text-[10px] font-medium uppercase text-muted-foreground">
+							{dev.process}
+						</span>
+					</div>
+
+					<div class="mt-3 grid gap-2">
+						{#if selectedPayloads.length === 0}
+							<div class="rounded border border-dashed border-border px-3 py-3 text-center text-xs text-muted-foreground">
+								No payload selected
+							</div>
+						{:else}
+							{#each selectedPayloads as key}
+								<div class="rounded border border-border/70 bg-background/50 px-3 py-2">
+									<p class="text-[10px] uppercase tracking-normal text-muted-foreground truncate">{key}</p>
+									<p class="mt-0.5 text-lg font-semibold text-foreground truncate" title={formatValue(getPayloadValue(payload, key))}>
+										{formatValue(getPayloadValue(payload, key))}
+									</p>
+								</div>
+							{/each}
+						{/if}
+					</div>
+
+					<p class="mt-3 text-[12px] text-muted-foreground whitespace-nowrap">
+						Last update: {formatTime(record?.timestamp || '')}
+					</p>
 				</div>
 			{/each}
 		</div>
-	</div>
+	{/if}
 
-	<!-- Running Machines Data -->
-	<div class="rounded-lg border border-border bg-card p-4">
-		<h2 class="mb-3 text-sm font-semibold text-card-foreground">Running Machine Details</h2>
-		<div class="overflow-x-auto">
-			<table class="w-full text-xs">
-				<thead>
-					<tr class="border-b border-border">
-						<th class="pb-2 text-left font-medium text-muted-foreground">Machine</th>
-						<th class="pb-2 text-right font-medium text-muted-foreground">Data 1</th>
-						<th class="pb-2 text-right font-medium text-muted-foreground">Data 2</th>
-						<th class="pb-2 text-right font-medium text-muted-foreground">Data 3</th>
-						<th class="pb-2 text-right font-medium text-muted-foreground">Uptime</th>
-					</tr>
-				</thead>
-				<tbody class="divide-y divide-border">
-					{#each runningMachines as m}
-						<tr>
-							<td class="py-2 font-medium text-foreground">{m.name}</td>
-							<td class="py-2 text-right text-foreground">{m.data1}</td>
-							<td class="py-2 text-right text-foreground">{m.data2}</td>
-							<td class="py-2 text-right text-foreground">{m.data3}</td>
-							<td class="py-2 text-right text-muted-foreground">{m.uptime}</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+	{#if selectedDevices.length === 0}
+		<div class="flex items-center justify-between border-t border-border px-4 py-2.5 bg-muted/18 rounded-lg">
+			<p class="text-xs text-muted-foreground">
+				Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, activeDevices.length)} of {activeDevices.length} rows
+			</p>
+			<div class="flex items-center gap-1.5">
+				<button
+					onclick={() => (currentPage = Math.max(1, currentPage - 1))}
+					disabled={currentPage === 1}
+					class="rounded border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
+				>
+					Previous
+				</button>
+				<span class="text-xs text-muted-foreground px-2">Page {currentPage} of {totalPages}</span>
+				<button
+					onclick={() => (currentPage = Math.min(totalPages, currentPage + 1))}
+					disabled={currentPage === totalPages}
+					class="rounded border border-border bg-background px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted disabled:opacity-50"
+				>
+					Next
+				</button>
+			</div>
 		</div>
-	</div>
+	{/if}
 </div>
