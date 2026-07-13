@@ -83,6 +83,10 @@
 
 	const totalPages = $derived(Math.ceil(activeDevices.length / pageSize) || 1);
 
+	const visibleDevicesStr = $derived(
+		displayedDevices.map((d: any) => d.device).join(',')
+	);
+
 	function formatTime(ts: string) {
 		if (!ts) return '—';
 		try {
@@ -98,13 +102,13 @@
 		}
 	}
 
-	function connectSSE(proc: string) {
+	function connectSSE(proc: string, devicesStr: string) {
 		if (sse) {
 			sse.close();
 		}
-		if (!proc) return;
+		if (!proc || !devicesStr) return;
 		const host = window.location.hostname;
-		sse = new EventSource(`http://${host}:8002/api/v1/realtime/alarm/${proc}`);
+		sse = new EventSource(`http://${host}:8001/api/v1/device/realtime/alarm-status?process=${proc}&devices=${devicesStr}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);
@@ -115,7 +119,7 @@
 						timestamp: item.timestamp || ''
 					};
 				}
-				alarmMap = newMap;
+				alarmMap = { ...alarmMap, ...newMap };
 			} catch (err) {
 				console.error('Error parsing SSE alarm:', err);
 			}
@@ -123,12 +127,11 @@
 	}
 
 	$effect(() => {
-		if (selectedProcess) {
-			connectSSE(selectedProcess);
-		}
-		return () => {
+		if (selectedProcess && visibleDevicesStr) {
+			connectSSE(selectedProcess, visibleDevicesStr);
+		} else {
 			if (sse) sse.close();
-		};
+		}
 	});
 
 	onDestroy(() => {
@@ -139,6 +142,7 @@
 		selectedProcess;
 		selectedDevices = [];
 		currentPage = 1;
+		alarmMap = {};
 	});
 </script>
 

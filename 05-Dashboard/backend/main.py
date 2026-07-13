@@ -16,6 +16,7 @@ from database import get_ch_client, init_db  # noqa: E402
 from routers.register import router as register_router  # noqa: E402
 from routers.auth import router as auth_router  # noqa: E402
 from routers.device import router as device_router  # noqa: E402
+from routers.stream import router as stream_router  # noqa: E402
 
 from logging.handlers import RotatingFileHandler  # noqa: E402
 
@@ -28,9 +29,9 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
-        RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=3),
-        logging.StreamHandler(sys.stdout)
-    ]
+        RotatingFileHandler(log_file, maxBytes=10 * 1024 * 1024, backupCount=3),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 # Suppress watchfiles info logging to prevent log loops and spam
 logging.getLogger("watchfiles").setLevel(logging.WARNING)
@@ -39,7 +40,7 @@ logger = logging.getLogger("DashboardBackend")
 app = FastAPI(
     title="MMS Dashboard API",
     description="Backend API for User, Device, and Column Registration",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Enable CORS for frontend integration
@@ -55,19 +56,24 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(register_router)
 app.include_router(device_router)
+app.include_router(stream_router)
+
 
 @app.on_event("startup")
 def startup_event():
     logger.info("Initializing database...")
     init_db()
 
+
 @app.get("/health", status_code=status.HTTP_200_OK)
-def health_check(client = Depends(get_ch_client)):
+def health_check(client=Depends(get_ch_client)):
     client.query("SELECT 1")
     return {"status": "healthy", "postgres": "connected"}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     host = os.getenv("HOST", "0.0.0.0").strip().strip("'\"")
     port = int(os.getenv("DASHBOARD_PORT", os.getenv("PORT", 8001)))
     logger.info(f"Starting MMS Dashboard Backend Server at http://{host}:{port}")

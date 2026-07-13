@@ -8,6 +8,7 @@ logger = logging.getLogger("DashboardBackend.Device")
 
 router = APIRouter(prefix="/api/v1/device", tags=["Device"])
 
+
 def get_registered_devices(postgres_client, process: str) -> List[str]:
     """
     Retrieve registered device names for the given process from PostgreSQL device_register_tb.
@@ -17,13 +18,16 @@ def get_registered_devices(postgres_client, process: str) -> List[str]:
         result = postgres_client.query(query, parameters={"process": process})
         return [row[0] for row in result.result_rows]
     except Exception as e:
-        logger.warning(f"Error querying PostgreSQL device_register_tb for process '{process}': {e}")
+        logger.warning(
+            f"Error querying PostgreSQL device_register_tb for process '{process}': {e}"
+        )
         return []
+
 
 @router.get("/currently/status/{process}", response_model=DeviceStatusCountResponse)
 def get_currently_process_status(
     process: str = Path(..., description="The process identifier"),
-    client = Depends(get_ch_client)
+    client=Depends(get_ch_client),
 ):
     """
     Get the count of devices in each status (online, offline, no data) currently for the given process.
@@ -33,13 +37,9 @@ def get_currently_process_status(
         registered_devices = get_registered_devices(client, process)
         if not registered_devices:
             return DeviceStatusCountResponse(
-                process=process,
-                online=0,
-                offline=0,
-                communication_fail=0,
-                total=0
+                process=process, online=0, offline=0, communication_fail=0, total=0
             )
-            
+
         # 2. Get the latest status of each device in the process from ClickHouse
         ch_client = get_clickhouse_client()
         query = """
@@ -50,12 +50,12 @@ def get_currently_process_status(
         """
         result = ch_client.query(query, parameters={"process": process})
         latest_statuses = {row[0]: (row[1], row[2]) for row in result.result_rows}
-        
+
         # 3. Count statuses
         online_count = 0
         offline_count = 0
         communication_fail = 0
-        
+
         for dev in registered_devices:
             dev_info = latest_statuses.get(dev)
             if dev_info is None:
@@ -68,17 +68,16 @@ def get_currently_process_status(
                     online_count += 1
                 else:
                     offline_count += 1
-                
+
         return DeviceStatusCountResponse(
             process=process,
             online=online_count,
             offline=offline_count,
             communication_fail=communication_fail,
-            total=len(registered_devices)
+            total=len(registered_devices),
         )
     except Exception as e:
         logger.error(f"Error counting current device statuses: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )

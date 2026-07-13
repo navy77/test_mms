@@ -2,3 +2,4 @@ clickhouse-connect>=0.7.0
 redis>=5.0.0
 paho-mqtt>=1.6.1
 python-dotenv>=1.0.0
+psycopg2-binary>=2.9.9

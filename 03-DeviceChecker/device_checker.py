@@ -8,6 +8,7 @@ import dotenv
 import redis
 import paho.mqtt.client as mqtt
 import clickhouse_connect
+import psycopg2
 
 from logging.handlers import RotatingFileHandler
 
@@ -20,14 +21,34 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
-        RotatingFileHandler(log_file, maxBytes=20*1024*1024, backupCount=3),
-        logging.StreamHandler(sys.stdout)
-    ]
+        RotatingFileHandler(log_file, maxBytes=20 * 1024 * 1024, backupCount=3),
+        logging.StreamHandler(sys.stdout),
+    ],
 )
 logger = logging.getLogger("DeviceChecker")
 
+
 class DeviceChecker:
-    def __init__(self, redis_host, redis_port, redis_key, mqtt_broker, mqtt_port, mqtt_status_topic, ch_host, ch_port, ch_user, ch_pass, ch_db, check_period):
+    def __init__(
+        self,
+        redis_host: str,
+        redis_port: int,
+        redis_key: str,
+        mqtt_broker: str,
+        mqtt_port: int,
+        mqtt_status_topic: str,
+        ch_host: str,
+        ch_port: int,
+        ch_user: str,
+        ch_pass: str,
+        ch_db: str,
+        pg_host: str,
+        pg_port: int,
+        pg_user: str,
+        pg_pass: str,
+        pg_db: str,
+        check_period: int,
+    ) -> None:
         self.redis_host = redis_host
         self.redis_port = redis_port
         self.redis_key = redis_key
@@ -39,58 +60,107 @@ class DeviceChecker:
         self.ch_user = ch_user
         self.ch_pass = ch_pass
         self.ch_db = ch_db
+        self.pg_host = pg_host
+        self.pg_port = pg_port
+        self.pg_user = pg_user
+        self.pg_pass = pg_pass
+        self.pg_db = pg_db
         self.check_period = check_period
 
         # Initialize Redis client
         logger.info(f"Connecting to Redis at {self.redis_host}:{self.redis_port}...")
         self.redis_client = redis.Redis(host=self.redis_host, port=self.redis_port)
-        
+
         # Track previous status of devices to only publish when transitioning to offline
         self.last_status = {}  # key: (process, device), value: status ("online" / "offline")
 
         # Initialize MQTT client
         self.mqtt_client = mqtt.Client()
         self.ch_client = None
+        self.pg_conn = None
 
     def connect_mqtt(self):
         try:
-            logger.info(f"Connecting to MQTT Broker at {self.mqtt_broker}:{self.mqtt_port}...")
+            logger.info(
+                f"Connecting to MQTT Broker at {self.mqtt_broker}:{self.mqtt_port}..."
+            )
             self.mqtt_client.connect(self.mqtt_broker, self.mqtt_port, 60)
             self.mqtt_client.loop_start()
             logger.info("Connected to MQTT Broker and started background loop")
         except Exception as e:
             logger.error(f"Failed to connect to MQTT Broker: {e}")
 
-    def check_device(self):
+    def check_device(self) -> None:
         logger.info("Starting device check round...")
         try:
-            # 1. Query registered devices from ClickHouse device_register_tb
-            if self.ch_client is None:
-                self.ch_client = clickhouse_connect.get_client(
-                    host=self.ch_host,
-                    port=self.ch_port,
-                    username=self.ch_user,
-                    password=self.ch_pass,
-                    database=self.ch_db
+            # 1. Query registered devices from PostgreSQL device_register_tb
+            if self.pg_conn is None:
+                logger.info(
+                    f"Connecting to PostgreSQL at {self.pg_host}:{self.pg_port}..."
                 )
+                try:
+                    self.pg_conn = psycopg2.connect(
+                        host=self.pg_host,
+                        port=self.pg_port,
+                        user=self.pg_user,
+                        password=self.pg_pass,
+                        dbname=self.pg_db,
+                    )
+                except Exception as pg_err:
+                    if self.pg_host not in ("127.0.0.1", "localhost"):
+                        logger.info(
+                            f"Failed to connect to PostgreSQL at '{self.pg_host}'. Trying fallback to '127.0.0.1'..."
+                        )
+                        self.pg_conn = psycopg2.connect(
+                            host="127.0.0.1",
+                            port=self.pg_port,
+                            user=self.pg_user,
+                            password=self.pg_pass,
+                            dbname=self.pg_db,
+                        )
+                    else:
+                        raise pg_err
             else:
                 try:
-                    self.ch_client.command("SELECT 1")
+                    with self.pg_conn.cursor() as cur:
+                        cur.execute("SELECT 1")
                 except Exception:
-                    logger.info("ClickHouse client connection lost, reconnecting...")
-                    self.ch_client = clickhouse_connect.get_client(
-                        host=self.ch_host,
-                        port=self.ch_port,
-                        username=self.ch_user,
-                        password=self.ch_pass,
-                        database=self.ch_db
-                    )
-            ch_client = self.ch_client
-            result = ch_client.query("SELECT process, device FROM configdb.device_register_tb")
-            master_devices = result.result_rows  # list of tuples (process, device)
-            logger.info(f"Retrieved {len(master_devices)} master devices from ClickHouse configdb.device_register_tb")
+                    logger.info("PostgreSQL connection lost, reconnecting...")
+                    try:
+                        self.pg_conn.close()
+                    except Exception:
+                        pass
+                    try:
+                        self.pg_conn = psycopg2.connect(
+                            host=self.pg_host,
+                            port=self.pg_port,
+                            user=self.pg_user,
+                            password=self.pg_pass,
+                            dbname=self.pg_db,
+                        )
+                    except Exception as pg_err:
+                        if self.pg_host not in ("127.0.0.1", "localhost"):
+                            logger.info(
+                                f"Failed to connect to PostgreSQL at '{self.pg_host}'. Trying fallback to '127.0.0.1'..."
+                            )
+                            self.pg_conn = psycopg2.connect(
+                                host="127.0.0.1",
+                                port=self.pg_port,
+                                user=self.pg_user,
+                                password=self.pg_pass,
+                                dbname=self.pg_db,
+                            )
+                        else:
+                            raise pg_err
+
+            with self.pg_conn.cursor() as cur:
+                cur.execute("SELECT process, device FROM device_register_tb")
+                master_devices = cur.fetchall()  # list of tuples (process, device)
+            logger.info(
+                f"Retrieved {len(master_devices)} master devices from PostgreSQL device_register_tb"
+            )
         except Exception as e:
-            logger.error(f"Error querying ClickHouse: {e}")
+            logger.error(f"Error querying PostgreSQL: {e}")
             return
 
         try:
@@ -100,7 +170,7 @@ class DeviceChecker:
             latest_device_data = {}
             for topic_bytes, msg_bytes in redis_data.items():
                 try:
-                    msg = json.loads(msg_bytes.decode('utf-8'))
+                    msg = json.loads(msg_bytes.decode("utf-8"))
                     proc = msg.get("process")
                     dev = msg.get("device")
                     if proc and dev:
@@ -120,7 +190,7 @@ class DeviceChecker:
             broker = ""
             modbus = ""
             mac_id = ""
-            
+
             # Look up device in Redis real-time data
             redis_entry = latest_device_data.get((proc, dev))
             if redis_entry:
@@ -131,22 +201,28 @@ class DeviceChecker:
                     except ValueError:
                         # Fallback for formats that might not be fully standard
                         if "." in timestamp_str:
-                            ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S.%f")
+                            ts = datetime.strptime(
+                                timestamp_str.split("+")[0].split("Z")[0],
+                                "%Y-%m-%dT%H:%M:%S.%f",
+                            )
                         else:
-                            ts = datetime.strptime(timestamp_str.split("+")[0].split("Z")[0], "%Y-%m-%dT%H:%M:%S")
-                    
+                            ts = datetime.strptime(
+                                timestamp_str.split("+")[0].split("Z")[0],
+                                "%Y-%m-%dT%H:%M:%S",
+                            )
+
                     if ts.tzinfo is not None:
                         diff_seconds = (datetime.now(ts.tzinfo) - ts).total_seconds()
                     else:
                         diff_seconds = (now - ts).total_seconds()
- 
+
                     # Parse payload variables
                     payload_str = redis_entry.get("payload", "{}")
                     try:
                         payload_dict = json.loads(payload_str)
                     except Exception:
                         payload_dict = {}
-                        
+
                     broker = str(payload_dict.get("broker", ""))
                     modbus = str(payload_dict.get("modbus", ""))
                     mac_id = str(payload_dict.get("mac_id", ""))
@@ -159,7 +235,9 @@ class DeviceChecker:
                         modbus = ""
                         mac_id = ""
                 except Exception as e:
-                    logger.error(f"Error checking timestamps/payloads for {proc}/{dev}: {e}")
+                    logger.error(
+                        f"Error checking timestamps/payloads for {proc}/{dev}: {e}"
+                    )
                     status = "offline"
                     broker = ""
                     modbus = ""
@@ -197,12 +275,73 @@ class DeviceChecker:
         # 5. Insert records into ClickHouse device_tb
         if data_to_insert:
             try:
-                ch_client.insert(
-                    'device_tb',
+                if self.ch_client is None:
+                    try:
+                        self.ch_client = clickhouse_connect.get_client(
+                            host=self.ch_host,
+                            port=self.ch_port,
+                            username=self.ch_user,
+                            password=self.ch_pass,
+                            database=self.ch_db,
+                        )
+                    except Exception as ch_err:
+                        if self.ch_host not in ("127.0.0.1", "localhost"):
+                            logger.info(
+                                f"Failed to connect to ClickHouse at '{self.ch_host}'. Trying fallback to '127.0.0.1'..."
+                            )
+                            self.ch_client = clickhouse_connect.get_client(
+                                host="127.0.0.1",
+                                port=self.ch_port,
+                                username=self.ch_user,
+                                password=self.ch_pass,
+                                database=self.ch_db,
+                            )
+                        else:
+                            raise ch_err
+                else:
+                    try:
+                        self.ch_client.command("SELECT 1")
+                    except Exception:
+                        logger.info(
+                            "ClickHouse client connection lost, reconnecting..."
+                        )
+                        try:
+                            self.ch_client = clickhouse_connect.get_client(
+                                host=self.ch_host,
+                                port=self.ch_port,
+                                username=self.ch_user,
+                                password=self.ch_pass,
+                                database=self.ch_db,
+                            )
+                        except Exception as ch_err:
+                            if self.ch_host not in ("127.0.0.1", "localhost"):
+                                logger.info(
+                                    f"Failed to connect to ClickHouse at '{self.ch_host}'. Trying fallback to '127.0.0.1'..."
+                                )
+                                self.ch_client = clickhouse_connect.get_client(
+                                    host="127.0.0.1",
+                                    port=self.ch_port,
+                                    username=self.ch_user,
+                                    password=self.ch_pass,
+                                    database=self.ch_db,
+                                )
+                            else:
+                                raise ch_err
+                self.ch_client.insert(
+                    "device_tb",
                     data_to_insert,
-                    column_names=['process', 'device', 'status', 'broker', 'modbus', 'mac_id']
+                    column_names=[
+                        "process",
+                        "device",
+                        "status",
+                        "broker",
+                        "modbus",
+                        "mac_id",
+                    ],
                 )
-                logger.info(f"Successfully inserted {len(data_to_insert)} records to ClickHouse device_tb")
+                logger.info(
+                    f"Successfully inserted {len(data_to_insert)} records to ClickHouse device_tb"
+                )
             except Exception as e:
                 logger.error(f"Error inserting to ClickHouse table device_tb: {e}")
 
@@ -214,8 +353,9 @@ class DeviceChecker:
                 self.check_device()
             except Exception as e:
                 logger.error(f"Unhandled error in check loop: {e}")
-            
+
             time.sleep(self.check_period)
+
 
 def main():
     env_path = dotenv.find_dotenv()
@@ -228,19 +368,27 @@ def main():
     # Read config from environment variables
     mqtt_broker = os.getenv("MQTT_BROKER", "127.0.0.1").strip().strip("'\"")
     mqtt_port = int(os.getenv("MQTT_PORT", 1883))
-    mqtt_status_topic = os.getenv("MQTT_STATUS_TOPIC", "status/mic/#").strip().strip("'\"")
-    
+    mqtt_status_topic = (
+        os.getenv("MQTT_STATUS_TOPIC", "status/mic/#").strip().strip("'\"")
+    )
+
     redis_host = os.getenv("REDIS_HOST", "redis").strip().strip("'\"")
     redis_port = int(os.getenv("REDIS_PORT", 6379))
     redis_hash_key = os.getenv("REDIS_HASH_KEY", "rt_mqtt").strip().strip("'\"")
-    
+
     period = int(os.getenv("PERIOD", 300))
-    
+
     ch_host = os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\"")
     ch_port = int(os.getenv("CLICKHOUSE_PORT", 8123))
     ch_user = os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\"")
     ch_pass = os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\"")
     ch_db = os.getenv("CLICKHOUSE_DATABASE", "default").strip().strip("'\"")
+
+    pg_host = os.getenv("POSTGRES_HOST", "postgres").strip().strip("'\"")
+    pg_port = int(os.getenv("POSTGRES_PORT", 5432))
+    pg_user = os.getenv("POSTGRES_USER", "postgres").strip().strip("'\"")
+    pg_pass = os.getenv("POSTGRES_PASSWORD", "postgres").strip().strip("'\"")
+    pg_db = os.getenv("POSTGRES_DB", "iiot_db").strip().strip("'\"")
 
     checker = DeviceChecker(
         redis_host=redis_host,
@@ -254,13 +402,19 @@ def main():
         ch_user=ch_user,
         ch_pass=ch_pass,
         ch_db=ch_db,
-        check_period=period
+        pg_host=pg_host,
+        pg_port=pg_port,
+        pg_user=pg_user,
+        pg_pass=pg_pass,
+        pg_db=pg_db,
+        check_period=period,
     )
-    
+
     try:
         checker.run_schedule()
     except KeyboardInterrupt:
         logger.info("Device Checker stopped by keyboard interrupt")
+
 
 if __name__ == "__main__":
     main()

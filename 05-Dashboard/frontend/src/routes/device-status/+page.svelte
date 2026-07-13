@@ -62,14 +62,26 @@
 
 	const totalPages = $derived(Math.ceil(filtered.length / pageSize) || 1);
 
-	function connectSSE(proc: string) {
+	const visibleDevicesStr = $derived(
+		sortedDevices
+			.filter((d: any) => d.process === selectedProcess)
+			.filter((d: any) => 
+				!searchQuery || 
+				d.device.toLowerCase().includes(searchQuery.toLowerCase())
+			)
+			.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+			.map((d: any) => d.device)
+			.join(',')
+	);
+
+	function connectSSE(proc: string, devicesStr: string) {
 		if (sse) {
 			sse.close();
 		}
-		if (!proc) return;
+		if (!proc || !devicesStr) return;
 		
 		const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-		sse = new EventSource(`http://${apiHost}:8002/api/v1/realtime/mqtt/${proc}`);
+		sse = new EventSource(`http://${apiHost}:8001/api/v1/device/realtime/status?process=${proc}&devices=${devicesStr}`);
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);
@@ -85,43 +97,22 @@
 					}
 					newMap[item.device] = {
 						status: item.status || 'offline',
-						broker: payload.broker !== undefined ? payload.broker : '—',
-						modbus: payload.modbus !== undefined ? payload.modbus : '—',
-						mac_id: payload.mac_id || '—',
+						broker: payload && payload.broker !== undefined ? payload.broker : '—',
+						modbus: payload && payload.modbus !== undefined ? payload.modbus : '—',
+						mac_id: (payload && payload.mac_id) || '—',
 						timestamp: item.timestamp || ''
 					};
 				}
 				realtimeMap = newMap;
-
-				// Recalculate counts dynamically from real-time SSE stream
-				const processDevices = sortedDevices.filter((d: any) => d.process === proc);
-				let total = processDevices.length;
-				let online = 0;
-				let offline = 0;
-				let communication_fail = 0;
-				for (const d of processDevices) {
-					const rt = newMap[d.device];
-					const status = rt ? rt.status : 'offline';
-					const modbus = rt ? rt.modbus : '—';
-					
-					if (String(modbus) === '0' || modbus === 0) {
-						communication_fail++;
-					} else if (status.toLowerCase() === 'online') {
-						online++;
-					} else {
-						offline++;
-					}
-				}
-				counts = { total, online, offline, communication_fail };
 			} catch (err) {
 				console.error('Error parsing SSE data:', err);
 			}
 		};
 	}
 
-	async function fetchCounts(proc: string) {
+	async function fetchCounts(proc: string, showLoading = false) {
 		if (!proc) return;
-		loadingCounts = true;
+		if (showLoading) loadingCounts = true;
 		try {
 			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
 			const res = await fetch(`http://${apiHost}:8001/api/v1/device/currently/status/${proc}`);
@@ -137,18 +128,28 @@
 		} catch (err) {
 			console.error('Error fetching status counts:', err);
 		} finally {
-			loadingCounts = false;
+			if (showLoading) loadingCounts = false;
 		}
 	}
 
 	$effect(() => {
-		if (selectedProcess) {
-			connectSSE(selectedProcess);
-			fetchCounts(selectedProcess);
-		}
-		return () => {
+		if (selectedProcess && visibleDevicesStr) {
+			connectSSE(selectedProcess, visibleDevicesStr);
+		} else {
 			if (sse) sse.close();
-		};
+		}
+	});
+
+	$effect(() => {
+		if (selectedProcess) {
+			fetchCounts(selectedProcess, true);
+			const interval = setInterval(() => {
+				fetchCounts(selectedProcess, false);
+			}, 5000);
+			return () => {
+				clearInterval(interval);
+			};
+		}
 	});
 
 	onDestroy(() => {
@@ -206,21 +207,21 @@
 				<LoaderCircle class="h-5 w-5 animate-spin text-primary" />
 			</div>
 		{/if}
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Total Devices</p>
-			<p class="text-3xl font-semibold text-card-foreground">{counts.total}</p>
+		<div class="rounded-lg border p-3 transition-all duration-200" style="border-color: color-mix(in srgb, #3b82f6 30%, transparent); background-color: color-mix(in srgb, #3b82f6 8%, transparent);">
+			<p class="text-xs font-medium" style="color: #3b82f6;">Total Devices</p>
+			<p class="mt-1 text-3xl font-semibold" style="color: #3b82f6;">{counts.total}</p>
 		</div>
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Online</p>
-			<p class="text-3xl font-semibold text-green-500">{counts.online}</p>
+		<div class="rounded-lg border p-3 transition-all duration-200" style="border-color: color-mix(in srgb, #22c55e 30%, transparent); background-color: color-mix(in srgb, #22c55e 8%, transparent);">
+			<p class="text-xs font-medium" style="color: #22c55e;">Online</p>
+			<p class="mt-1 text-3xl font-semibold" style="color: #22c55e;">{counts.online}</p>
 		</div>
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Offline</p>
-			<p class="text-3xl font-semibold {counts.offline > 0 ? 'text-red-500' : 'text-green-500'}">{counts.offline}</p>
+		<div class="rounded-lg border p-3 transition-all duration-200" style="border-color: color-mix(in srgb, #ef4444 30%, transparent); background-color: color-mix(in srgb, #ef4444 8%, transparent);">
+			<p class="text-xs font-medium" style="color: #ef4444;">Offline</p>
+			<p class="mt-1 text-3xl font-semibold" style="color: #ef4444;">{counts.offline}</p>
 		</div>
-		<div class="rounded-lg border border-border bg-card p-3">
-			<p class="text-xs text-muted-foreground">Communication Fail</p>
-			<p class="text-3xl font-semibold {counts.communication_fail > 0 ? 'text-amber-500' : 'text-yellow-500'}">{counts.communication_fail}</p>
+		<div class="rounded-lg border p-3 transition-all duration-200" style="border-color: color-mix(in srgb, #f59e0b 30%, transparent); background-color: color-mix(in srgb, #f59e0b 8%, transparent);">
+			<p class="text-xs font-medium" style="color: #f59e0b;">Communication Fail</p>
+			<p class="mt-1 text-3xl font-semibold" style="color: #f59e0b;">{counts.communication_fail}</p>
 		</div>
 	</div>
 
