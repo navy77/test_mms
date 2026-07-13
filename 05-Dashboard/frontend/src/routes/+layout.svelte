@@ -27,7 +27,8 @@
 	let darkMode = $state(false);
 	let subMenuOpen = $state<Record<string, boolean>>({
 		'Machine Status': false,
-		'Alarm Status': false
+		'Alarm Status': false,
+		'Device Status': false
 	});
 
 	interface NavItem {
@@ -57,7 +58,14 @@
 				{ href: '/alarm-status-history', label: 'History' }
 			]
 		},
-		{ href: '/device-status', label: 'Device Status', icon: HardDrive },
+		{ 
+			label: 'Device Status', 
+			icon: HardDrive,
+			subItems: [
+				{ href: '/device-status', label: 'Overview' },
+				{ href: '/device-status-history', label: 'History' }
+			]
+		},
 		...(auth.user?.role === 'admin' ? [{ href: '/setting', label: 'Setting', icon: Settings }] : [])
 	]);
 
