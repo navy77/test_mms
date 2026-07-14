@@ -1,5 +1,5 @@
 services:
-  postgres:
+  prefect-postgres:
     image: postgres:14
     environment:
       POSTGRES_USER: prefect
@@ -12,8 +12,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - mms-network
 
-  redis:
+  prefect-redis:
     image: redis:7
     volumes:
       - redis_data:/data
@@ -22,21 +24,23 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - mms-network
 
   prefect-server:
     image: prefecthq/prefect:3-latest
     depends_on:
-      postgres:
+      prefect-postgres:
         condition: service_healthy
-      redis:
+      prefect-redis:
         condition: service_healthy
     environment:
-      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@postgres:5432/prefect
+      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@prefect-postgres:5432/prefect
       PREFECT_SERVER_API_HOST: 0.0.0.0
       PREFECT_SERVER_UI_API_URL: http://localhost:4200/api
       PREFECT_MESSAGING_BROKER: prefect_redis.messaging
       PREFECT_MESSAGING_CACHE: prefect_redis.messaging
-      PREFECT_REDIS_MESSAGING_HOST: redis
+      PREFECT_REDIS_MESSAGING_HOST: prefect-redis
       PREFECT_REDIS_MESSAGING_PORT: 6379
       PREFECT_REDIS_MESSAGING_DB: 0
     command: prefect server start --no-services
@@ -48,6 +52,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+    networks:
+      - mms-network
 
   prefect-services:
     image: prefecthq/prefect:3-latest
@@ -55,24 +61,87 @@ services:
       prefect-server:
         condition: service_healthy
     environment:
-      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@postgres:5432/prefect
+      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@prefect-postgres:5432/prefect
       PREFECT_MESSAGING_BROKER: prefect_redis.messaging
       PREFECT_MESSAGING_CACHE: prefect_redis.messaging
-      PREFECT_REDIS_MESSAGING_HOST: redis
+      PREFECT_REDIS_MESSAGING_HOST: prefect-redis
       PREFECT_REDIS_MESSAGING_PORT: 6379
       PREFECT_REDIS_MESSAGING_DB: 0
     command: prefect server services start
+    networks:
+      - mms-network
 
   prefect-worker:
-    image: prefecthq/prefect:3-latest
+    build:
+      context: .
+    image: mic/data-storage-prefect:1.0.0
     depends_on:
       prefect-server:
         condition: service_healthy
+    env_file:
+      - ../.env
     environment:
       PREFECT_API_URL: http://prefect-server:4200/api
-    command: prefect worker start --pool local-pool
+      POSTGRES_STORAGE_DB: storage_db
+    command:
+      - sh
+      - -c
+      - |
+        prefect work-pool create --type process local-pool || true
+        prefect worker start --pool local-pool
     restart: on-failure
+    networks:
+      - mms-network
+
+  data-storage-deploy:
+    build:
+      context: .
+    image: mic/data-storage-prefect:1.0.0
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+      POSTGRES_STORAGE_DB: storage_db
+      TZ: Asia/Bangkok
+    command:
+      - sh
+      - -c
+      - |
+        prefect work-pool create --type process local-pool || true
+        prefect deploy /app/main.py:data_storage_pipeline \
+          --name hourly \
+          --pool local-pool \
+          --cron "0 * * * *" \
+          --timezone Asia/Bangkok
+    restart: "no"
+    networks:
+      - mms-network
+
+  data-storage-run:
+    build:
+      context: .
+    image: mic/data-storage-prefect:1.0.0
+    profiles:
+      - manual
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+      POSTGRES_STORAGE_DB: storage_db
+    command: python main.py
+    networks:
+      - mms-network
 
 volumes:
   postgres_data:
   redis_data:
+
+networks:
+  mms-network:
+    external: true
