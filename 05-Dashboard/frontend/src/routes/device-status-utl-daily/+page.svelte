@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { historyApiUrl } from '$lib/api';
 	import { untrack } from 'svelte';
 	import HistoryChart from '$lib/components/HistoryChart.svelte';
 
@@ -85,9 +86,8 @@
 	}
 
 	function buildDailyUrl(processName: string, devices: string[]) {
-		const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
 		const params = new URLSearchParams({ devices: devices.join(',') });
-		return `http://${apiHost}:8003/api/v1/device/daily/${encodeURIComponent(processName)}?${params}`;
+		return historyApiUrl(`/api/v1/device/daily/${encodeURIComponent(processName)}?${params}`);
 	}
 
 	async function fetchDailyData(processName: string, devices: string[]) {

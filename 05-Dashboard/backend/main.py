@@ -21,7 +21,7 @@ from routers.stream import router as stream_router  # noqa: E402
 from logging.handlers import RotatingFileHandler  # noqa: E402
 
 # Configure logging
-log_dir = os.path.join(script_dir, "log")
+log_dir = os.getenv("LOG_DIR", os.path.join(script_dir, "log")).strip().strip("'\"")
 os.makedirs(log_dir, exist_ok=True)
 log_file = os.path.join(log_dir, "dashboard_backend.log")
 
@@ -51,7 +51,7 @@ cors_origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -81,5 +81,6 @@ if __name__ == "__main__":
 
     host = os.getenv("HOST", "0.0.0.0").strip().strip("'\"")
     port = int(os.getenv("DASHBOARD_PORT", os.getenv("PORT", 8001)))
+    reload = os.getenv("UVICORN_RELOAD", "false").lower() == "true"
     logger.info(f"Starting MMS Dashboard Backend Server at http://{host}:{port}")
-    uvicorn.run("main:app", host=host, port=port, reload=True)
+    uvicorn.run("main:app", host=host, port=port, reload=reload)

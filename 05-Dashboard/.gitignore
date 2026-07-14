@@ -7,3 +7,5 @@ log/
 node_modules/
 dist/
 .svelte-kit/
+.env
+.env.*

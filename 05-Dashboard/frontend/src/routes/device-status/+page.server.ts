@@ -1,9 +1,10 @@
+import { dashboardApiUrl } from '$lib/server/api';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
 	try {
 		// 1. Fetch columns to extract unique processes
-		const columnsRes = await fetch('http://localhost:8001/api/v1/columns');
+		const columnsRes = await fetch(dashboardApiUrl('/api/v1/columns'));
 		const columns = columnsRes.ok ? await columnsRes.json() : [];
 		
 		const uniqueProcs = Array.from(new Set(columns.map((c: any) => c.process))) as string[];
@@ -13,7 +14,9 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		let initialCounts = { total: 0, online: 0, offline: 0, communication_fail: 0 };
 		if (initialProcess) {
 			try {
-				const countsRes = await fetch(`http://localhost:8001/api/v1/device/currently/status/${initialProcess}`);
+				const countsRes = await fetch(
+					dashboardApiUrl(`/api/v1/device/currently/status/${encodeURIComponent(initialProcess)}`)
+				);
 				if (countsRes.ok) {
 					const data = await countsRes.json();
 					initialCounts = {
@@ -29,7 +32,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		}
 
 		// 3. Fetch registered devices
-		const devicesRes = await fetch('http://localhost:8001/api/v1/devices');
+		const devicesRes = await fetch(dashboardApiUrl('/api/v1/devices'));
 		const registeredDevices = devicesRes.ok ? await devicesRes.json() : [];
 
 		return {

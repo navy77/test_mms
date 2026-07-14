@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dashboardApiUrl } from '$lib/api';
 	import { onDestroy } from 'svelte';
 
 	let { data } = $props();
@@ -128,12 +129,11 @@
 			sse.close();
 		}
 		if (!proc || !devicesStr) return;
-		const host = window.location.hostname;
 		const params = new URLSearchParams({
 			process: proc,
 			devices: devicesStr
 		});
-		sse = new EventSource(`http://${host}:8001/api/v1/device/realtime/alarm-status?${params}`);
+		sse = new EventSource(dashboardApiUrl(`/api/v1/device/realtime/alarm-status?${params}`));
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);

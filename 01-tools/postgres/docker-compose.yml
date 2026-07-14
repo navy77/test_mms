@@ -1,8 +1,10 @@
 services:
 
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17-trixie
     container_name: postgres
+    mem_limit: 1g
+    cpus: 0.5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

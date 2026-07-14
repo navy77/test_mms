@@ -1,3 +1,4 @@
+import { dashboardApiUrl } from '$lib/server/api';
 import type { PageServerLoad } from './$types';
 
 interface DeviceCount {
@@ -11,11 +12,11 @@ interface DeviceCount {
 export const load: PageServerLoad = async ({ fetch }) => {
 	try {
 		const [columnsRes, devicesRes, statusesRes, alarmsRes, healthRes] = await Promise.all([
-			fetch('http://localhost:8001/api/v1/columns'),
-			fetch('http://localhost:8001/api/v1/devices'),
-			fetch('http://localhost:8001/api/v1/statuses'),
-			fetch('http://localhost:8001/api/v1/alarms'),
-			fetch('http://localhost:8001/health')
+			fetch(dashboardApiUrl('/api/v1/columns')),
+			fetch(dashboardApiUrl('/api/v1/devices')),
+			fetch(dashboardApiUrl('/api/v1/statuses')),
+			fetch(dashboardApiUrl('/api/v1/alarms')),
+			fetch(dashboardApiUrl('/health'))
 		]);
 
 		const columns = columnsRes.ok ? await columnsRes.json() : [];
@@ -29,7 +30,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
 			processes.map(async (process) => {
 				try {
 					const res = await fetch(
-						`http://localhost:8001/api/v1/device/currently/status/${encodeURIComponent(process)}`
+						dashboardApiUrl(`/api/v1/device/currently/status/${encodeURIComponent(process)}`)
 					);
 					if (!res.ok) {
 						throw new Error(`status ${res.status}`);

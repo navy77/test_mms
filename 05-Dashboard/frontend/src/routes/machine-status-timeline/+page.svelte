@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { historyApiUrl } from '$lib/api';
 	import TimelineChart from '$lib/components/TimelineChart.svelte';
 	import { untrack } from 'svelte';
 
@@ -76,9 +77,7 @@
 
 		loading = untrack(() => !devices.some((d) => d in timelines));
 		error = null;
-
-		const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-		const url = `http://${host}:8003/api/v1/status/state/${p}?devices=${devices.join(',')}`;
+		const url = historyApiUrl(`/api/v1/status/state/${encodeURIComponent(p)}?devices=${encodeURIComponent(devices.join(','))}`);
 
 		let lastError: Error | null = null;
 		for (let attempt = 1; attempt <= maxRetries; attempt++) {

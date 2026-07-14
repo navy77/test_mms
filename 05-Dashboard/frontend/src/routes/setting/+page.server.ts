@@ -1,14 +1,15 @@
+import { dashboardApiUrl } from '$lib/server/api';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch }) => {
 	try {
 		const [usersRes, devicesRes, columnsRes, projectsRes, statusesRes, alarmsRes] = await Promise.all([
-			fetch('http://localhost:8001/api/v1/users'),
-			fetch('http://localhost:8001/api/v1/devices'),
-			fetch('http://localhost:8001/api/v1/columns'),
-			fetch('http://localhost:8001/api/v1/projects'),
-			fetch('http://localhost:8001/api/v1/statuses'),
-			fetch('http://localhost:8001/api/v1/alarms') 
+			fetch(dashboardApiUrl('/api/v1/users')),
+			fetch(dashboardApiUrl('/api/v1/devices')),
+			fetch(dashboardApiUrl('/api/v1/columns')),
+			fetch(dashboardApiUrl('/api/v1/projects')),
+			fetch(dashboardApiUrl('/api/v1/statuses')),
+			fetch(dashboardApiUrl('/api/v1/alarms')) 
 		]);
 
 		const users = usersRes.ok ? await usersRes.json() : [];

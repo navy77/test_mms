@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dashboardApiUrl, historyApiUrl } from '$lib/api';
 	import './layout.css';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -67,7 +68,7 @@
 				{ href: '/device-status-utl-daily', label: 'Daily Utilization' }
 			]
 		},
-		{ href: 'http://localhost:8003/docs', label: 'Documents', icon: BookText },
+		{ href: historyApiUrl('/docs'), label: 'Documents', icon: BookText },
 		...(auth.user?.role === 'admin' ? [{ href: '/setting', label: 'Setting', icon: Settings }] : [])
 	]);
 
@@ -110,8 +111,7 @@
 
 	async function checkHealth() {
 		try {
-			const host = window.location.hostname;
-			const res = await fetch(`http://${host}:8001/health`);
+			const res = await fetch(dashboardApiUrl('/health'));
 			if (res.ok) {
 				const data = await res.json();
 				isLive = data.status === 'healthy';

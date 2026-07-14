@@ -2,14 +2,14 @@ services:
   kafka:
     image: apache/kafka:4.3.0
     container_name: kafka
+    mem_limit: 4g
+    cpus: 2
     hostname: kafka
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
-    mem_limit: 2g
     ports:
       - "29092:29092"
-
     environment:
       CLUSTER_ID: '783efbc5-0335-4663-918a-d95b866977f5'
 
@@ -39,6 +39,8 @@ services:
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
+    mem_limit: 1g
+    cpus: 0.5
     depends_on:
       - kafka
     ports:

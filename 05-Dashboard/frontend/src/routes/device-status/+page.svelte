@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dashboardApiUrl } from '$lib/api';
 	import { onDestroy } from 'svelte';
 	import { LoaderCircle } from 'lucide-svelte';
 
@@ -79,9 +80,7 @@
 			sse.close();
 		}
 		if (!proc || !devicesStr) return;
-		
-		const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-		sse = new EventSource(`http://${apiHost}:8001/api/v1/device/realtime/status?process=${proc}&devices=${devicesStr}`);
+		sse = new EventSource(dashboardApiUrl(`/api/v1/device/realtime/status?process=${encodeURIComponent(proc)}&devices=${encodeURIComponent(devicesStr)}`));
 		sse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);
@@ -114,8 +113,7 @@
 		if (!proc) return;
 		if (showLoading) loadingCounts = true;
 		try {
-			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
-			const res = await fetch(`http://${apiHost}:8001/api/v1/device/currently/status/${proc}`);
+			const res = await fetch(dashboardApiUrl(`/api/v1/device/currently/status/${encodeURIComponent(proc)}`));
 			if (res.ok) {
 				const resData = await res.json();
 				counts = {

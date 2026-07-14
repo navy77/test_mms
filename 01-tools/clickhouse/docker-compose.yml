@@ -4,6 +4,7 @@ services:
     image: clickhouse/clickhouse-server:25.6
     container_name: clickhouse
     mem_limit: 4g
+    cpus: 2
     environment:
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: maibok

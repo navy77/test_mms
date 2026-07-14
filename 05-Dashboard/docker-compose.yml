@@ -1,33 +1,42 @@
 services:
   dashboard-backend:
-    build: ./backend
+    build:
+      context: ./backend
     image: mic/dashboard-backend:1.0.0
     container_name: dashboard-backend
-    ports:
-      - "8001:8001"
+    mem_limit: 2g
+    cpus: 1
     restart: always
+    env_file:
+      - ./.env.production
     environment:
       - TZ=Asia/Bangkok
-    env_file:
-      - ../.env
+      - LOG_DIR=/var/log/apps
+    ports:
+      - "${DASHBOARD_PORT:-8001}:8001"
     volumes:
-      - ./backend/log:/app/log
+      - ./backend/log:/var/log/apps
     networks:
       - mms-network
 
   dashboard-frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     image: mic/dashboard-frontend:1.0.0
     container_name: dashboard-frontend
-    ports:
-      - "8000:3000"
+    mem_limit: 2g
+    cpus: 1
     restart: always
+    env_file:
+      - ./.env.production
     environment:
       - TZ=Asia/Bangkok
-    env_file:
-      - ../.env
-    extra_hosts:
-      - "localhost:host-gateway"
+      - HOST=0.0.0.0
+      - PORT=3000
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - dashboard-backend
     networks:
       - mms-network
 

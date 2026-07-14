@@ -1,34 +1,25 @@
-# Build stage
-FROM node:20-alpine AS builder
-
+FROM node:22-alpine AS deps
 WORKDIR /app
-
-# Copy dependency specifications
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy source code and build SvelteKit app
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-# Run stage
-FROM node:20-alpine
-
+FROM node:22-alpine AS production
 WORKDIR /app
+ENV NODE_ENV=production \
+    HOST=0.0.0.0 \
+    PORT=3000
 
-# Install production dependencies only
-COPY package*.json ./
-RUN npm ci --omit=dev
+RUN addgroup -g 1001 -S appgroup && adduser -S appuser -u 1001
+COPY --from=build --chown=appuser:appgroup /app/build ./build
+COPY --from=build --chown=appuser:appgroup /app/node_modules ./node_modules
+COPY --from=build --chown=appuser:appgroup /app/package.json ./package.json
+USER appuser
 
-# Copy compiled SvelteKit build from builder stage
-COPY --from=builder /app/build ./build
-
-# Environment configurations
-ENV PORT=3000
-ENV NODE_ENV=production
-
-# Expose SvelteKit default runtime port
 EXPOSE 3000
-
-# Start Sveltekit Node adapter
-CMD ["node", "build/index.js"]
+CMD ["node", "build"]

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dashboardApiUrl } from '$lib/api';
 	import { onDestroy } from 'svelte';
 	import {
 		Activity,
@@ -122,10 +123,8 @@
 			dataSse = null;
 		}
 		if (!process || !devices) return;
-
-		const host = window.location.hostname;
 		const params = new URLSearchParams({ process, devices });
-		dataSse = new EventSource(`http://${host}:8001/api/v1/device/realtime/data?${params}`);
+		dataSse = new EventSource(dashboardApiUrl(`/api/v1/device/realtime/data?${params}`));
 		dataSse.onmessage = (event) => {
 			try {
 				const list = JSON.parse(event.data);

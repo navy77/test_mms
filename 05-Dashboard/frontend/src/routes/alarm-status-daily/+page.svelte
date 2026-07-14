@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { historyApiUrl } from '$lib/api';
 	import { untrack } from 'svelte';
 	import HistoryChart from '$lib/components/HistoryChart.svelte';
 
@@ -87,10 +88,9 @@
 		error = null;
 
 		try {
-			const apiHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
 			const params = new URLSearchParams({ devices: devices.join(',') });
 			const res = await fetch(
-				`http://${apiHost}:8003/api/v1/alarm/daily/${encodeURIComponent(processName)}?${params}`
+				historyApiUrl(`/api/v1/alarm/daily/${encodeURIComponent(processName)}?${params}`)
 			);
 			if (!res.ok) {
 				throw new Error(`Failed to fetch daily alarms (${res.status})`);

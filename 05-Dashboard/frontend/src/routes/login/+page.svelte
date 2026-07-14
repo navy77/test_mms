@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { dashboardApiUrl } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { auth } from '$lib/stores/auth.svelte';
 	import { Activity, Loader2 } from '@lucide/svelte';
@@ -20,8 +21,7 @@
 		loading = true;
 
 		try {
-			const host = window.location.hostname;
-			const res = await fetch(`http://${host}:8001/auth/login`, {
+			const res = await fetch(dashboardApiUrl('/auth/login'), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

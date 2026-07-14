@@ -16,8 +16,8 @@
 ## 📂 Project Folder Structure
 
 โปรเจกต์นี้แบ่งสัดส่วนการพัฒนาและ Deploy ออกเป็น 6 ส่วนหลัก:
-* **`01-tools/`** : บริหารจัดการโครงสร้างพื้นฐาน (Docker Compose สำหรับ MQTT, Redis, Kafka, ClickHouse, PostgreSQL)
-* **`02-benthos/`** : Benthos Configuration ที่ใช้สำหรับดึงข้อมูลจาก MQTT มาใส่ใน Redis, ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka, และดึงข้อมูลจาก Kafka บันทึกลง ClickHouse
+* **`01-Tools/`** : บริหารจัดการโครงสร้างพื้นฐาน (Docker Compose สำหรับ MQTT, Redis, Kafka, ClickHouse, PostgreSQL)
+* **`02-Benthos/`** : Benthos Configuration ที่ใช้สำหรับดึงข้อมูลจาก MQTT มาใส่ใน Redis, ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka, และดึงข้อมูลจาก Kafka บันทึกลง ClickHouse
 * **`03-DeviceChecker/`** : ตรวจสอบสถานะอุปกรณ์ว่า online หรือ offline และบันทึกลง ClickHouse
 * **`04-API/`** : API Service ดึงข้อมูลประวัติย้อนหลังจาก ClickHouse โดยใช้ หลักการ batch endpoint
 * **`05-Dashboard/`** : สร้าง Frontend และ Backend ของ Web Dashboard โดยใช้ PostgreSQL สำหรับเก็บข้อมูลของระบบ
@@ -29,10 +29,10 @@
 
 เพื่อประสิทธิภาพสูงสุด ทุก Agent จะถูกเขียนขึ้นด้วยภาษา Python โดยออกแบบในรูปแบบ **Class-based Object Oriented (OOP)** และใช้ไลบรารีประเภท Asynchronous หรือ High-throughput Client
 
-### 1. tools (`01-tools`)
+### 1. Tools (`01-Tools`)
 * **หน้าที่:** บริหารจัดการโครงสร้างพื้นฐาน (Docker Compose สำหรับ MQTT, Redis, Kafka, ClickHouse, PostgreSQL)
 
-### 2. benthos (`02-benthos`)
+### 2. Benthos (`02-Benthos`)
 * **หน้าที่:** จัดการ Benthos Configuration สำหรับการส่งต่อข้อมูล:
   * ดึงข้อมูลจาก MQTT มาใส่ใน Redis
   * ดึงข้อมูลจาก Redis ส่งต่อให้ Kafka
