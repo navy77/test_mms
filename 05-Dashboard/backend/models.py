@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 # =====================================================================
@@ -44,13 +44,8 @@ class ColumnCreate(BaseModel):
     column_type: str = Field(..., min_length=1, description="Column data type (e.g. String, Float32)")
     column_key: bool = Field(False, description="Is this a key/indexing column (True) or a data column (False)?")
 
-class ColumnUpdate(BaseModel):
-    old_process: str = Field(..., min_length=1, description="Current process name")
-    old_column_name: str = Field(..., min_length=1, description="Current column name")
-    new_process: str = Field(..., min_length=1, description="New process name")
-    new_column_name: str = Field(..., min_length=1, description="New column name")
-    new_column_type: str = Field(..., min_length=1, description="New column data type")
-    new_column_key: bool = Field(False, description="New column key status (True = key, False = data)")
+class ColumnBatchCreate(BaseModel):
+    columns: List[ColumnCreate] = Field(..., min_length=1, description="Columns to register")
 
 class ColumnResponse(BaseModel):
     last_update: Optional[datetime] = None

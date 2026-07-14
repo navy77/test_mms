@@ -5,6 +5,13 @@
 	import { Plus, Pencil, Trash2, Loader2 } from '@lucide/svelte';
 
 	type Tab = 'users' | 'projects' | 'devices' | 'columns' | 'statuses' | 'alarms';
+	type ColumnDraft = {
+		process: string;
+		column_name: string;
+		column_type: string;
+		column_key: boolean;
+	};
+
 	let activeTab = $state<Tab>('users');
 
 	// ── SvelteKit Server Loaded Data ──────────────────────────────────────────
@@ -30,6 +37,7 @@
 	let formProject = $state({ items: '', value: '' });
 	let formDevice = $state({ process: '', device: '' });
 	let formColumn = $state({ process: '', column_name: '', column_type: 'Float32', column_key: false });
+	let formColumnsDraft = $state<ColumnDraft[]>([]);
 	let formStatus = $state({ process: '', status: '', color: '#00cc00' });
 	let formAlarm = $state({ process: '', status: '', color: '#ff9933' });
 
@@ -124,6 +132,7 @@
 		formProject = { items: '', value: '' };
 		formDevice = { process: '', device: '' };
 		formColumn = { process: '', column_name: '', column_type: 'Float32', column_key: false };
+		formColumnsDraft = [{ process: '', column_name: '', column_type: 'Float32', column_key: false }];
 		formStatus = { process: '', status: 'run', color: '#00cc00' };
 		formAlarm = { process: '', status: '', color: '#ff9933' };
 		errorMsg = '';
@@ -141,6 +150,7 @@
 			formDevice = { process: item.process, device: item.device };
 		} else if (activeTab === 'columns') {
 			formColumn = { process: item.process, column_name: item.column_name, column_type: item.column_type, column_key: item.column_key || false };
+			formColumnsDraft = [];
 		} else if (activeTab === 'statuses') {
 			formStatus = { process: item.process, status: item.status, color: item.color };
 		} else if (activeTab === 'alarms') {
@@ -148,6 +158,45 @@
 		}
 		errorMsg = '';
 		modalOpen = true;
+	}
+
+	function addColumnDraft() {
+		const last = formColumnsDraft[formColumnsDraft.length - 1];
+		formColumnsDraft.push({
+			process: last?.process ?? '',
+			column_name: '',
+			column_type: last?.column_type ?? 'Float32',
+			column_key: false
+		});
+	}
+
+	function removeColumnDraft(index: number) {
+		if (formColumnsDraft.length === 1) {
+			formColumnsDraft = [{ process: '', column_name: '', column_type: 'Float32', column_key: false }];
+			return;
+		}
+		formColumnsDraft.splice(index, 1);
+	}
+
+	function validateColumnDrafts() {
+		if (formColumnsDraft.length === 0) {
+			throw new Error('Add at least one column');
+		}
+
+		const seen = new Set<string>();
+		for (const column of formColumnsDraft) {
+			const process = column.process.trim();
+			const columnName = column.column_name.trim();
+			if (!process || !columnName) {
+				throw new Error('Process and column name are required for every row');
+			}
+
+			const key = `${process}::${columnName}`;
+			if (seen.has(key)) {
+				throw new Error(`Duplicate column in draft: ${process}/${columnName}`);
+			}
+			seen.add(key);
+		}
 	}
 
 	async function saveModal() {
@@ -217,31 +266,22 @@
 				}
 			} else if (activeTab === 'columns') {
 				if (modalMode === 'add') {
-					const res = await fetch(dashboardApiUrl(`/api/v1/columns`), {
+					validateColumnDrafts();
+					const res = await fetch(dashboardApiUrl(`/api/v1/columns/batch`), {
 						method: 'POST',
 						headers: getHeaders(),
-						body: JSON.stringify(formColumn)
-					});
-					if (!res.ok) {
-						const details = await res.json();
-						throw new Error(details.detail || 'Failed to register column');
-					}
-				} else {
-					const res = await fetch(dashboardApiUrl(`/api/v1/columns`), {
-						method: 'PUT',
-						headers: getHeaders(),
 						body: JSON.stringify({
-							old_process: editTarget.process,
-							old_column_name: editTarget.column_name,
-							new_process: formColumn.process,
-							new_column_name: formColumn.column_name,
-							new_column_type: formColumn.column_type,
-							new_column_key: formColumn.column_key
+							columns: formColumnsDraft.map((column) => ({
+								process: column.process.trim(),
+								column_name: column.column_name.trim(),
+								column_type: column.column_type,
+								column_key: column.column_key
+							}))
 						})
 					});
 					if (!res.ok) {
 						const details = await res.json();
-						throw new Error(details.detail || 'Failed to update column');
+						throw new Error(details.detail || 'Failed to register columns');
 					}
 				}
 			} else if (activeTab === 'statuses') {
@@ -544,7 +584,6 @@
 								{/if}
 							</td>
 							<td class="px-4 py-2.5 text-right">
-								<button onclick={() => openEdit(c)} class="mr-2 text-muted-foreground hover:text-foreground"><Pencil class="inline h-3 w-3" /></button>
 								<button onclick={() => deleteItem(c)} class="text-red-400 hover:text-red-600"><Trash2 class="inline h-3 w-3" /></button>
 							</td>
 						</tr>
@@ -722,30 +761,96 @@
 				</div>
 
 			{:else if activeTab === 'columns'}
-				<div class="space-y-3">
-					<div>
-						<label class="mb-1 block text-xs text-muted-foreground">Process</label>
-						<input bind:value={formColumn.process} placeholder="e.g. demo1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+				{#if modalMode === 'add'}
+					<div class="space-y-3">
+						<div class="flex items-center justify-between">
+							<p class="text-xs font-medium text-muted-foreground">Columns to create</p>
+							<button
+								type="button"
+								onclick={addColumnDraft}
+								class="flex items-center gap-1 rounded border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted"
+							>
+								<Plus class="h-3 w-3" />
+								Add row
+							</button>
+						</div>
+
+						<div class="max-h-[360px] space-y-3 overflow-y-auto pr-1">
+							{#each formColumnsDraft as column, index}
+								<div class="rounded-md border border-border bg-background/60 p-3">
+									<div class="mb-2 flex items-center justify-between">
+										<span class="text-[11px] font-medium text-muted-foreground">Column {index + 1}</span>
+										<button
+											type="button"
+											onclick={() => removeColumnDraft(index)}
+											class="text-muted-foreground transition-colors hover:text-destructive"
+											title="Remove row"
+										>
+											<Trash2 class="h-3.5 w-3.5" />
+										</button>
+									</div>
+									<div class="space-y-2">
+										<div>
+											<label for={`column_process_${index}`} class="mb-1 block text-xs text-muted-foreground">Process</label>
+											<input id={`column_process_${index}`} bind:value={column.process} placeholder="e.g. demo1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+										</div>
+										<div>
+											<label for={`column_name_${index}`} class="mb-1 block text-xs text-muted-foreground">Column Name</label>
+											<input id={`column_name_${index}`} bind:value={column.column_name} placeholder="e.g. data6" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+										</div>
+										<div>
+											<label for={`column_type_${index}`} class="mb-1 block text-xs text-muted-foreground">Column Type</label>
+											<select id={`column_type_${index}`} bind:value={column.column_type} class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary">
+												<option>Float32</option>
+												<option>Float64</option>
+												<option>String</option>
+												<option>Int32</option>
+												<option>Int64</option>
+												<option>UInt32</option>
+												<option>UInt64</option>
+												<option>Bool</option>
+												<option>DateTime</option>
+											</select>
+										</div>
+										<div class="flex items-center gap-2 pt-1">
+											<input type="checkbox" id={`column_key_${index}`} bind:checked={column.column_key} class="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-background" />
+											<label for={`column_key_${index}`} class="cursor-pointer select-none text-xs font-medium text-muted-foreground">Is Key Column</label>
+										</div>
+									</div>
+								</div>
+							{/each}
+						</div>
 					</div>
-					<div>
-						<label class="mb-1 block text-xs text-muted-foreground">Column Name</label>
-						<input bind:value={formColumn.column_name} placeholder="e.g. data1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+				{:else}
+					<div class="space-y-3">
+						<div>
+							<label class="mb-1 block text-xs text-muted-foreground">Process</label>
+							<input bind:value={formColumn.process} placeholder="e.g. demo1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+						</div>
+						<div>
+							<label class="mb-1 block text-xs text-muted-foreground">Column Name</label>
+							<input bind:value={formColumn.column_name} placeholder="e.g. data1" class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+						</div>
+						<div>
+							<label class="mb-1 block text-xs text-muted-foreground">Column Type</label>
+							<select bind:value={formColumn.column_type} class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary">
+								<option>Float32</option>
+								<option>Float64</option>
+								<option>String</option>
+								<option>Int32</option>
+								<option>Int64</option>
+								<option>UInt32</option>
+								<option>UInt64</option>
+								<option>Bool</option>
+								<option>DateTime</option>
+							</select>
+						</div>
+						<div class="flex items-center gap-2 pt-1">
+							<input type="checkbox" id="column_key" bind:checked={formColumn.column_key} class="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-background" />
+							<label for="column_key" class="text-xs font-medium text-muted-foreground cursor-pointer select-none">Is Key Column</label>
+						</div>
 					</div>
-					<div>
-						<label class="mb-1 block text-xs text-muted-foreground">Column Type</label>
-						<select bind:value={formColumn.column_type} class="w-full rounded border border-border bg-background px-3 py-1.5 text-sm text-foreground outline-none focus:border-primary">
-							<option>Float32</option>
-							<option>Float64</option>
-							<option>String</option>
-							<option>Int32</option>
-							<option>UInt32</option>
-						</select>
-					</div>
-					<div class="flex items-center gap-2 pt-1">
-						<input type="checkbox" id="column_key" bind:checked={formColumn.column_key} class="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-background" />
-						<label for="column_key" class="text-xs font-medium text-muted-foreground cursor-pointer select-none">Is Key Column</label>
-					</div>
-				</div>
+				{/if}
 
 			{:else if activeTab === 'statuses'}
 				<div class="space-y-3">

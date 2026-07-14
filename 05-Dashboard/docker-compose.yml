@@ -8,14 +8,16 @@ services:
     cpus: 1
     restart: always
     env_file:
-      - ./.env.production
+      - ../.env
     environment:
       - TZ=Asia/Bangkok
       - LOG_DIR=/var/log/apps
+      - BENTHOS_KAFKA_CLICKHOUSE_CONFIG=/app/benthos/kafka-clickhouse.yaml
     ports:
       - "${DASHBOARD_PORT:-8001}:8001"
     volumes:
       - ./backend/log:/var/log/apps
+      - ../02-Benthos/03-KafkaClickhouse/benthos.yaml:/app/benthos/kafka-clickhouse.yaml
     networks:
       - mms-network
 
@@ -28,13 +30,13 @@ services:
     cpus: 1
     restart: always
     env_file:
-      - ./.env.production
+      - ../.env
     environment:
       - TZ=Asia/Bangkok
       - HOST=0.0.0.0
-      - PORT=3000
+      - PORT=1311
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-1311}:1311"
     depends_on:
       - dashboard-backend
     networks:

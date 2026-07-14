@@ -13,7 +13,7 @@ def ch_conn():
 
 
 def get_record_period():
-    print(1111111111)
+  
     """Fetch record_period from PostgreSQL"""
     query = "SELECT items, value FROM project_register_tb"
     

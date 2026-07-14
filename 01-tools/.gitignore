@@ -5,5 +5,4 @@ __pycache__/
 *.log
 *.db
 log/
-mosquitto.db
-mosquitto.log
+mosquitto/log/

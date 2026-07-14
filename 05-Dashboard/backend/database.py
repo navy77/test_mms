@@ -250,20 +250,20 @@ def init_db():
                         ('record_period', '60');
                 """)
 
-            # 4. Insert default columns if empty
-            cur.execute("SELECT COUNT(*) FROM columns_register_tb;")
-            if cur.fetchone()[0] == 0:
-                logger.info("Initializing default columns in columns_register_tb...")
-                cur.execute("""
-                    INSERT INTO columns_register_tb (process, column_name, column_type, column_key)
-                    VALUES 
-                        ('demo1', 'model', 'String', TRUE),
-                        ('demo1', 'data1', 'Float32', FALSE),
-                        ('demo1', 'data2', 'Float32', FALSE),
-                        ('demo1', 'data3', 'Float32', FALSE),
-                        ('demo1', 'data4', 'Float32', FALSE),
-                        ('demo1', 'data5', 'Float32', FALSE);
-                """)
+            # # 4. Insert default columns if empty
+            # cur.execute("SELECT COUNT(*) FROM columns_register_tb;")
+            # if cur.fetchone()[0] == 0:
+            #     logger.info("Initializing default columns in columns_register_tb...")
+            #     cur.execute("""
+            #         INSERT INTO columns_register_tb (process, column_name, column_type, column_key)
+            #         VALUES 
+            #             ('demo1', 'model', 'String', TRUE),
+            #             ('demo1', 'data1', 'Float32', FALSE),
+            #             ('demo1', 'data2', 'Float32', FALSE),
+            #             ('demo1', 'data3', 'Float32', FALSE),
+            #             ('demo1', 'data4', 'Float32', FALSE),
+            #             ('demo1', 'data5', 'Float32', FALSE);
+            #     """)
 
             # 5. Insert default devices if empty
             cur.execute("SELECT COUNT(*) FROM device_register_tb;")

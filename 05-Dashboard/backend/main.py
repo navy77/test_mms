@@ -43,12 +43,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Enable CORS for frontend integration
-cors_origins = [
-    origin.strip()
-    for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
-    if origin.strip()
-]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

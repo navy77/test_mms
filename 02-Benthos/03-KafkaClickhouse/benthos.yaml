@@ -11,7 +11,7 @@ input:
   label: kafka_input
   kafka:
     addresses: ["kafka:9092"]
-    topics: ["data","status", "alarm"]
+    topics: ["data", "status", "alarm"]
     consumer_group: "benthos_clickhouse_group"
     start_from_oldest: true
     batching:
@@ -32,7 +32,7 @@ output:
               - device
               - status
             args_mapping: |
-              root = [ 
+              root = [
                 this.process,
                 this.device,
                 this.payload.parse_json().catch({"status": this.payload}).status
@@ -52,7 +52,7 @@ output:
               - device
               - status
             args_mapping: |
-              root = [ 
+              root = [
                 this.process,
                 this.device,
                 this.payload.parse_json().catch({"status": this.payload}).status
@@ -70,22 +70,29 @@ output:
             columns:
               - process
               - device
-              - model
               - data1
               - data2
               - data3
               - data4
               - data5
+              - model
+              - data7
+              - data8
+              - data6
             args_mapping: |
-              root = [ 
+              let payload = this.payload.parse_json().catch({})
+              root = [
                 this.process,
                 this.device,
-                this.payload.parse_json().catch({}).model,
-                this.payload.parse_json().catch({}).data1.number().catch(0.0),
-                this.payload.parse_json().catch({}).data2.number().catch(0.0),
-                this.payload.parse_json().catch({}).data3.number().catch(0.0),
-                this.payload.parse_json().catch({}).data4.number().catch(0.0),
-                this.payload.parse_json().catch({}).data5.number().catch(0.0)
+                $payload.data1.number().catch(0.0),
+                $payload.data2.number().catch(0.0),
+                $payload.data3.number().catch(0.0),
+                $payload.data4.number().catch(0.0),
+                $payload.data5.number().catch(0.0),
+                $payload.model.string().catch(""),
+                $payload.data7.number().catch(0.0),
+                $payload.data8.number().catch(0.0),
+                $payload.data6.number().catch(0.0)
               ]
             batching:
               count: 10000

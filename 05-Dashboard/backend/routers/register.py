@@ -1,12 +1,14 @@
 import logging
+import os
+import re
 from typing import List
 from fastapi import APIRouter, HTTPException, status, Depends, Query
-from database import get_ch_client, format_result
+from database import get_ch_client, get_clickhouse_client, format_result
 from security import hash_password, verify_admin
 from models import (
     UserCreate, UserUpdate, UserResponse,
     DeviceCreate, DeviceUpdate, DeviceResponse,
-    ColumnCreate, ColumnUpdate, ColumnResponse,
+    ColumnCreate, ColumnBatchCreate, ColumnResponse,
     ProjectCreate, ProjectUpdate, ProjectResponse,
     StatusRegisterCreate, StatusRegisterUpdate, StatusRegisterResponse,
     AlarmRegisterCreate, AlarmRegisterUpdate, AlarmRegisterResponse
@@ -18,6 +20,273 @@ router = APIRouter(
     prefix="/api/v1",
     tags=["register"]
 )
+
+VALID_COLUMN_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+ALLOWED_CLICKHOUSE_TYPES = {
+    "String",
+    "Float32",
+    "Float64",
+    "Int32",
+    "Int64",
+    "UInt32",
+    "UInt64",
+    "Bool",
+    "DateTime",
+}
+
+BENTHOS_KAFKA_CLICKHOUSE_CONFIG = os.getenv(
+    "BENTHOS_KAFKA_CLICKHOUSE_CONFIG",
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "02-Benthos",
+            "03-KafkaClickhouse",
+            "benthos.yaml",
+        )
+    ),
+)
+
+
+def validate_clickhouse_column(column: ColumnCreate):
+    if not VALID_COLUMN_NAME_RE.fullmatch(column.column_name):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Invalid column name '{column.column_name}'. Use letters, numbers, "
+                "and underscores only, and do not start with a number."
+            ),
+        )
+
+    if column.column_type not in ALLOWED_CLICKHOUSE_TYPES:
+        allowed = ", ".join(sorted(ALLOWED_CLICKHOUSE_TYPES))
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid ClickHouse type '{column.column_type}'. Allowed types: {allowed}",
+        )
+
+
+def quote_clickhouse_identifier(identifier: str) -> str:
+    return f"`{identifier}`"
+
+
+def benthos_payload_mapping(column_name: str, column_type: str) -> str:
+    if column_type == "String":
+        return f'$payload.{column_name}.string().catch("")'
+    if column_type == "Bool":
+        return f"$payload.{column_name}.bool().catch(false)"
+    if column_type == "DateTime":
+        return f'$payload.{column_name}.string().catch("")'
+    return f"$payload.{column_name}.number().catch(0.0)"
+
+
+def render_benthos_kafka_clickhouse_config(columns: List[dict]) -> str:
+    column_lines = "\n".join(f"              - {column['column_name']}" for column in columns)
+    mapping_lines = ",\n".join(
+        f"                {benthos_payload_mapping(column['column_name'], column['column_type'])}"
+        for column in columns
+    )
+
+    return f"""logger:
+  level: INFO
+  format: logfmt
+  add_timestamp: true
+metrics:
+  logger:
+    push_interval: 30s
+    flush_metrics: true
+
+input:
+  label: kafka_input
+  kafka:
+    addresses: [\"kafka:9092\"]
+    topics: [\"data\", \"status\", \"alarm\"]
+    consumer_group: \"benthos_clickhouse_group\"
+    start_from_oldest: true
+    batching:
+      period: 1s
+      byte_size: 100000
+
+output:
+  switch:
+    cases:
+      - check: meta(\"kafka_topic\") == \"status\"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: status_tb
+            columns:
+              - process
+              - device
+              - status
+            args_mapping: |
+              root = [
+                this.process,
+                this.device,
+                this.payload.parse_json().catch({{\"status\": this.payload}}).status
+              ]
+            batching:
+              count: 10000
+              period: 1s
+
+      - check: meta(\"kafka_topic\") == \"alarm\"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: alarm_tb
+            columns:
+              - process
+              - device
+              - status
+            args_mapping: |
+              root = [
+                this.process,
+                this.device,
+                this.payload.parse_json().catch({{\"status\": this.payload}}).status
+              ]
+            batching:
+              count: 10000
+              period: 1s
+
+      - check: meta(\"kafka_topic\") == \"data\"
+        output:
+          sql_insert:
+            driver: clickhouse
+            dsn: clickhouse://default:maibok@clickhouse:9000/default
+            table: data_tb
+            columns:
+              - process
+              - device
+{column_lines}
+            args_mapping: |
+              let payload = this.payload.parse_json().catch({{}})
+              root = [
+                this.process,
+                this.device,
+{mapping_lines}
+              ]
+            batching:
+              count: 10000
+              period: 1s
+"""
+
+
+def regenerate_benthos_kafka_clickhouse_config(client):
+    result = client.query(
+        """
+        SELECT process, column_name, column_type, column_key
+        FROM columns_register_tb
+        ORDER BY last_update ASC, process ASC, column_name ASC
+        """
+    )
+    registered_columns = format_result(result)
+    seen_column_names = set()
+    data_columns = []
+
+    for column in registered_columns:
+        column_name = column["column_name"]
+        if column_name in seen_column_names:
+            continue
+        validate_clickhouse_column(
+            ColumnCreate(
+                process=column["process"],
+                column_name=column_name,
+                column_type=column["column_type"],
+                column_key=column["column_key"],
+            )
+        )
+        seen_column_names.add(column_name)
+        data_columns.append(column)
+
+    config = render_benthos_kafka_clickhouse_config(data_columns)
+    config_path = BENTHOS_KAFKA_CLICKHOUSE_CONFIG
+    config_dir = os.path.dirname(config_path)
+    if config_dir:
+        os.makedirs(config_dir, exist_ok=True)
+
+    with open(config_path, "w", encoding="utf-8", newline="\n") as config_file:
+        config_file.write(config)
+
+    logger.info(
+        "Regenerated Benthos Kafka ClickHouse config at %s with %s data column(s)",
+        config_path,
+        len(data_columns),
+    )
+    return {"path": config_path, "data_columns": len(data_columns)}
+
+
+def ensure_columns_can_be_registered(columns: List[ColumnCreate], client):
+    seen = set()
+    for column in columns:
+        validate_clickhouse_column(column)
+        key = (column.process, column.column_name)
+        if key in seen:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Column '{column.column_name}' under process '{column.process}' is duplicated in request",
+            )
+        seen.add(key)
+
+    for column in columns:
+        dup_check = client.query(
+            "SELECT column_name FROM columns_register_tb WHERE process = %(p)s AND column_name = %(c)s",
+            parameters={"p": column.process, "c": column.column_name},
+        )
+        if dup_check.result_rows:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Column '{column.column_name}' under process '{column.process}' is already registered",
+            )
+
+    ch_client = get_clickhouse_client()
+    names = sorted({column.column_name for column in columns})
+    quoted_names = ", ".join(f"'{name}'" for name in names)
+    existing_result = ch_client.query(
+        f"""
+        SELECT name
+        FROM system.columns
+        WHERE database = currentDatabase()
+          AND table = 'data_tb'
+          AND name IN ({quoted_names})
+        """
+    )
+    existing_names = {row[0] for row in existing_result.result_rows}
+    if existing_names:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Column(s) already exist in ClickHouse data_tb: {', '.join(sorted(existing_names))}",
+        )
+
+    return ch_client
+
+
+def register_columns_in_clickhouse_and_postgres(columns: List[ColumnCreate], client):
+    ch_client = ensure_columns_can_be_registered(columns, client)
+
+    for column in columns:
+        column_name = quote_clickhouse_identifier(column.column_name)
+        ch_client.command(
+            f"ALTER TABLE data_tb ADD COLUMN IF NOT EXISTS {column_name} {column.column_type}"
+        )
+        logger.info(
+            "Added ClickHouse data_tb column: %s %s",
+            column.column_name,
+            column.column_type,
+        )
+
+    client.insert(
+        "columns_register_tb",
+        [
+            [column.process, column.column_name, column.column_type, column.column_key]
+            for column in columns
+        ],
+        column_names=["process", "column_name", "column_type", "column_key"],
+    )
+
 
 # =====================================================================
 # API Endpoints
@@ -214,65 +483,56 @@ def get_columns(client = Depends(get_ch_client)):
 def create_column(column_data: ColumnCreate, client = Depends(get_ch_client)):
     logger.info(f"Registering column: {column_data.process}/{column_data.column_name} ({column_data.column_type}, key={column_data.column_key})")
     try:
-        # Check for duplicate
-        dup_check = client.query(
-            "SELECT column_name FROM columns_register_tb WHERE process = %(p)s AND column_name = %(c)s",
-            parameters={'p': column_data.process, 'c': column_data.column_name}
-        )
-        if dup_check.result_rows:
-            raise HTTPException(status_code=400, detail=f"Column '{column_data.column_name}' under process '{column_data.process}' is already registered")
-        
-        # Insert column
-        client.insert(
-            'columns_register_tb',
-            [[column_data.process, column_data.column_name, column_data.column_type, column_data.column_key]],
-            column_names=['process', 'column_name', 'column_type', 'column_key']
-        )
-        return {"message": f"Column '{column_data.column_name}' registered under process '{column_data.process}'"}
+        register_columns_in_clickhouse_and_postgres([column_data], client)
+        benthos_config = regenerate_benthos_kafka_clickhouse_config(client)
+        return {
+            "message": f"Column '{column_data.column_name}' registered under process '{column_data.process}'",
+            "benthos_config": benthos_config,
+        }
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error registering column: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.put("/columns", dependencies=[Depends(verify_admin)])
-def update_column(update_data: ColumnUpdate, client = Depends(get_ch_client)):
-    logger.info(f"Updating column registration: {update_data.old_process}/{update_data.old_column_name} -> {update_data.new_process}/{update_data.new_column_name}")
+@router.post("/columns/batch", status_code=status.HTTP_201_CREATED, dependencies=[Depends(verify_admin)])
+def create_columns_batch(batch_data: ColumnBatchCreate, client = Depends(get_ch_client)):
+    logger.info("Registering %s column(s) in batch", len(batch_data.columns))
     try:
-        # Check if original column exists
-        check = client.query(
-            "SELECT column_name FROM columns_register_tb WHERE process = %(op)s AND column_name = %(oc)s",
-            parameters={'op': update_data.old_process, 'oc': update_data.old_column_name}
-        )
-        if not check.result_rows:
-            raise HTTPException(status_code=404, detail=f"Column '{update_data.old_column_name}' under process '{update_data.old_process}' not found")
-        
-        # Check if the new name would collide with another existing entry
-        if (update_data.old_process != update_data.new_process) or (update_data.old_column_name != update_data.new_column_name):
-            dup_check = client.query(
-                "SELECT column_name FROM columns_register_tb WHERE process = %(np)s AND column_name = %(nc)s",
-                parameters={'np': update_data.new_process, 'nc': update_data.new_column_name}
-            )
-            if dup_check.result_rows:
-                raise HTTPException(status_code=400, detail=f"Target column name '{update_data.new_column_name}' under process '{update_data.new_process}' already exists")
-        
-        # Update column registration
-        client.command(
-            "UPDATE columns_register_tb SET process = %(np)s, column_name = %(nc)s, column_type = %(nt)s, column_key = %(nk)s WHERE process = %(op)s AND column_name = %(oc)s",
-            parameters={
-                'np': update_data.new_process,
-                'nc': update_data.new_column_name,
-                'nt': update_data.new_column_type,
-                'nk': update_data.new_column_key,
-                'op': update_data.old_process,
-                'oc': update_data.old_column_name
-            }
-        )
-        return {"message": "Column registration updated successfully"}
+        register_columns_in_clickhouse_and_postgres(batch_data.columns, client)
+        benthos_config = regenerate_benthos_kafka_clickhouse_config(client)
+        return {
+            "message": f"{len(batch_data.columns)} column(s) registered successfully",
+            "benthos_config": benthos_config,
+            "columns": [
+                {
+                    "process": column.process,
+                    "column_name": column.column_name,
+                    "column_type": column.column_type,
+                    "column_key": column.column_key,
+                }
+                for column in batch_data.columns
+            ],
+        }
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error updating column registration: {e}")
+        logger.error(f"Error registering columns batch: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/benthos/kafka-clickhouse/regenerate", dependencies=[Depends(verify_admin)])
+def regenerate_kafka_clickhouse_benthos(client = Depends(get_ch_client)):
+    logger.info("Manually regenerating Benthos Kafka ClickHouse config")
+    try:
+        benthos_config = regenerate_benthos_kafka_clickhouse_config(client)
+        return {
+            "message": "Benthos Kafka ClickHouse config regenerated successfully",
+            "benthos_config": benthos_config,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error regenerating Benthos Kafka ClickHouse config: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.delete("/columns", dependencies=[Depends(verify_admin)])
