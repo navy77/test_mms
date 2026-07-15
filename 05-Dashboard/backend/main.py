@@ -17,6 +17,7 @@ from routers.register import router as register_router  # noqa: E402
 from routers.auth import router as auth_router  # noqa: E402
 from routers.device import router as device_router  # noqa: E402
 from routers.stream import router as stream_router  # noqa: E402
+from routers.monitor import router as monitor_router  # noqa: E402
 
 from logging.handlers import RotatingFileHandler  # noqa: E402
 
@@ -56,6 +57,7 @@ app.include_router(auth_router)
 app.include_router(register_router)
 app.include_router(device_router)
 app.include_router(stream_router)
+app.include_router(monitor_router)
 
 
 @app.on_event("startup")

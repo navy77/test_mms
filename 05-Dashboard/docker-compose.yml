@@ -18,6 +18,7 @@ services:
     volumes:
       - ./backend/log:/var/log/apps
       - ../02-Benthos/03-KafkaClickhouse/benthos.yaml:/app/benthos/kafka-clickhouse.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - mms-network
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dashboardApiUrl } from '$lib/api';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import {
 		Activity,
 		AlertTriangle,
@@ -151,7 +151,63 @@
 		}
 	});
 
+	interface ContainerStats {
+		name: string;
+		status: string;
+		cpu_percent: number;
+		memory_usage_mb: number;
+		memory_limit_mb: number;
+		memory_percent: number;
+		network_rx_mb: number;
+		network_tx_mb: number;
+	}
+
+	const systemNodes = [
+		{ key: 'mqtt', label: 'MQTT Broker', description: 'Mosquitto' },
+		{ key: 'mqttredis', label: 'MQTT ➔ Redis', description: 'Benthos Pipeline' },
+		{ key: 'rediskafka', label: 'Redis ➔ Kafka', description: 'Benthos Pipeline' },
+		{ key: 'kafkaclickhouse', label: 'Kafka ➔ ClickHouse', description: 'Benthos Pipeline' },
+		{ key: 'clickhouse', label: 'ClickHouse', description: 'OLAP DB' },
+		{ key: 'prefect server', label: 'Prefect Server', description: 'Orchestrator' }
+	];
+
+	let containerStatsList = $state<ContainerStats[]>([]);
+	let monitorInterval: any;
+
+	async function fetchContainerStats() {
+		try {
+			const res = await fetch(dashboardApiUrl('/api/v1/monitor/containers'));
+			if (res.ok) {
+				const body = await res.json();
+				containerStatsList = body.containers || [];
+			}
+		} catch (err) {
+			console.error('Failed to fetch container stats:', err);
+		}
+	}
+
+	function findContainer(key: string) {
+		const mapping: Record<string, string> = {
+			mqtt: 'mosquitto',
+			mqttredis: 'mqtt-redis',
+			rediskafka: 'redis-kafka',
+			kafkaclickhouse: 'kafka-clickhouse',
+			clickhouse: 'clickhouse',
+			'prefect server': 'prefect-server'
+		};
+		const searchName = mapping[key] || key;
+		return containerStatsList.find(
+			(c) => c.name.toLowerCase().includes(searchName.toLowerCase())
+		);
+	}
+
+	onMount(() => {
+		fetchContainerStats();
+		monitorInterval = setInterval(fetchContainerStats, 5000);
+	});
+
 	onDestroy(() => {
+		if (monitorInterval) clearInterval(monitorInterval);
 		if (dataSse) dataSse.close();
 	});
 
@@ -350,4 +406,87 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- System Health Diagram Widget -->
+	<div class="rounded-lg border border-border bg-card p-5">
+		<div class="mb-5 flex items-center gap-2">
+			<Server class="h-4 w-4 text-green-500 animate-pulse" />
+			<h2 class="text-sm font-semibold text-card-foreground">Data Pipeline Health Monitor</h2>
+		</div>
+
+		<!-- Horizontal Flow Diagram -->
+		<div class="overflow-x-auto pb-4">
+			<div class="flex items-center min-w-[1000px] justify-between px-4 py-12">
+				{#each systemNodes as node, index}
+					{@const c = findContainer(node.key)}
+					{@const isOnline = c && c.status === 'running'}
+
+					<!-- Node Card with Hover Tooltip -->
+					<div class="relative group flex flex-col items-center">
+						<div class="flex items-center justify-between rounded-lg border px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer min-w-[160px] h-14
+							{isOnline 
+								? 'bg-green-500/5 border-green-500/30 hover:border-green-500' 
+								: 'bg-red-500/5 border-red-500/30 hover:border-red-500'}">
+							<div class="flex flex-col text-left mr-3">
+								<span class="text-xs font-semibold text-foreground">{node.label}</span>
+								<span class="text-[10px] text-muted-foreground">{node.description}</span>
+							</div>
+							
+							<!-- Status Glow indicator -->
+							<span class="relative flex h-2.5 w-2.5">
+								{#if isOnline}
+									<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+									<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+								{:else}
+									<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+								{/if}
+							</span>
+						</div>
+
+						<!-- Hover Detail Card (Glassmorphism styled) -->
+						<div class="pointer-events-none absolute z-50 flex w-64 flex-col rounded-md border border-border bg-background/95 backdrop-blur-md p-3 shadow-xl opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 text-xs {index === systemNodes.length - 1 ? 'right-full mr-3 top-1/2 -translate-y-1/2 origin-right' : 'left-full ml-3 top-1/2 -translate-y-1/2 origin-left'}">
+							<div class="border-b border-border pb-1.5 mb-1.5 flex justify-between font-semibold">
+								<span>{node.label} Stats</span>
+								<span class={isOnline ? 'text-green-500' : 'text-red-500'}>
+									{isOnline ? 'Online' : 'Offline'}
+								</span>
+							</div>
+							{#if isOnline && c}
+								<div class="grid grid-cols-2 gap-y-1.5 gap-x-3 text-muted-foreground">
+									<span class="font-medium text-foreground">CPU Usage:</span>
+									<span class="text-right">{c.cpu_percent}%</span>
+									
+									<span class="font-medium text-foreground">Memory:</span>
+									<span class="text-right">{c.memory_usage_mb} MB / {c.memory_limit_mb} MB</span>
+									
+									<span class="font-medium text-foreground">Memory (%):</span>
+									<span class="text-right">{c.memory_percent}%</span>
+									
+									<span class="font-medium text-foreground">Net Rx:</span>
+									<span class="text-right">{c.network_rx_mb} MB</span>
+									
+									<span class="font-medium text-foreground">Net Tx:</span>
+									<span class="text-right">{c.network_tx_mb} MB</span>
+								</div>
+							{:else}
+								<span class="text-muted-foreground text-[5px] italic">Container statistics unavailable (offline or not found).</span>
+							{/if}
+						</div>
+					</div>
+
+					<!-- Arrow Connector (Omit for the last node) -->
+					{#if index < systemNodes.length - 1}
+						<div class="flex-1 flex items-center justify-center px-2">
+							<div class="h-0.5 bg-border flex-1 border-t-2 border-dashed relative">
+								<div class="absolute -top-1.5 right-0 text-muted-foreground leading-[0] flex items-center text-sm font-bold">
+									➔
+								</div>
+							</div>
+						</div>
+					{/if}
+				{/each}
+			</div>
+		</div>
+	</div>
+
 </div>
