@@ -30,7 +30,7 @@ services:
     cpus: 1
     restart: always
     env_file:
-      - ../.env
+      - ./.env.production
     environment:
       - TZ=Asia/Bangkok
       - HOST=0.0.0.0

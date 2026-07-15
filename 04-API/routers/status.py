@@ -2,7 +2,8 @@ import logging
 import calendar
 from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional
-from fastapi import APIRouter, HTTPException, Path, Query, status
+from fastapi import APIRouter, HTTPException, Path, Query, status, Request
+from limiter import limiter
 from database import format_result, get_ch_client, get_registered_devices as fetch_registered_devices
 from models import (
     DailyStatusResponse,
@@ -429,7 +430,9 @@ def group_status_by_month(
 
 # 1. currently Endpoints
 @router.get("/currently/{process}", response_model=List[StatusResponse])
+@limiter.limit("20/minute")
 def get_currently_process(
+    request: Request,
     process: str = Path(..., description="The process identifier"),
     devices: Optional[str] = Query(
         None,
@@ -493,7 +496,9 @@ def get_currently_process(
 
 # 2. Daily Endpoints
 @router.get("/daily/{process}", response_model=List[DailyStatusResponse])
+@limiter.limit("20/minute")
 def get_daily_process(
+    request: Request,
     process: str = Path(..., description="The process identifier"),
     devices: Optional[str] = Query(
         None,
@@ -567,7 +572,9 @@ def get_daily_process(
 
 # 3. Monthly Endpoints
 @router.get("/monthly/{year}/{month}/{process}", response_model=List[MonthlyStatusResponse])
+@limiter.limit("20/minute")
 def get_monthly_process(
+    request: Request,
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
     process: str = Path(..., description="The process identifier"),
@@ -649,7 +656,9 @@ def get_monthly_process(
 
 # 4a. State status — BATCH (single ClickHouse query for multiple devices)
 @router.get("/state/{process}", response_model=Dict[str, List[TimelineSegment]])
+@limiter.limit("20/minute")
 def get_state_status_batch(
+    request: Request,
     process: str = Path(..., description="The process identifier"),
     devices: Optional[str] = Query(
         None,

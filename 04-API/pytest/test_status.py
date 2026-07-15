@@ -52,7 +52,12 @@ def test_state_batch_serializes_timeline_strings(mock_get_client):
     mock_client.query.side_effect = [initial_result, timeline_result]
     mock_get_client.return_value = mock_client
 
-    response = get_state_status_batch("demo1", "no_1")
+    from fastapi import Request
+    mock_request = MagicMock(spec=Request)
+    mock_request.client = MagicMock()
+    mock_request.client.host = "127.0.0.1"
+
+    response = get_state_status_batch(mock_request, "demo1", "no_1")
 
     assert response["no_1"][0]["status"] == "run"
     assert isinstance(response["no_1"][0]["start_time"], str)

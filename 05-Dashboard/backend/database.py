@@ -262,7 +262,9 @@ def init_db():
             #             ('demo1', 'data2', 'Float32', FALSE),
             #             ('demo1', 'data3', 'Float32', FALSE),
             #             ('demo1', 'data4', 'Float32', FALSE),
-            #             ('demo1', 'data5', 'Float32', FALSE);
+            #             ('demo1', 'data5', 'Float32', FALSE),
+            #             ('demo1', 'data6', 'Float32', FALSE),
+            #             ('demo1', 'data7', 'Float32', FALSE);   
             #     """)
 
             # 5. Insert default devices if empty

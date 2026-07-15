@@ -71,29 +71,7 @@ services:
     networks:
       - mms-network
 
-  prefect-worker:
-    build:
-      context: .
-    image: mic/data-storage-prefect:1.0.0
-    depends_on:
-      prefect-server:
-        condition: service_healthy
-    env_file:
-      - ../.env
-    environment:
-      PREFECT_API_URL: http://prefect-server:4200/api
-      POSTGRES_STORAGE_DB: storage_db
-    command:
-      - sh
-      - -c
-      - |
-        prefect work-pool create --type process local-pool || true
-        prefect worker start --pool local-pool
-    restart: on-failure
-    networks:
-      - mms-network
-
-  data-storage-deploy:
+  data-storage:
     build:
       context: .
     image: mic/data-storage-prefect:1.0.0
@@ -106,35 +84,10 @@ services:
       PREFECT_API_URL: http://prefect-server:4200/api
       POSTGRES_STORAGE_DB: storage_db
       TZ: Asia/Bangkok
-    command:
-      - sh
-      - -c
-      - |
-        prefect work-pool create --type process local-pool || true
-        prefect deploy /app/main.py:data_storage_pipeline \
-          --name hourly \
-          --pool local-pool \
-          --cron "0 * * * *" \
-          --timezone Asia/Bangkok
-    restart: "no"
-    networks:
-      - mms-network
-
-  data-storage-run:
-    build:
-      context: .
-    image: mic/data-storage-prefect:1.0.0
-    profiles:
-      - manual
-    depends_on:
-      prefect-server:
-        condition: service_healthy
-    env_file:
-      - ../.env
-    environment:
-      PREFECT_API_URL: http://prefect-server:4200/api
-      POSTGRES_STORAGE_DB: storage_db
     command: python main.py
+    restart: always
+    volumes:
+      - ./log:/var/log/apps
     networks:
       - mms-network
 

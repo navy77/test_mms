@@ -34,11 +34,17 @@ logging.basicConfig(
 logging.getLogger("watchfiles").setLevel(logging.WARNING)
 logger = logging.getLogger("RESTApi")
 
+from limiter import limiter
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
 app = FastAPI(
     title="MMS REST History API",
     description="Backend REST API for historical data from ClickHouse",
     version="1.0.0"
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Enable CORS for frontend integration
 app.add_middleware(

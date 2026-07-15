@@ -243,24 +243,6 @@ def ensure_columns_can_be_registered(columns: List[ColumnCreate], client):
             )
 
     ch_client = get_clickhouse_client()
-    names = sorted({column.column_name for column in columns})
-    quoted_names = ", ".join(f"'{name}'" for name in names)
-    existing_result = ch_client.query(
-        f"""
-        SELECT name
-        FROM system.columns
-        WHERE database = currentDatabase()
-          AND table = 'data_tb'
-          AND name IN ({quoted_names})
-        """
-    )
-    existing_names = {row[0] for row in existing_result.result_rows}
-    if existing_names:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Column(s) already exist in ClickHouse data_tb: {', '.join(sorted(existing_names))}",
-        )
-
     return ch_client
 
 

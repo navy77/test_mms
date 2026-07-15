@@ -8,6 +8,8 @@ from zoneinfo import ZoneInfo
 import clickhouse_connect
 import pandas as pd
 from prefect import flow, get_run_logger, task
+from prefect.runtime import task_run
+from prefect.schedules import Cron
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
 
@@ -17,52 +19,80 @@ DEFAULT_RECORD_PERIOD_MINUTES = 60
 OUTPUT_TABLE = os.getenv("DATA_STORAGE_TABLE", "data_storage_tb")
 FIXED_DATA_COLUMNS = ["created_at", "process", "device"]
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-)
+# Ensure the log directory exists
+if os.name == "nt":
+    LOG_DIR = "./log"
+else:
+    LOG_DIR = "/var/log/apps"
+
+try:
+    os.makedirs(LOG_DIR, exist_ok=True)
+except Exception:
+    LOG_DIR = "./log"
+    os.makedirs(LOG_DIR, exist_ok=True)
+
+LOG_FILE = os.path.join(LOG_DIR, "datastorage.log")
+
+# Setup logging handlers
+formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+file_handler = logging.FileHandler(LOG_FILE, encoding="utf-8")
+file_handler.setFormatter(formatter)
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(formatter)
+
 logger = logging.getLogger("DataStorage")
+logger.setLevel(logging.INFO)
+logger.handlers.clear()
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 
-def env_str(name: str, default: str) -> str:
-    """Return a cleaned environment variable value."""
-    return os.getenv(name, default).strip().strip("'\"")
+def log_task_retry(task_name: str) -> None:
+    """Log a warning if the task is currently retrying."""
+    try:
+        run_count = task_run.run_count
+    except Exception:
+        run_count = 1
 
-
-def env_int(name: str, default: int) -> int:
-    """Return an integer environment variable value."""
-    value = env_str(name, str(default))
-    return int(value)
+    if run_count and run_count > 1:
+        msg = f"Retrying task '{task_name}' (Attempt #{run_count - 1} of 3)..."
+        # Always write to file log first
+        logger.warning(msg)
+        try:
+            run_logger = get_run_logger()
+            run_logger.warning(msg)
+        except Exception:
+            pass
 
 
 def postgres_engine(database: str) -> Engine:
     """Create a PostgreSQL SQLAlchemy engine for the requested database."""
-    host = env_str("POSTGRES_HOST", "postgres")
-    port = env_int("POSTGRES_PORT", 5432)
-    user = env_str("POSTGRES_USER", "postgres")
-    password = env_str("POSTGRES_PASSWORD", "postgres")
+    host = os.getenv("POSTGRES_HOST", "postgres").strip().strip("'\"")
+    port = int(os.getenv("POSTGRES_PORT", 5432))
+    user = os.getenv("POSTGRES_USER", "postgres").strip().strip("'\"")
+    password = os.getenv("POSTGRES_PASSWORD", "postgres").strip().strip("'\"")
     url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
     return create_engine(url, pool_pre_ping=True)
 
 
 def app_db_engine() -> Engine:
     """Create the dashboard app PostgreSQL engine."""
-    return postgres_engine(env_str("POSTGRES_DB", "iiot_db"))
+    return postgres_engine(os.getenv("POSTGRES_DB", "iiot_db"))
 
 
 def storage_db_engine() -> Engine:
     """Create the storage PostgreSQL engine."""
-    return postgres_engine(env_str("POSTGRES_STORAGE_DB", "storage_db"))
+    return postgres_engine(os.getenv("POSTGRES_STORAGE_DB", "storage_db"))
 
 
 def clickhouse_client() -> clickhouse_connect.driver.Client:
     """Create a ClickHouse client."""
     return clickhouse_connect.get_client(
-        host=env_str("CLICKHOUSE_HOST", "clickhouse"),
-        port=env_int("CLICKHOUSE_PORT", 8123),
-        username=env_str("CLICKHOUSE_USER", "default"),
-        password=env_str("CLICKHOUSE_PASSWORD", "maibok"),
-        database=env_str("CLICKHOUSE_DATABASE", "default"),
+        host=os.getenv("CLICKHOUSE_HOST", "clickhouse").strip().strip("'\""),
+        port=int(os.getenv("CLICKHOUSE_PORT", 8123)),
+        username=os.getenv("CLICKHOUSE_USER", "default").strip().strip("'\""),
+        password=os.getenv("CLICKHOUSE_PASSWORD", "maibok").strip().strip("'\""),
+        database=os.getenv("CLICKHOUSE_DATABASE", "default").strip().strip("'\""),
     )
 
 
@@ -76,19 +106,6 @@ def quote_postgres_identifier(identifier: str) -> str:
     """Quote a PostgreSQL identifier."""
     escaped = identifier.replace('"', '""')
     return f'"{escaped}"'
-
-
-def postgres_type_for_series(series: pd.Series) -> str:
-    """Map a pandas series to a conservative PostgreSQL column type."""
-    if pd.api.types.is_bool_dtype(series):
-        return "BOOLEAN"
-    if pd.api.types.is_integer_dtype(series):
-        return "BIGINT"
-    if pd.api.types.is_float_dtype(series):
-        return "DOUBLE PRECISION"
-    if pd.api.types.is_datetime64_any_dtype(series):
-        return "TIMESTAMP WITH TIME ZONE"
-    return "TEXT"
 
 
 def postgres_type_for_clickhouse_type(column_type: str) -> str:
@@ -108,6 +125,7 @@ def postgres_type_for_clickhouse_type(column_type: str) -> str:
 @task(retries=3, retry_delay_seconds=30)
 def ensure_output_table_schema(columns: pd.DataFrame) -> None:
     """Create or evolve the storage output table from registered columns."""
+    log_task_retry("ensure_output_table_schema")
     base_columns = {
         "created_at": "TIMESTAMP WITH TIME ZONE",
         "process": "TEXT",
@@ -168,91 +186,10 @@ def ensure_output_table_schema(columns: pd.DataFrame) -> None:
             )
 
 
-def ensure_output_table_columns(table_name: str, data: pd.DataFrame, engine: Engine) -> None:
-    """Add missing columns to an existing PostgreSQL output table."""
-    if data.empty:
-        return
-
-    with engine.begin() as conn:
-        table_exists = conn.execute(
-            text(
-                """
-                SELECT EXISTS (
-                    SELECT 1
-                    FROM information_schema.tables
-                    WHERE table_schema = 'public'
-                      AND table_name = :table_name
-                )
-                """
-            ),
-            {"table_name": table_name},
-        ).scalar()
-
-        if not table_exists:
-            return
-
-        existing_columns = {
-            row[0]
-            for row in conn.execute(
-                text(
-                    """
-                    SELECT column_name
-                    FROM information_schema.columns
-                    WHERE table_schema = 'public'
-                      AND table_name = :table_name
-                    """
-                ),
-                {"table_name": table_name},
-            )
-        }
-
-        for column in data.columns:
-            if column in existing_columns:
-                continue
-            column_type = postgres_type_for_series(data[column])
-            conn.execute(
-                text(
-                    "ALTER TABLE "
-                    f"{quote_postgres_identifier(table_name)} "
-                    "ADD COLUMN "
-                    f"{quote_postgres_identifier(column)} {column_type}"
-                )
-            )
-
-
-@task(retries=3, retry_delay_seconds=30)
-def get_record_period_minutes() -> int:
-    """Fetch the query lookback period from project_register_tb."""
-    query = """
-        SELECT value
-        FROM project_register_tb
-        WHERE items = 'record_period'
-        LIMIT 1
-    """
-    with app_db_engine().connect() as conn:
-        value = conn.execute(text(query)).scalar()
-
-    if value is None:
-        logger.warning(
-            "record_period not found; using fallback %s minutes",
-            DEFAULT_RECORD_PERIOD_MINUTES,
-        )
-        return DEFAULT_RECORD_PERIOD_MINUTES
-
-    try:
-        record_period = int(str(value).strip())
-    except ValueError as exc:
-        raise ValueError(f"Invalid record_period value: {value}") from exc
-
-    if record_period <= 0:
-        raise ValueError(f"record_period must be positive, got {record_period}")
-
-    return record_period
-
-
 @task(retries=3, retry_delay_seconds=30)
 def get_register_metadata() -> tuple[pd.DataFrame, pd.DataFrame]:
     """Fetch device and column register tables from PostgreSQL."""
+    log_task_retry("get_register_metadata")
     with app_db_engine().connect() as conn:
         devices = pd.read_sql(
             "SELECT process, device FROM device_register_tb",
@@ -270,14 +207,45 @@ def get_register_metadata() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 @task(retries=3, retry_delay_seconds=30)
-def query_clickhouse_data(
-    record_period_minutes: int,
-    columns: pd.DataFrame,
-) -> tuple[pd.DataFrame, datetime, datetime]:
-    """Query data_tb from the current time back by record_period minutes."""
-    end_time = datetime.now(TZ_BANGKOK)
-    start_time = end_time - timedelta(minutes=record_period_minutes)
+def get_last_stored_time_end() -> datetime | None:
+    """Fetch the latest time_end from the output table in storage PostgreSQL."""
+    log_task_retry("get_last_stored_time_end")
+    engine = storage_db_engine()
+    with engine.connect() as conn:
+        table_exists = conn.execute(
+            text(
+                """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM information_schema.tables
+                    WHERE table_schema = 'public'
+                      AND table_name = :table_name
+                )
+                """
+            ),
+            {"table_name": OUTPUT_TABLE},
+        ).scalar()
 
+        if not table_exists:
+            return None
+
+        query = f"SELECT MAX(time_end) FROM {quote_postgres_identifier(OUTPUT_TABLE)}"
+        val = conn.execute(text(query)).scalar()
+        if val is not None:
+            if val.tzinfo is None:
+                val = val.replace(tzinfo=TZ_BANGKOK)
+            return val
+    return None
+
+
+@task(retries=3, retry_delay_seconds=30)
+def query_clickhouse_data(
+    start_time: datetime,
+    end_time: datetime,
+    columns: pd.DataFrame,
+) -> pd.DataFrame:
+    """Query data_tb from the start time to the end time."""
+    log_task_retry("query_clickhouse_data")
     dynamic_columns = sorted(columns["column_name"].dropna().unique().tolist())
     select_columns = FIXED_DATA_COLUMNS + dynamic_columns
     select_sql = ", ".join(quote_clickhouse_identifier(col) for col in select_columns)
@@ -298,7 +266,7 @@ def query_clickhouse_data(
             "end_time": end_time.replace(tzinfo=None),
         },
     )
-    return result, start_time, end_time
+    return result
 
 
 @task
@@ -351,12 +319,11 @@ def select_latest_by_process_device_keys(
 @task(retries=3, retry_delay_seconds=30)
 def write_postgres(latest_data: pd.DataFrame) -> int:
     """Append latest rows into the storage PostgreSQL table."""
+    log_task_retry("write_postgres")
     if latest_data.empty:
         return 0
 
     engine = storage_db_engine()
-    ensure_output_table_columns(OUTPUT_TABLE, latest_data, engine)
-
     with engine.begin() as conn:
         latest_data.to_sql(
             OUTPUT_TABLE,
@@ -369,26 +336,214 @@ def write_postgres(latest_data: pd.DataFrame) -> int:
     return len(latest_data)
 
 
+@task(retries=3, retry_delay_seconds=30)
+def ensure_raw_table_schema(table_name: str) -> None:
+    """Create the status or alarm storage table if it does not exist."""
+    log_task_retry("ensure_raw_table_schema")
+    engine = storage_db_engine()
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                f"""
+                CREATE TABLE IF NOT EXISTS {quote_postgres_identifier(table_name)} (
+                    created_at TIMESTAMP WITH TIME ZONE,
+                    process TEXT,
+                    device TEXT,
+                    status TEXT,
+                    stored_at TIMESTAMP WITH TIME ZONE
+                )
+                """
+            )
+        )
+
+
+@task(retries=3, retry_delay_seconds=30)
+def get_last_created_at(table_name: str) -> datetime | None:
+    """Fetch the latest created_at from the specified table in storage PostgreSQL."""
+    log_task_retry("get_last_created_at")
+    engine = storage_db_engine()
+    with engine.connect() as conn:
+        table_exists = conn.execute(
+            text(
+                """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM information_schema.tables
+                    WHERE table_schema = 'public'
+                      AND table_name = :table_name
+                )
+                """
+            ),
+            {"table_name": table_name},
+        ).scalar()
+
+        if not table_exists:
+            return None
+
+        query = f"SELECT MAX(created_at) FROM {quote_postgres_identifier(table_name)}"
+        val = conn.execute(text(query)).scalar()
+        if val is not None:
+            if val.tzinfo is None:
+                val = val.replace(tzinfo=TZ_BANGKOK)
+            return val
+    return None
+
+
+@task(retries=3, retry_delay_seconds=30)
+def query_clickhouse_raw(
+    clickhouse_table: str,
+    start_time: datetime,
+    end_time: datetime,
+) -> pd.DataFrame:
+    """Query created_at, process, device, status from ClickHouse."""
+    log_task_retry("query_clickhouse_raw")
+    query = f"""
+        SELECT created_at, process, device, status
+        FROM {quote_clickhouse_identifier(clickhouse_table)}
+        WHERE created_at >= %(start_time)s
+          AND created_at <= %(end_time)s
+        ORDER BY created_at ASC
+    """
+    client = clickhouse_client()
+    result = client.query_df(
+        query,
+        parameters={
+            "start_time": start_time.replace(tzinfo=None),
+            "end_time": end_time.replace(tzinfo=None),
+        },
+    )
+    return result
+
+
+@task(retries=3, retry_delay_seconds=30)
+def write_postgres_raw(table_name: str, df: pd.DataFrame) -> int:
+    """Append raw logs into the storage PostgreSQL table."""
+    log_task_retry("write_postgres_raw")
+    if df.empty:
+        return 0
+
+    df = df.copy()
+    df["stored_at"] = datetime.now(TZ_BANGKOK)
+
+    engine = storage_db_engine()
+    with engine.begin() as conn:
+        df.to_sql(
+            table_name,
+            conn,
+            if_exists="append",
+            index=False,
+            method="multi",
+            chunksize=1000,
+        )
+    return len(df)
+
+
 @flow(name="data_storage_pipeline", retries=0)
 def data_storage_pipeline() -> int:
     """Run the data storage top1 aggregation pipeline."""
-    run_logger = get_run_logger()
-    record_period = get_record_period_minutes()
+    record_period = 60
+
     devices, columns = get_register_metadata()
     ensure_output_table_schema(columns)
-    raw_data, start_time, end_time = query_clickhouse_data(record_period, columns)
+
+    end_time = datetime.now(TZ_BANGKOK)
+    last_time = get_last_stored_time_end()
+
+    if last_time is not None:
+        if last_time >= end_time:
+            logger.info("Database is already up to date. Skipping aggregation.")
+            return 0
+        start_time = last_time
+        logger.info("Found last run time: %s. Catching up from that point.", start_time)
+    else:
+        start_time = end_time - timedelta(minutes=record_period)
+        logger.info("No prior run history found. Starting lookup from %s.", start_time)
+
+    raw_data = query_clickhouse_data(start_time, end_time, columns)
+    actual_period_minutes = int((end_time - start_time).total_seconds() / 60)
+
     latest_data = select_latest_by_process_device_keys(
         raw_data,
         devices,
         columns,
-        record_period,
+        actual_period_minutes,
         start_time,
         end_time,
     )
     inserted_rows = write_postgres(latest_data)
-    run_logger.info("Inserted %s row(s) into %s", inserted_rows, OUTPUT_TABLE)
+    logger.info("Inserted %s row(s) into %s", inserted_rows, OUTPUT_TABLE)
+    return inserted_rows
+
+
+@flow(name="status_storage_pipeline", retries=0)
+def status_storage_pipeline() -> int:
+    """Run the status storage log forwarding pipeline."""
+    table_name = "status_storage_tb"
+    ch_table = "status_tb"
+    lookback_minutes = 60
+
+    ensure_raw_table_schema(table_name)
+    end_time = datetime.now(TZ_BANGKOK)
+    last_time = get_last_created_at(table_name)
+
+    if last_time is not None:
+        max_lookback = timedelta(days=1)
+        start_time = max(last_time, end_time - max_lookback)
+        if start_time >= end_time:
+            logger.info("Status log is up to date.")
+            return 0
+        logger.info("Found last status log: %s. Catching up.", start_time)
+    else:
+        start_time = end_time - timedelta(minutes=lookback_minutes)
+        logger.info("No prior status log found. Starting lookup from %s.", start_time)
+
+    raw_data = query_clickhouse_raw(ch_table, start_time, end_time)
+    inserted_rows = write_postgres_raw(table_name, raw_data)
+    logger.info("Inserted %s raw status row(s) into %s", inserted_rows, table_name)
+    return inserted_rows
+
+
+@flow(name="alarm_storage_pipeline", retries=0)
+def alarm_storage_pipeline() -> int:
+    """Run the alarm storage log forwarding pipeline."""
+    table_name = "alarm_storage_tb"
+    ch_table = "alarm_tb"
+    lookback_minutes = 60
+
+    ensure_raw_table_schema(table_name)
+    end_time = datetime.now(TZ_BANGKOK)
+    last_time = get_last_created_at(table_name)
+
+    if last_time is not None:
+        max_lookback = timedelta(days=1)
+        start_time = max(last_time, end_time - max_lookback)
+        if start_time >= end_time:
+            logger.info("Alarm log is up to date.")
+            return 0
+        logger.info("Found last alarm log: %s. Catching up.", start_time)
+    else:
+        start_time = end_time - timedelta(minutes=lookback_minutes)
+        logger.info("No prior alarm log found. Starting lookup from %s.", start_time)
+
+    raw_data = query_clickhouse_raw(ch_table, start_time, end_time)
+    inserted_rows = write_postgres_raw(table_name, raw_data)
+    logger.info("Inserted %s raw alarm row(s) into %s", inserted_rows, table_name)
     return inserted_rows
 
 
 if __name__ == "__main__":
-    data_storage_pipeline()
+    from prefect import serve
+
+    dep_data = data_storage_pipeline.to_deployment(
+        name="pipeline_data",
+        schedule=Cron("1 * * * *", timezone="Asia/Bangkok"),
+    )
+    dep_status = status_storage_pipeline.to_deployment(
+        name="pipeline_status",
+        schedule=Cron("1 * * * *", timezone="Asia/Bangkok"),
+    )
+    dep_alarm = alarm_storage_pipeline.to_deployment(
+        name="pipeline_alarm",
+        schedule=Cron("1 * * * *", timezone="Asia/Bangkok"),
+    )
+    serve(dep_data, dep_status, dep_alarm)
