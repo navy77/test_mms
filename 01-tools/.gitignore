@@ -5,5 +5,5 @@ __pycache__/
 *.log
 *.db
 log/
-mosquitto/log/*
-mosquitto/data/*
+/mosquitto/log/
+/mosquitto/data/

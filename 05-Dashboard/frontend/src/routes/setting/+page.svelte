@@ -871,7 +871,7 @@
 					<div>
 						<label class="mb-1 block text-xs text-muted-foreground">Color</label>
 						<div class="flex items-center gap-2 mt-1">
-							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F'] as c}
+							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F','#444444'] as c}
 								<button
 									type="button"
 									onclick={() => (formStatus.color = c)}
@@ -897,7 +897,7 @@
 					<div>
 						<label class="mb-1 block text-xs text-muted-foreground">Color</label>
 						<div class="flex items-center gap-2 mt-1">
-							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F'] as c}
+							{#each ['#FFFF00', '#FFA500', '#FF8C00', '#FF4500', '#FF0000','#8B008B','#800080','#4B0082','#0000FF','#008B8B','#008000','#ADFF2F','#444444'] as c}
 								<button
 									type="button"
 									onclick={() => (formAlarm.color = c)}

@@ -254,7 +254,7 @@
 				{@const record = dataMap[dev.device]}
 				{@const payload = record?.payload || {}}
 				{@const hasData = record?.status === 'online'}
-				<div class="rounded-lg border p-4 transition-all hover:shadow-sm {hasData ? 'border-emerald-500/30 bg-emerald-500/20' : 'border-border bg-card'}">
+				<div class="rounded-lg border p-4 transition-all hover:shadow-sm {hasData ? 'border-blue-500/30 bg-blue-500/20' : 'border-border bg-card'}">
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-2 min-w-0">
 							<span class="h-2.5 w-2.5 rounded-full {hasData ? 'animate-pulse bg-emerald-500' : 'bg-muted-foreground/50'}"></span>

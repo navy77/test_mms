@@ -12,7 +12,8 @@
 		Factory,
 		HardDrive,
 		Radio,
-		Server
+		Server,
+		Warehouse
 	} from '@lucide/svelte';
 
 	let { data } = $props();
@@ -59,7 +60,7 @@
 		registeredDevices
 			.filter((device: any) => device.process === selectedProcess)
 			.sort((a: any, b: any) => a.device.localeCompare(b.device, undefined, { numeric: true }))
-			.slice(0, 8)
+			.slice(0, 5)
 	);
 
 	const visibleDevicesStr = $derived(selectedDevices.map((device: any) => device.device).join(','));
@@ -69,7 +70,7 @@
 			.filter((column: any) => column.process === selectedProcess)
 			.map((column: any) => column.column_name)
 			.filter((name: string, index: number, list: string[]) => name && list.indexOf(name) === index)
-			.slice(0, 3)
+			.slice(0, 5)
 	);
 
 	const processRows = $derived(
@@ -114,7 +115,7 @@
 		{ label: 'Dashboard API', status: health.status === 'healthy' ? 'online' : 'offline', icon: Server },
 		{ label: 'PostgreSQL', status: health.postgres === 'connected' ? 'online' : 'offline', icon: Database },
 		{ label: 'Realtime Redis', status: health.status === 'healthy' ? 'online' : 'unknown', icon: Radio },
-		{ label: 'ClickHouse', status: health.status === 'healthy' ? 'online' : 'unknown', icon: Activity }
+		{ label: 'ClickHouse', status: health.status === 'healthy' ? 'online' : 'unknown', icon: Warehouse }
 	]);
 
 	function connectDataStream(process: string, devices: string) {
@@ -240,30 +241,16 @@
 			<h1 class="text-sm font-semibold text-card-foreground">Operations Overview</h1>
 			<p class="mt-1 text-xs text-muted-foreground">Realtime health, device availability, and latest production signals.</p>
 		</div>
-		<div class="flex items-center gap-2">
-			<span class="text-xs font-medium text-muted-foreground">Process:</span>
-			{#if processes.length > 0}
-				<select
-					bind:value={selectedProcess}
-					class="rounded border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
-				>
-					{#each processes as process}
-						<option value={process}>{process}</option>
-					{/each}
-				</select>
-			{:else}
-				<span class="text-xs italic text-muted-foreground">No process registered</span>
-			{/if}
-		</div>
 	</div>
 
+	<!-- Operations Overview -->
 	<div class="grid grid-cols-2 gap-3 xl:grid-cols-4">
 		{#each kpiCards as card}
 			<div class="rounded-lg border border-border bg-card p-4">
 				<div class="flex items-center justify-between">
 					<p class="text-xs font-medium text-muted-foreground">{card.label}</p>
 					<span class="rounded-md p-1.5" style="background-color: color-mix(in srgb, {card.color} 12%, transparent);">
-						<card.icon class="h-3.5 w-3.5" style="color: {card.color}" />
+						<card.icon class="h-6 w-6" style="color: {card.color}" />
 					</span>
 				</div>
 				<p class="mt-2 text-2xl font-semibold text-card-foreground">{card.value}</p>
@@ -272,7 +259,9 @@
 		{/each}
 	</div>
 
+	
 	<div class="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
+		<!-- Device Availability by Process -->
 		<div class="rounded-lg border border-border bg-card p-4">
 			<div class="mb-4 flex items-center justify-between">
 				<div class="flex items-center gap-2">
@@ -304,43 +293,7 @@
 				{/each}
 			</div>
 		</div>
-
-		<div class="rounded-lg border border-border bg-card p-4">
-			<div class="mb-4 flex items-center gap-2">
-				<CheckCircle2 class="h-4 w-4 text-green-500" />
-				<h2 class="text-sm font-semibold text-card-foreground">System Health</h2>
-			</div>
-			<div class="space-y-2">
-				{#each healthItems as item}
-					<div class="flex items-center gap-3 rounded-md border border-border bg-background px-3 py-2.5">
-						<item.icon class="h-4 w-4 text-muted-foreground" />
-						<div class="min-w-0 flex-1">
-							<p class="text-xs font-medium text-foreground">{item.label}</p>
-						</div>
-						<span
-							class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase
-							{item.status === 'online'
-								? 'bg-green-500/10 text-green-600 dark:text-green-400'
-								: item.status === 'unknown'
-									? 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400'
-									: 'bg-red-500/10 text-red-600 dark:text-red-400'}"
-						>
-							<span
-								class="h-1.5 w-1.5 rounded-full {item.status === 'online'
-									? 'bg-green-500'
-									: item.status === 'unknown'
-										? 'bg-yellow-500'
-										: 'bg-red-500'}"
-							></span>
-							{item.status}
-						</span>
-					</div>
-				{/each}
-			</div>
-		</div>
-	</div>
-
-	<div class="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
+		<!-- Configuration Snapshot -->
 		<div class="rounded-lg border border-border bg-card p-4">
 			<div class="mb-4 flex items-center gap-2">
 				<Cpu class="h-4 w-4 text-blue-500" />
@@ -365,45 +318,60 @@
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<div class="rounded-lg border border-border bg-card p-4">
-			<div class="mb-4 flex items-center justify-between gap-3">
-				<div class="flex items-center gap-2">
-					<Activity class="h-4 w-4 text-primary" />
-					<h2 class="text-sm font-semibold text-card-foreground">Latest Production Signals</h2>
-				</div>
-				<span class="text-xs text-muted-foreground">{selectedProcess || 'No process'}</span>
+	<!-- Latest Production Signals (Expanded to full width!) -->
+	<div class="rounded-lg border border-border bg-card p-4">
+		<div class="mb-4 flex items-center justify-between gap-3">
+			<div class="flex items-center gap-2">
+				<Activity class="h-4 w-4 text-primary" />
+				<h2 class="text-sm font-semibold text-card-foreground">Latest Production Signals</h2>
 			</div>
-			<div class="overflow-hidden rounded-md border border-border">
-				<table class="w-full text-xs">
-					<thead class="border-b border-border bg-muted/50">
-						<tr>
-							<th class="px-3 py-2 text-left font-medium text-muted-foreground">Device</th>
-							{#each selectedPayloadColumns as column}
-								<th class="px-3 py-2 text-left font-medium text-muted-foreground">{column}</th>
-							{/each}
-							<th class="px-3 py-2 text-left font-medium text-muted-foreground">Updated</th>
-						</tr>
-					</thead>
-					<tbody class="divide-y divide-border">
-						{#each recentData as record}
-							<tr class="bg-background">
-								<td class="px-3 py-2 font-medium text-foreground">{record.device}</td>
-								{#each selectedPayloadColumns as column}
-									<td class="px-3 py-2 text-muted-foreground">{formatValue(record.payload[column])}</td>
-								{/each}
-								<td class="px-3 py-2 text-muted-foreground whitespace-nowrap">{formatTime(record.timestamp)}</td>
-							</tr>
-						{:else}
-							<tr>
-								<td colspan={Math.max(2, selectedPayloadColumns.length + 2)} class="px-3 py-8 text-center text-muted-foreground">
-									No realtime production data yet.
-								</td>
-							</tr>
+			<div class="flex items-center gap-2">
+				<span class="text-xs font-medium text-muted-foreground">Process:</span>
+				{#if processes.length > 0}
+					<select
+						bind:value={selectedProcess}
+						class="rounded border border-border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary transition-colors cursor-pointer"
+					>
+						{#each processes as process}
+							<option value={process}>{process}</option>
 						{/each}
-					</tbody>
-				</table>
+					</select>
+				{:else}
+					<span class="text-xs italic text-muted-foreground">No process registered</span>
+				{/if}
 			</div>
+		</div>
+		<div class="overflow-hidden rounded-md border border-border">
+			<table class="w-full text-xs">
+				<thead class="border-b border-border bg-muted/50">
+					<tr>
+						<th class="px-3 py-2 text-left font-medium text-muted-foreground">Device</th>
+						{#each selectedPayloadColumns as column}
+							<th class="px-3 py-2 text-left font-medium text-muted-foreground">{column}</th>
+						{/each}
+						<th class="px-3 py-2 text-left font-medium text-muted-foreground">Updated</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-border">
+					{#each recentData as record}
+						<tr class="bg-background">
+							<td class="px-3 py-2 font-medium text-foreground">{record.device}</td>
+							{#each selectedPayloadColumns as column}
+								<td class="px-3 py-2 text-muted-foreground">{formatValue(record.payload[column])}</td>
+							{/each}
+							<td class="px-3 py-2 text-muted-foreground whitespace-nowrap">{formatTime(record.timestamp)}</td>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan={Math.max(2, selectedPayloadColumns.length + 2)} class="px-3 py-8 text-center text-muted-foreground">
+								No realtime production data yet.
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		</div>
 	</div>
 
@@ -420,13 +388,16 @@
 				{#each systemNodes as node, index}
 					{@const c = findContainer(node.key)}
 					{@const isOnline = c && c.status === 'running'}
+					{@const isHighUsage = isOnline && c && (c.cpu_percent > 80 || c.memory_percent > 80)}
 
 					<!-- Node Card with Hover Tooltip -->
 					<div class="relative group flex flex-col items-center">
 						<div class="flex items-center justify-between rounded-lg border px-4 py-3 shadow-sm transition-all duration-200 cursor-pointer min-w-[160px] h-14
-							{isOnline 
-								? 'bg-green-500/5 border-green-500/30 hover:border-green-500' 
-								: 'bg-red-500/5 border-red-500/30 hover:border-red-500'}">
+							{!isOnline
+								? 'bg-red-500/5 border-red-500/30 hover:border-red-500'
+								: isHighUsage
+									? 'bg-orange-500/10 border-orange-500/40 hover:border-orange-500 animate-pulse'
+									: 'bg-green-500/5 border-green-500/30 hover:border-green-500'}">
 							<div class="flex flex-col text-left mr-3">
 								<span class="text-xs font-semibold text-foreground">{node.label}</span>
 								<span class="text-[10px] text-muted-foreground">{node.description}</span>
@@ -435,8 +406,13 @@
 							<!-- Status Glow indicator -->
 							<span class="relative flex h-2.5 w-2.5">
 								{#if isOnline}
-									<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-									<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+									{#if isHighUsage}
+										<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+										<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+									{:else}
+										<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+										<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+									{/if}
 								{:else}
 									<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
 								{/if}
@@ -476,12 +452,8 @@
 
 					<!-- Arrow Connector (Omit for the last node) -->
 					{#if index < systemNodes.length - 1}
-						<div class="flex-1 flex items-center justify-center px-2">
-							<div class="h-0.5 bg-border flex-1 border-t-2 border-dashed relative">
-								<div class="absolute -top-1.5 right-0 text-muted-foreground leading-[0] flex items-center text-sm font-bold">
-									➔
-								</div>
-							</div>
+						<div class="flex-1 flex items-center justify-center text-muted-foreground text-lg font-bold">
+							➔
 						</div>
 					{/if}
 				{/each}

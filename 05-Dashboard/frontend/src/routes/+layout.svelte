@@ -43,32 +43,33 @@
 	const navItems: NavItem[] = $derived([
 		{ href: '/', label: 'Home', icon: LayoutDashboard },
 		{ href: '/production', label: 'Production', icon: Factory },
-		{   href: '/machine-status',
-			label: 'Machine Status', 
+		{
+			href: '/machine-status',
+			label: 'Machine Status',
 			icon: Cpu,
 			subItems: [
 				{ href: '/machine-status', label: 'Overview' },
 				{ href: '/machine-status-timeline', label: 'Timeline' },
-				{ href: '/machine-status-utl-daily', label: 'Daily Utilization' },
+				{ href: '/machine-status-utl-daily', label: 'Daily Utilization' }
 			]
 		},
-		{ 
-			label: 'Alarm Status', 
+		{
+			label: 'Alarm Status',
 			icon: Bell,
 			subItems: [
 				{ href: '/alarm-status', label: 'Overview' },
 				{ href: '/alarm-status-daily', label: 'Daily Ratio' }
 			]
 		},
-		{ 
-			label: 'Device Status', 
+		{
+			label: 'Device Status',
 			icon: HardDrive,
 			subItems: [
 				{ href: '/device-status', label: 'Overview' },
 				{ href: '/device-status-utl-daily', label: 'Daily Utilization' }
 			]
 		},
-		{ href: historyApiUrl('/docs'), label: 'Documents', icon: BookText },
+		{ href: '/documents', label: 'Documents', icon: BookText },
 		...(auth.user?.role === 'admin' ? [{ href: '/setting', label: 'Setting', icon: Settings }] : [])
 	]);
 
@@ -128,12 +129,14 @@
 		const interval = setInterval(checkHealth, 10000);
 		return () => clearInterval(interval);
 	});
-
 </script>
 
 <svelte:head>
 	<title>MMS IoT Dashboard</title>
-	<meta name="description" content="Industrial IoT monitoring dashboard for machine, device, and alarm status" />
+	<meta
+		name="description"
+		content="Industrial IoT monitoring dashboard for machine, device, and alarm status"
+	/>
 </svelte:head>
 
 {#if $page.url.pathname === '/login'}
@@ -142,14 +145,18 @@
 	<div class="flex h-screen overflow-hidden bg-background">
 		<!-- Sidebar -->
 		<aside
-			class="flex flex-col border-r border-border bg-sidebar transition-all duration-300 {sidebarCollapsed ? 'w-16' : 'w-56'}"
+			class="flex flex-col border-r border-border bg-sidebar transition-all duration-300 {sidebarCollapsed
+				? 'w-16'
+				: 'w-56'}"
 		>
 			<!-- Logo / Brand + Collapse Button -->
 			<div class="flex h-14 items-center border-b border-border px-3">
 				{#if !sidebarCollapsed}
 					<div class="flex flex-1 items-center gap-2">
 						<Activity class="h-5 w-5 text-primary" />
-						<span class="text-sm font-semibold tracking-tight text-sidebar-foreground">MMS Monitor</span>
+						<span class="text-sm font-semibold tracking-tight text-sidebar-foreground"
+							>MMS Monitor</span
+						>
 					</div>
 					<button
 						onclick={() => (sidebarCollapsed = !sidebarCollapsed)}
@@ -186,15 +193,17 @@
 								}}
 								class="flex w-full items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors cursor-pointer
 									{parentActive && sidebarCollapsed
-										? 'bg-sidebar-primary text-sidebar-primary-foreground'
-										: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
+									? 'bg-sidebar-primary text-sidebar-primary-foreground'
+									: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
 									{sidebarCollapsed ? 'justify-center' : ''}"
 								title={sidebarCollapsed ? item.label : ''}
 							>
 								<item.icon class="h-4 w-4 shrink-0" />
 								{#if !sidebarCollapsed}
 									<span>{item.label}</span>
-									<span class="ml-auto text-sidebar-foreground/50 transition-transform duration-200">
+									<span
+										class="ml-auto text-sidebar-foreground/50 transition-transform duration-200"
+									>
 										{#if subMenuOpen[item.label]}
 											<ChevronDown class="h-3.5 w-3.5" />
 										{:else}
@@ -204,15 +213,18 @@
 								{/if}
 							</button>
 							{#if subMenuOpen[item.label] && !sidebarCollapsed}
-								<div transition:slide={{ duration: 200 }} class="ml-4 flex flex-col gap-1 border-l border-border pl-3">
+								<div
+									transition:slide={{ duration: 200 }}
+									class="ml-4 flex flex-col gap-1 border-l border-border pl-3"
+								>
 									{#each item.subItems as sub}
 										{@const subActive = isActive(sub.href)}
 										<a
 											href={sub.href}
-											class="rounded-md px-2 py-1.5 text-xs transition-colors 
-												{subActive 
-													? 'bg-sidebar-primary/10 text-primary font-medium' 
-													: 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}"
+											class="rounded-md px-2 py-1.5 text-xs transition-colors
+												{subActive
+												? 'bg-sidebar-primary/10 text-primary font-medium'
+												: 'text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}"
 										>
 											{sub.label}
 										</a>
@@ -226,8 +238,8 @@
 							href={item.href}
 							class="flex items-center gap-3 rounded-md px-2 py-2 text-sm transition-colors
 								{active
-									? 'bg-sidebar-primary text-sidebar-primary-foreground'
-									: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
+								? 'bg-sidebar-primary text-sidebar-primary-foreground'
+								: 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}
 								{sidebarCollapsed ? 'justify-center' : ''}"
 							title={sidebarCollapsed ? item.label : ''}
 						>
@@ -245,7 +257,9 @@
 				<!-- Dark Mode Toggle -->
 				<button
 					onclick={() => (darkMode = !darkMode)}
-					class="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground {sidebarCollapsed ? 'justify-center' : ''}"
+					class="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground {sidebarCollapsed
+						? 'justify-center'
+						: ''}"
 					title={darkMode ? 'Light Mode' : 'Dark Mode'}
 				>
 					{#if darkMode}
@@ -260,8 +274,13 @@
 
 				<!-- Sign Out -->
 				<button
-					onclick={() => { auth.logout(); goto('/login'); }}
-					class="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-500 transition-colors hover:bg-red-500/10 {sidebarCollapsed ? 'justify-center' : ''}"
+					onclick={() => {
+						auth.logout();
+						goto('/login');
+					}}
+					class="flex items-center gap-3 rounded-md px-2 py-2 text-sm text-500 transition-colors hover:bg-red-500/10 {sidebarCollapsed
+						? 'justify-center'
+						: ''}"
 					title="Sign Out"
 				>
 					<LogOut class="h-4 w-4 shrink-0" />
@@ -276,26 +295,35 @@
 		<main class="flex flex-1 flex-col overflow-hidden">
 			<!-- Topbar -->
 			<header class="flex h-14 items-center border-b border-border bg-background px-6">
-				<h1 class="text-sm font-medium text-muted-foreground">
+				<h1 class="text-sm font-medium text-muted-foreground flex items-center">
 					{#each navItems as item}
 						{#if isActive(item.href)}
-							{item.label}
+							{#if item.label === 'Home'}
+								<img src="/img/nmb.png" alt="NMB Logo" class="h-7 w-auto object-contain mix-blend-multiply dark:mix-blend-normal dark:invert dark:hue-rotate-180" />
+							{:else}
+								{item.label}
+							{/if}
 						{/if}
 					{/each}
 				</h1>
 				<div class="ml-auto flex items-center gap-4">
 					{#if auth.user}
 						<span class="text-xs text-muted-foreground">
-							Logged in as: <strong class="text-foreground">{auth.user.username}</strong> ({auth.user.role})
+							Logged in as: <strong class="text-foreground">{auth.user.username}</strong> ({auth
+								.user.role})
 						</span>
 					{/if}
 					{#if isLive}
-						<span class="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-600 dark:text-green-400">
+						<span
+							class="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-600 dark:text-green-400"
+						>
 							<span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span>
 							Live
 						</span>
 					{:else}
-						<span class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-pulse">
+						<span
+							class="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-pulse"
+						>
 							<span class="h-1.5 w-1.5 rounded-full bg-destructive"></span>
 							Offline
 						</span>

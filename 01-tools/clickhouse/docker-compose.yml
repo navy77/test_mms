@@ -3,7 +3,7 @@ services:
   clickhouse:
     image: clickhouse/clickhouse-server:25.6
     container_name: clickhouse
-    mem_limit: 4g
+    mem_limit: 8g
     cpus: 2
     environment:
       CLICKHOUSE_USER: default

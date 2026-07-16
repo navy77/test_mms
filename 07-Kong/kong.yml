@@ -1,0 +1,225 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  # =========================================================================
+  # 1. LIVE / CURRENTLY ENDPOINTS (Rate Limit: 20 req/min + Key-Auth)
+  # =========================================================================
+  - name: data-currently-service
+    url: http://api-rest:8003/api/v1/data/currently
+    routes:
+      - name: data-currently-route
+        paths:
+          - /mic/api/v1/data/currently
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: status-currently-service
+    url: http://api-rest:8003/api/v1/status/currently
+    routes:
+      - name: status-currently-route
+        paths:
+          - /mic/api/v1/status/currently
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: alarm-currently-service
+    url: http://api-rest:8003/api/v1/alarm/currently
+    routes:
+      - name: alarm-currently-route
+        paths:
+          - /mic/api/v1/alarm/currently
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: device-currently-service
+    url: http://api-rest:8003/api/v1/device/currently
+    routes:
+      - name: device-currently-route
+        paths:
+          - /mic/api/v1/device/currently
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  # =========================================================================
+  # 2. DAILY ENDPOINTS (Rate Limit: 20 req/min + Key-Auth)
+  # =========================================================================
+  - name: data-daily-service
+    url: http://api-rest:8003/api/v1/data/daily
+    routes:
+      - name: data-daily-route
+        paths:
+          - /mic/api/v1/data/daily
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: status-daily-service
+    url: http://api-rest:8003/api/v1/status/daily
+    routes:
+      - name: status-daily-route
+        paths:
+          - /mic/api/v1/status/daily
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: alarm-daily-service
+    url: http://api-rest:8003/api/v1/alarm/daily
+    routes:
+      - name: alarm-daily-route
+        paths:
+          - /mic/api/v1/alarm/daily
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  - name: device-daily-service
+    url: http://api-rest:8003/api/v1/device/daily
+    routes:
+      - name: device-daily-route
+        paths:
+          - /mic/api/v1/device/daily
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 20
+              policy: local
+          - name: key-auth
+
+  # =========================================================================
+  # 3. MONTHLY ENDPOINTS (Rate Limit: 10 req/min + Key-Auth)
+  # =========================================================================
+  - name: data-monthly-service
+    url: http://api-rest:8003/api/v1/data/monthly
+    routes:
+      - name: data-monthly-route
+        paths:
+          - /mic/api/v1/data/monthly
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 10
+              policy: local
+          - name: key-auth
+
+  - name: status-monthly-service
+    url: http://api-rest:8003/api/v1/status/monthly
+    routes:
+      - name: status-monthly-route
+        paths:
+          - /mic/api/v1/status/monthly
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 10
+              policy: local
+          - name: key-auth
+
+  - name: alarm-monthly-service
+    url: http://api-rest:8003/api/v1/alarm/monthly
+    routes:
+      - name: alarm-monthly-route
+        paths:
+          - /mic/api/v1/alarm/monthly
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 10
+              policy: local
+          - name: key-auth
+
+  - name: device-monthly-service
+    url: http://api-rest:8003/api/v1/device/monthly
+    routes:
+      - name: device-monthly-route
+        paths:
+          - /mic/api/v1/device/monthly
+        strip_path: true
+        methods:
+          - GET
+        plugins:
+          - name: rate-limiting
+            config:
+              minute: 10
+              policy: local
+          - name: key-auth
+
+# =========================================================================
+# 4. STATIC CONSUMERS & CREDENTIALS DEFINITION
+# =========================================================================
+consumers:
+  - username: external-client
+    keyauth_credentials:
+      - key: sawadeeja
+
+# =========================================================================
+# 5. GLOBAL PLUGINS (Active across all services)
+# =========================================================================
+plugins:
+  - name: prometheus
+    enabled: true
+    config:
+      status_code_metrics: true
+      latency_metrics: true
+      bandwidth_metrics: true
+      upstream_health_metrics: true
+
