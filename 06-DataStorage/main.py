@@ -262,8 +262,8 @@ def query_clickhouse_data(
     result = client.query_df(
         query,
         parameters={
-            "start_time": start_time.replace(tzinfo=None),
-            "end_time": end_time.replace(tzinfo=None),
+            "start_time": start_time,
+            "end_time": end_time,
         },
     )
     return result
@@ -408,8 +408,8 @@ def query_clickhouse_raw(
     result = client.query_df(
         query,
         parameters={
-            "start_time": start_time.replace(tzinfo=None),
-            "end_time": end_time.replace(tzinfo=None),
+            "start_time": start_time,
+            "end_time": end_time,
         },
     )
     return result
