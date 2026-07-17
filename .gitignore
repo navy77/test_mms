@@ -5,6 +5,6 @@ venv/
 *.log
 /log/
 .pytest_cache/
-images
 /mosquitto/log/
 /mosquitto/data/
+/production/image
