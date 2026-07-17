@@ -4,9 +4,14 @@ services:
       context: ./backend
     image: mic/dashboard-backend:1.0.0
     container_name: dashboard-backend
-    mem_limit: 2g
-    cpus: 1
+    mem_limit: 512m
+    cpus: 0.5
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     env_file:
       - ../.env
     environment:
@@ -27,12 +32,18 @@ services:
       context: ./frontend
     image: mic/dashboard-frontend:1.0.0
     container_name: dashboard-frontend
-    mem_limit: 2g
-    cpus: 1
+    mem_limit: 512m
+    cpus: 0.5
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     env_file:
-      - ./.env.production
+      - ../.env
     environment:
+
       - TZ=Asia/Bangkok
       - HOST=0.0.0.0
       - PORT=1311

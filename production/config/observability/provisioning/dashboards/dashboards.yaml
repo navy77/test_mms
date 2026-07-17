@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: 'MMS Dashboards Provider'
+    orgId: 1
+    folder: 'MMS System Monitoring'
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

@@ -1,0 +1,737 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # 1. CORE INFRASTRUCTURE TOOLS (01-Tools)
+  # =========================================================================
+
+  # ClickHouse Database
+  clickhouse:
+    image: clickhouse/clickhouse-server:25.6
+    container_name: clickhouse
+    mem_limit: 4g
+    cpus: 2
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: maibok
+      TZ: Asia/Bangkok
+    ports:
+      - 8123:8123
+      - 19001:9000
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_logs:/var/logs/clickhouse-server
+      - ./config/clickhouse/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mms-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17-trixie
+    container_name: postgres
+    mem_limit: 1g
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: iiot_db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mms-network
+
+  # Redis Cache & Buffer
+  redis:
+    image: redis:7
+    container_name: redis
+    mem_limit: 1g
+    cpus: 1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    ports:
+      - 6379:6379
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redis_data:/d
+    networks:
+      - mms-network
+
+  # RedisInsight Web UI
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: redisinsight
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    ports:
+      - 5540:5540
+    depends_on:
+      - redis
+    networks:
+      - mms-network
+
+  # Kafka Message Queue
+  kafka:
+    image: apache/kafka:4.3.0
+    container_name: kafka
+    mem_limit: 2g
+    cpus: 1
+    hostname: kafka
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    ports:
+      - "29092:29092"
+    environment:
+      CLUSTER_ID: '783efbc5-0335-4663-918a-d95b866977f5'
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+      KAFKA_LISTENERS: "INTERNAL://:9092,EXTERNAL://:29092,CONTROLLER://:9093"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:9092,EXTERNAL://localhost:29092"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_NUM_PARTITIONS: 10
+      KAFKA_LOG_RETENTION_HOURS: 48
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    networks:
+      - mms-network
+
+  # Kafka Web UI
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    mem_limit: 512m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    depends_on:
+      - kafka
+    ports:
+      - "18080:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: "true"
+      KAFKA_CLUSTERS_0_NAME: "local"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+    networks:
+      - mms-network
+
+  # Mosquitto MQTT Broker
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    mem_limit: 256m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    ports:
+      - 1883:1883
+      - 8883:8883
+      - 9001:9001
+    volumes:
+      - ./config/mosquitto/config:/mosquitto/config
+      - ./data/mosquitto:/mosquitto/data
+      - ./log/mosquitto:/mosquitto/log
+    networks:
+      - mms-network
+
+  # Portainer Container Management
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:lts
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    ports:
+      - 9443:9443
+      - 9000:9000
+    command: ["--no-setup-token"]
+
+  # =========================================================================
+  # 2. BENTHOS PIPELINES (02-Benthos)
+  # =========================================================================
+
+  # Stage 1: MQTT to Redis Buffer
+  mqtt-redis:
+    image: jeffail/benthos:latest
+    container_name: mqtt-redis
+    mem_limit: 256m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    volumes:
+      - ./config/benthos/mqtt-redis.yaml:/benthos.yaml
+      - ./log/mqtt-redis:/app/log
+    entrypoint:
+      - "sh"
+      - "-c"
+      - "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"
+    networks:
+      - mms-network
+
+  # Stage 2: Redis Buffer to Kafka
+  redis-kafka:
+    image: jeffail/benthos:latest
+    container_name: redis-kafka
+    mem_limit: 256m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    volumes:
+      - ./config/benthos/redis-kafka.yaml:/benthos.yaml
+      - ./log/redis-kafka:/app/log
+    entrypoint:
+      - "sh"
+      - "-c"
+      - "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"
+    networks:
+      - mms-network
+
+  # Stage 3: Kafka to ClickHouse OLAP
+  kafka-clickhouse:
+    image: jeffail/benthos:latest
+    container_name: kafka-clickhouse
+    mem_limit: 256m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    volumes:
+      - ./config/benthos/kafka-clickhouse.yaml:/benthos.yaml
+      - ./log/kafka-clickhouse:/app/log
+    entrypoint:
+      - "sh"
+      - "-c"
+      - "/benthos -c /benthos.yaml 2>&1 | tee -a /app/log/benthos.log"
+    networks:
+      - mms-network
+
+  # =========================================================================
+  # 3. INTERNAL PIPELINE SERVICES (03-DeviceChecker & 07-Kong)
+  # =========================================================================
+
+  # Device Status Checker
+  devicechecker:
+    image: mic/devicechecker:1.0.0
+    container_name: devicechecker
+    mem_limit: 256m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    volumes:
+      - ./log/devicechecker:/app/log
+    networks:
+      - mms-network
+
+  # Kong API Gateway Proxy
+  kong:
+    container_name: kong
+    image: kong:3.7.1
+    mem_limit: 1g
+    cpus: 1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/local/kong/declarative/kong.yml
+      KONG_PROXY_LISTEN: "0.0.0.0:8500, 0.0.0.0:8443 ssl"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_ADMIN_GUI_LISTEN: "0.0.0.0:8002"
+      KONG_ADMIN_API_URI: http://127.0.0.1:8011
+      KONG_ADMIN_GUI_API_URL: http://127.0.0.1:8011
+      KONG_ADMIN_CORS: "on"
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_PREFIX: /var/run/kong
+    ports:
+      - "8500:8500/tcp"
+      - "8443:8443/tcp"
+      - "8011:8001/tcp"
+      - "8012:8002/tcp"
+    healthcheck:
+      test: [ "CMD", "kong", "health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - ./config/kong/kong.yml:/usr/local/kong/declarative/kong.yml
+      - kong_prefix_vol:/var/run/kong
+      - kong_tmp_vol:/tmp
+    security_opt:
+      - no-new-privileges
+    networks:
+      - kong-net
+      - mms-network
+
+  # =========================================================================
+  # 4. WEB APPLICATIONS (04-API & 05-Dashboard)
+  # =========================================================================
+
+  # MMS REST History API
+  api-rest:
+    image: mic/api-rest:1.0.0
+    container_name: api-rest
+    mem_limit: 512m
+    cpus: 0.5
+    ports:
+      - "8003:8003"
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Bangkok
+    volumes:
+      - ./log/api-rest:/app/log
+    networks:
+      - mms-network
+
+  # Dashboard Web App Backend (FastAPI)
+  dashboard-backend:
+    image: mic/dashboard-backend:1.0.0
+    container_name: dashboard-backend
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Bangkok
+      - LOG_DIR=/var/log/apps
+      - BENTHOS_KAFKA_CLICKHOUSE_CONFIG=/app/benthos/kafka-clickhouse.yaml
+    ports:
+      - "${DASHBOARD_PORT:-8001}:8001"
+    volumes:
+      - ./log/dashboard-backend:/var/log/apps
+      - ./config/benthos/kafka-clickhouse.yaml:/app/benthos/kafka-clickhouse.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - mms-network
+
+  # Dashboard Web App Frontend (SvelteKit)
+  dashboard-frontend:
+    image: mic/dashboard-frontend:1.0.0
+    container_name: dashboard-frontend
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    env_file:
+      - .env
+    environment:
+      - TZ=Asia/Bangkok
+      - HOST=0.0.0.0
+      - PORT=1311
+    ports:
+      - "${FRONTEND_PORT:-1311}:1311"
+    depends_on:
+      - dashboard-backend
+    networks:
+      - mms-network
+
+  # =========================================================================
+  # 5. PREFECT DATA STORAGE ENGINE (06-DataStorage)
+  # =========================================================================
+
+  # Prefect Metadata Database
+  prefect-postgres:
+    image: postgres:14
+    container_name: prefect-postgres
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    environment:
+      POSTGRES_USER: prefect
+      POSTGRES_PASSWORD: prefect
+      POSTGRES_DB: prefect
+    volumes:
+      - prefect_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prefect"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mms-network
+
+  # Prefect Queue Cache
+  prefect-redis:
+    image: redis:7
+    container_name: prefect-redis
+    mem_limit: 256m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - prefect_redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mms-network
+
+  # Prefect Control Server
+  prefect-server:
+    image: prefecthq/prefect:3-latest
+    container_name: prefect-server
+    mem_limit: 1g
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    depends_on:
+      prefect-postgres:
+        condition: service_healthy
+      prefect-redis:
+        condition: service_healthy
+    environment:
+      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@prefect-postgres:5432/prefect
+      PREFECT_SERVER_API_HOST: 0.0.0.0
+      PREFECT_SERVER_UI_API_URL: http://localhost:4200/api
+      PREFECT_MESSAGING_BROKER: prefect_redis.messaging
+      PREFECT_MESSAGING_CACHE: prefect_redis.messaging
+      PREFECT_REDIS_MESSAGING_HOST: prefect-redis
+      PREFECT_REDIS_MESSAGING_PORT: 6379
+      PREFECT_REDIS_MESSAGING_DB: 0
+    command: prefect server start --no-services
+    ports:
+      - "4200:4200"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:4200/api/health', timeout=1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - mms-network
+
+  # Prefect Daemon Worker Services
+  prefect-services:
+    image: prefecthq/prefect:3-latest
+    container_name: prefect-services
+    mem_limit: 512m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+    environment:
+      PREFECT_API_DATABASE_CONNECTION_URL: postgresql+asyncpg://prefect:prefect@prefect-postgres:5432/prefect
+      PREFECT_MESSAGING_BROKER: prefect_redis.messaging
+      PREFECT_MESSAGING_CACHE: prefect_redis.messaging
+      PREFECT_REDIS_MESSAGING_HOST: prefect-redis
+      PREFECT_REDIS_MESSAGING_PORT: 6379
+      PREFECT_REDIS_MESSAGING_DB: 0
+    command: prefect server services start
+    networks:
+      - mms-network
+
+  # Prefect Aggregation Orchestrator Workflow
+  data-storage:
+    image: mic/data-storage-prefect:1.0.0
+    container_name: data-storage
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    depends_on:
+      prefect-server:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      PREFECT_API_URL: http://prefect-server:4200/api
+    command: python main.py
+    volumes:
+      - ./log/data-storage:/var/log/apps
+    networks:
+      - mms-network
+
+  # =========================================================================
+  # 6. OBSERVABILITY MONITORING STACK (08-observability)
+  # =========================================================================
+
+  # Metrics Scraper (Prometheus)
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: prometheus
+    mem_limit: 1g
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ./config/observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    networks:
+      - mms-network
+      - kong-net
+
+  # Visualization Dashboard (Grafana)
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    mem_limit: 512m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/observability/provisioning:/etc/grafana/provisioning:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    ports:
+      - "3000:3000"
+    networks:
+      - mms-network
+      - kong-net
+
+  # Log Store (Loki)
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    mem_limit: 1g
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    user: "root"
+    volumes:
+      - ./config/observability/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/tmp/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    networks:
+      - mms-network
+      - kong-net
+
+  # Log Shipper (Promtail)
+  promtail:
+    image: grafana/promtail:3.0.0
+    container_name: promtail
+    mem_limit: 256m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - ./config/observability/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./log:/var/log/apps:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - mms-network
+      - kong-net
+
+  # Container Statistics Exporter (docker-stats-exporter)
+  docker-stats-exporter:
+    image: wywywywy/docker_stats_exporter:latest
+    container_name: docker-stats-exporter
+    mem_limit: 256m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "9487:9487"
+    networks:
+      - mms-network
+
+  # Hardware Node Metric Exporter (node-exporter)
+  node-exporter:
+    image: prom/node-exporter:v1.8.1
+    container_name: node-exporter
+    mem_limit: 256m
+    cpus: 0.25
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    networks:
+      - mms-network
+
+# =========================================================================
+# NETWORKS & VOLUMES DECLARATION
+# =========================================================================
+
+networks:
+  mms-network:
+    external: true
+  kong-net:
+    name: kong-net
+    external: false
+
+volumes:
+  clickhouse_data:
+  clickhouse_logs:
+  postgres_data:
+  redis_data:
+  kafka_data:
+  portainer_data:
+  prefect_postgres_data:
+  prefect_redis_data:
+  prometheus_data:
+  grafana_data:
+  loki_data:
+  kong_prefix_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  kong_tmp_vol:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+

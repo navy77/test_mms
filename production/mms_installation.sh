@@ -37,11 +37,11 @@ read -r -p "Ready to load images? [Y/n]: " load_confirm
 if [[ "$load_confirm" =~ ^[Nn]$ ]]; then
     echo "[INFO] Skip loading images."
 else
-    if [ ! -d "images" ]; then
-        echo "[ERROR] 'images' folder not found."
+    if [ ! -d "image" ]; then
+        echo "[ERROR] 'image' folder not found."
         exit 1
     fi
-    for f in images/*.tar; do
+    for f in image/*.tar; do
         if [ -f "$f" ]; then
             echo "Loading: $f..."
             docker load -i "$f"
@@ -81,7 +81,7 @@ else
         docker compose up -d
         echo
         echo "==================================================="
-        echo "     MMS Application Deployed Successfully!"
+        echo "     MMS Application Deployed Successfully."
         echo "==================================================="
     else
         echo "[ERROR] docker-compose.yml not found."
@@ -89,3 +89,5 @@ else
     fi
 fi
 echo
+
+

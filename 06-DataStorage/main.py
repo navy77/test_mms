@@ -531,6 +531,29 @@ def alarm_storage_pipeline() -> int:
     return inserted_rows
 
 
+@flow(name="clickhouse_clean_partition_pipeline", retries=0)
+def clickhouse_clean_partition_pipeline() -> None:
+    """Drop ClickHouse monthly partitions older than 2 months (keep last month and current month)."""
+    logger.info("Starting ClickHouse partition cleanup...")
+    client = clickhouse_client()
+
+    now = datetime.now(TZ_BANGKOK)
+    first_day_this_month = now.replace(day=1)
+    two_months_ago = (first_day_this_month - timedelta(days=20)).replace(day=1)
+    partition_key = two_months_ago.strftime("%Y%m")
+
+    logger.info("Target partition to delete: %s", partition_key)
+
+    tables = ["data_tb", "status_tb", "alarm_tb", "device_tb"]
+    for table in tables:
+        try:
+            logger.info("Dropping partition %s from table %s...", partition_key, table)
+            client.command(f"ALTER TABLE {table} DROP PARTITION '{partition_key}'")
+            logger.info("Successfully dropped partition %s from table %s.", partition_key, table)
+        except Exception as e:
+            logger.warning("Failed to drop partition %s from table %s: %s", partition_key, table, e)
+
+
 if __name__ == "__main__":
     from prefect import serve
 
@@ -546,4 +569,9 @@ if __name__ == "__main__":
         name="pipeline_alarm",
         schedule=Cron("1 * * * *", timezone="Asia/Bangkok"),
     )
-    serve(dep_data, dep_status, dep_alarm)
+    dep_cleanup = clickhouse_clean_partition_pipeline.to_deployment(
+        name="pipeline_cleanup",
+        schedule=Cron("0 1 1 * *", timezone="Asia/Bangkok"),
+    )
+    serve(dep_data, dep_status, dep_alarm, dep_cleanup)
+

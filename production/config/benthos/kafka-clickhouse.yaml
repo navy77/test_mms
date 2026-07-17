@@ -4,9 +4,6 @@ logger:
   add_timestamp: true
 metrics:
   prometheus: {}
-  # logger:
-  #   push_interval: 30s
-  #   flush_metrics: true
 
 
 
@@ -74,32 +71,14 @@ output:
               - process
               - device
               - data1
-              - data2
-              - data3
-              - data4
-              - data5
-              - data6
-              - data7
               - model
-              - data8
-              - data9
-              - data10
             args_mapping: |
               let payload = this.payload.parse_json().catch({})
               root = [
                 this.process,
                 this.device,
                 $payload.data1.number().catch(0.0),
-                $payload.data2.number().catch(0.0),
-                $payload.data3.number().catch(0.0),
-                $payload.data4.number().catch(0.0),
-                $payload.data5.number().catch(0.0),
-                $payload.data6.number().catch(0.0),
-                $payload.data7.number().catch(0.0),
-                $payload.model.string().catch(""),
-                $payload.data8.number().catch(0.0),
-                $payload.data9.number().catch(0.0),
-                $payload.data10.number().catch(0.0)
+                $payload.model.string().catch("")
               ]
             batching:
               count: 10000

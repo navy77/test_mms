@@ -1,0 +1,1 @@
+CREATE DATABASE storage_db;

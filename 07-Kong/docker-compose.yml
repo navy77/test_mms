@@ -27,7 +27,14 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-    restart: on-failure
+    mem_limit: 1g
+    cpus: 1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     volumes:
       - ./kong.yml:/usr/local/kong/declarative/kong.yml
       - kong_prefix_vol:/var/run/kong

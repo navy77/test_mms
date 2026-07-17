@@ -3,11 +3,17 @@ services:
     build: .
     image: mic/api-rest:1.0.0
     container_name: api-rest
-    mem_limit: 2g
-    cpus: 1
+    mem_limit: 512m
+    cpus: 0.5
     ports:
       - "8003:8003"
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
     environment:
       - TZ=Asia/Bangkok
     env_file:

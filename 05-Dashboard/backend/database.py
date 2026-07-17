@@ -268,14 +268,14 @@ def init_db():
             #     """)
 
             # 5. Insert default devices if empty
-            cur.execute("SELECT COUNT(*) FROM device_register_tb;")
-            if cur.fetchone()[0] == 0:
-                logger.info("Initializing default devices in device_register_tb...")
-                for i in range(1, 1001):
-                    cur.execute("""
-                        INSERT INTO device_register_tb (process, device)
-                        VALUES ('demo1', %s) ON CONFLICT DO NOTHING;
-                    """, (f"no_{i}",))
+            # cur.execute("SELECT COUNT(*) FROM device_register_tb;")
+            # if cur.fetchone()[0] == 0:
+            #     logger.info("Initializing default devices in device_register_tb...")
+            #     for i in range(1, 1001):
+            #         cur.execute("""
+            #             INSERT INTO device_register_tb (process, device)
+            #             VALUES ('demo1', %s) ON CONFLICT DO NOTHING;
+            #         """, (f"no_{i}",))
 
             conn.commit()
             logger.info("PostgreSQL database tables initialized successfully.")

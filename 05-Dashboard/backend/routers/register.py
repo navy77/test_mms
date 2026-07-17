@@ -94,9 +94,9 @@ def render_benthos_kafka_clickhouse_config(columns: List[dict]) -> str:
   format: logfmt
   add_timestamp: true
 metrics:
-  logger:
-    push_interval: 30s
-    flush_metrics: true
+  prometheus: {{}}
+
+
 
 input:
   label: kafka_input

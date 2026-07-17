@@ -3,10 +3,16 @@ services:
     build: .
     image: mic/devicechecker:1.0.0
     container_name: devicechecker
-    mem_limit: 1g
-    cpus: 0.5
+    mem_limit: 256m
+    cpus: 0.25
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     env_file:
+
       - ../.env
     volumes:
       - ./log:/app/log

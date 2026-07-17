@@ -2,13 +2,21 @@ services:
   mqtt-redis:
     image: jeffail/benthos:latest
     container_name: mqtt-redis
+    mem_limit: 256m
+    cpus: 0.5
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     environment:
       - TZ=Asia/Bangkok
     ports:
       - 4195:4195
-    restart: always
     env_file:
       - ../../.env
+
     volumes:
       - ./benthos.yaml:/benthos.yaml
       - ./log:/app/log

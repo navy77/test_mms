@@ -224,3 +224,21 @@ def test_write_postgres(mock_storage_db_engine):
             method="multi",
             chunksize=1000
         )
+
+
+@patch("main.clickhouse_client")
+@patch("main.logger")
+def test_clickhouse_clean_partition_pipeline(mock_logger, mock_clickhouse_client):
+    mock_client = MagicMock()
+    mock_clickhouse_client.return_value = mock_client
+
+    from main import clickhouse_clean_partition_pipeline
+    clickhouse_clean_partition_pipeline.fn()
+
+    mock_clickhouse_client.assert_called_once()
+    assert mock_client.command.call_count == 4
+
+    called_commands = [call[0][0] for call in mock_client.command.call_args_list]
+    for table in ["data_tb", "status_tb", "alarm_tb", "device_tb"]:
+        assert any(f"ALTER TABLE {table} DROP PARTITION" in cmd for cmd in called_commands)
+

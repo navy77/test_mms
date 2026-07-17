@@ -1,7 +1,14 @@
 services:
   redis:
-    image: redis:latest
+    image: redis:7
     container_name: redis
+    mem_limit: 1g
+    cpus: 1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     ports:
       - 6379:6379
     command: redis-server --save 60 1 --loglevel warning
@@ -14,6 +21,13 @@ services:
   redisinsight:
     image: redis/redisinsight:latest
     container_name: redisinsight
+    mem_limit: 512m
+    cpus: 0.5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     ports:
       - 5540:5540
     restart: always
@@ -21,6 +35,7 @@ services:
       - mms-network
     depends_on:
       - redis
+
 
 
 volumes:

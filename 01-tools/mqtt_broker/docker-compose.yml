@@ -4,7 +4,15 @@ services:
         image: eclipse-mosquitto
         container_name: mosquitto
         restart: always
+        mem_limit: 256m
+        cpus: 0.5
+        logging:
+          driver: "json-file"
+          options:
+            max-size: "100m"
+            max-file: "3"
         ports:
+
             - 1883:1883
             - 8883:8883
             - 9001:9001

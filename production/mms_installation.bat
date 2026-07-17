@@ -34,12 +34,12 @@ set /p CONFIRM="Ready to load images? [Y/n]: "
 if /I "!CONFIRM!"=="n" (
     echo [INFO] Skip loading images.
 ) else (
-    if not exist "images" (
-        echo [ERROR] 'images' folder not found.
+    if not exist "image" (
+        echo [ERROR] 'image' folder not found.
         pause
         exit /b 1
     )
-    for %%f in (images\*.tar) do (
+    for %%f in (image\*.tar) do (
         echo Loading: %%f...
         docker load -i "%%f"
     )
@@ -80,7 +80,7 @@ if /I "!DEPLOY_CONFIRM!"=="n" (
         docker compose up -d
         echo.
         echo ===================================================
-        echo     MMS Application Deployed Successfully!
+        echo     MMS Application Deployed Successfully.
         echo ===================================================
     ) else (
         echo [ERROR] docker-compose.yml not found.
@@ -91,3 +91,5 @@ if /I "!DEPLOY_CONFIRM!"=="n" (
 echo.
 echo Press [Enter] to close this wizard.
 pause >nul
+
+
