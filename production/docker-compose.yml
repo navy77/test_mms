@@ -203,6 +203,7 @@ services:
   mqtt-redis:
     image: jeffail/benthos:latest
     container_name: mqtt-redis
+    user: root
     mem_limit: 256m
     cpus: 0.5
     restart: always
@@ -227,6 +228,7 @@ services:
   redis-kafka:
     image: jeffail/benthos:latest
     container_name: redis-kafka
+    user: root
     mem_limit: 256m
     cpus: 0.5
     restart: always
@@ -251,6 +253,7 @@ services:
   kafka-clickhouse:
     image: jeffail/benthos:latest
     container_name: kafka-clickhouse
+    user: root
     mem_limit: 256m
     cpus: 0.5
     restart: always

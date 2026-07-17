@@ -79,6 +79,12 @@ else
     if [ -f "docker-compose.yml" ]; then
         echo "Deploying containers..."
         docker compose up -d
+        
+        # Fix log folder permissions for Linux host mounts
+        if [ -d "log" ]; then
+            echo "Adjusting log folder permissions..."
+            chmod -R 777 log
+        fi
         echo
         echo "==================================================="
         echo "     MMS Application Deployed Successfully."
