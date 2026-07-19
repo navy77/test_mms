@@ -1,0 +1,719 @@
+{
+    "info": {
+        "_postman_id": "30efcecb-4d16-4c48-8a58-5c3e27fe6f82",
+        "name": "MMS REST History API",
+        "description": "Backend REST API for historical data from ClickHouse",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Alarm",
+            "item": [
+                {
+                    "name": "Get Currently Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/alarm/currently/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "alarm",
+                                "currently",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get current alarm segments for all devices in a process from 07:00 of the current production day until now."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Daily Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/alarm/daily/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "alarm",
+                                "daily",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get daily alarm segments for all devices in a process for the current production month."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Monthly Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/alarm/monthly/:year/:month/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "alarm",
+                                "monthly",
+                                ":year",
+                                ":month",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "year",
+                                    "value": "2026",
+                                    "description": "Path variable for year"
+                                },
+                                {
+                                    "key": "month",
+                                    "value": "07",
+                                    "description": "Path variable for month"
+                                },
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get alarm segments for all devices in a process for a specific month."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Data",
+            "item": [
+                {
+                    "name": "Get Currently Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/data/currently/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "data",
+                                "currently",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get currently data for all devices in a process from 07:00 of the current production day until now."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Daily Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/data/daily/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "data",
+                                "daily",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get daily data for all devices in a process from 07:00 of the 1st day of the current production month to the last day of the month."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Monthly Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/data/monthly/:year/:month/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "data",
+                                "monthly",
+                                ":year",
+                                ":month",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "year",
+                                    "value": "2026",
+                                    "description": "Path variable for year"
+                                },
+                                {
+                                    "key": "month",
+                                    "value": "07",
+                                    "description": "Path variable for month"
+                                },
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get the single latest data record for each device in a process for a specific month."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Device",
+            "item": [
+                {
+                    "name": "Get Currently Process Status",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/device/currently/status/:process",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "device",
+                                "currently",
+                                "status",
+                                ":process"
+                            ],
+                            "query": [],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get the count of devices in each status (online, offline, no data) currently for the given process."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Currently Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/device/currently/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "device",
+                                "currently",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get current device status segments for all devices in a process from 07:00 of the current production day until now."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Daily Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/device/daily/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "device",
+                                "daily",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get daily device status segments for all devices in a process for the current production month."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Monthly Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/device/monthly/:year/:month/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "device",
+                                "monthly",
+                                ":year",
+                                ":month",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated devices; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "year",
+                                    "value": "2026",
+                                    "description": "Path variable for year"
+                                },
+                                {
+                                    "key": "month",
+                                    "value": "07",
+                                    "description": "Path variable for month"
+                                },
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get device status segments for all devices in a process for a specific month."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "General",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "description": ""
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Status",
+            "item": [
+                {
+                    "name": "Get Currently Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/status/currently/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "status",
+                                "currently",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated device names; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get current status segments for requested or all devices from 07:00 until now."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Daily Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/status/daily/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "status",
+                                "daily",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated device names; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get daily status segments for requested or all devices for the current month."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Monthly Process",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/status/monthly/:year/:month/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "status",
+                                "monthly",
+                                ":year",
+                                ":month",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated device names; omit for all devices."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "year",
+                                    "value": "2026",
+                                    "description": "Path variable for year"
+                                },
+                                {
+                                    "key": "month",
+                                    "value": "07",
+                                    "description": "Path variable for month"
+                                },
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Get status segments for requested or all devices for a specific month."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get State Status Batch",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "apikey",
+                                "value": "{{apikey}}",
+                                "type": "text",
+                                "description": "Kong Gateway authentication key"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/v1/status/state/:process?devices=no_1,no_2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "status",
+                                "state",
+                                ":process"
+                            ],
+                            "query": [
+                                {
+                                    "key": "devices",
+                                    "value": "no_1,no_2",
+                                    "description": "Optional comma-separated device names, e.g. no_1,no_2,no_3. When omitted, returns all registered devices for the process."
+                                }
+                            ],
+                            "variable": [
+                                {
+                                    "key": "process",
+                                    "value": "demo1",
+                                    "description": "Path variable for process"
+                                }
+                            ]
+                        },
+                        "description": "Fetch state timelines for requested or all registered devices in one batch query.\n\nWhen ``devices`` is omitted, every device registered for ``process`` is queried.\nData is queried from ClickHouse on every request; no in-memory cache is used.\n\nResponse: { \"no_1\": [...segments], \"no_2\": [...segments], ... }"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://192.168.1.39:8003",
+            "type": "string"
+        },
+        {
+            "key": "apikey",
+            "value": "sawadeeja",
+            "type": "string"
+        }
+    ]
+}
