@@ -85,6 +85,29 @@ def storage_db_engine() -> Engine:
     return postgres_engine(os.getenv("POSTGRES_STORAGE_DB", "storage_db"))
 
 
+def is_mssql_enabled() -> bool:
+    """Check if MSSQL storage is enabled."""
+    enabled_str = os.getenv("ENABLE_MSSQL", "").strip().lower()
+    if enabled_str in {"false", "0", "no"}:
+        return False
+    host = os.getenv("MSSQL_HOST", "").strip().strip("'\"")
+    return bool(host)
+
+
+def mssql_engine() -> Engine | None:
+    """Create an MSSQL SQLAlchemy engine if enabled."""
+    if not is_mssql_enabled():
+        return None
+
+    host = os.getenv("MSSQL_HOST", "localhost").strip().strip("'\"")
+    port = int(os.getenv("MSSQL_PORT", 1433))
+    user = os.getenv("MSSQL_USER", "sa").strip().strip("'\"")
+    password = os.getenv("MSSQL_PASSWORD", "").strip().strip("'\"")
+    database = os.getenv("MSSQL_DB", os.getenv("POSTGRES_STORAGE_DB", "storage_db")).strip().strip("'\"")
+    url = f"mssql+pymssql://{user}:{password}@{host}:{port}/{database}"
+    return create_engine(url, pool_pre_ping=True)
+
+
 def clickhouse_client() -> clickhouse_connect.driver.Client:
     """Create a ClickHouse client."""
     return clickhouse_connect.get_client(
@@ -108,6 +131,12 @@ def quote_postgres_identifier(identifier: str) -> str:
     return f'"{escaped}"'
 
 
+def quote_mssql_identifier(identifier: str) -> str:
+    """Quote an MSSQL identifier using square brackets."""
+    escaped = identifier.replace("]", "]]")
+    return f"[{escaped}]"
+
+
 def postgres_type_for_clickhouse_type(column_type: str) -> str:
     """Map a registered ClickHouse type to a PostgreSQL column type."""
     normalized_type = column_type.strip()
@@ -120,6 +149,21 @@ def postgres_type_for_clickhouse_type(column_type: str) -> str:
     if normalized_type == "DateTime":
         return "TIMESTAMP WITH TIME ZONE"
     return "TEXT"
+
+
+def mssql_type_for_clickhouse_type(column_type: str) -> str:
+    """Map a registered ClickHouse type to an MSSQL column type."""
+    normalized_type = column_type.strip()
+    if normalized_type in {"Float32", "Float64"}:
+        return "FLOAT"
+    if normalized_type in {"Int32", "Int64", "UInt32", "UInt64"}:
+        return "BIGINT"
+    if normalized_type == "Bool":
+        return "BIT"
+    if normalized_type == "DateTime":
+        return "DATETIME2"
+    return "NVARCHAR(MAX)"
+
 
 
 @task(retries=3, retry_delay_seconds=30)
@@ -184,6 +228,74 @@ def ensure_output_table_schema(columns: pd.DataFrame) -> None:
                     f"{quote_postgres_identifier(column_name)} {column_type}"
                 )
             )
+
+
+@task(retries=3, retry_delay_seconds=30)
+def ensure_output_table_schema_mssql(columns: pd.DataFrame) -> None:
+    """Create or evolve the storage output table in MSSQL from registered columns."""
+    if not is_mssql_enabled():
+        return
+
+    log_task_retry("ensure_output_table_schema_mssql")
+    base_columns = {
+        "created_at": "DATETIME2",
+        "process": "NVARCHAR(255)",
+        "device": "NVARCHAR(255)",
+        "time_start": "DATETIME2",
+        "time_end": "DATETIME2",
+        "record_period_minutes": "BIGINT",
+        "stored_at": "DATETIME2",
+    }
+    dynamic_columns = {
+        row["column_name"]: mssql_type_for_clickhouse_type(row["column_type"])
+        for _, row in columns.iterrows()
+        if pd.notna(row["column_name"])
+    }
+    table_columns = {**base_columns, **dynamic_columns}
+
+    try:
+        engine = mssql_engine()
+        if engine is None:
+            return
+        with engine.begin() as conn:
+            column_definitions = ",\n".join(
+                f"            {quote_mssql_identifier(name)} {column_type}"
+                for name, column_type in table_columns.items()
+            )
+            create_sql = f"""
+                IF NOT EXISTS (
+                    SELECT * FROM sys.tables t 
+                    JOIN sys.schemas s ON t.schema_id = s.schema_id 
+                    WHERE t.name = '{OUTPUT_TABLE}' AND s.name = 'dbo'
+                )
+                BEGIN
+                    CREATE TABLE dbo.{quote_mssql_identifier(OUTPUT_TABLE)} (
+{column_definitions}
+                    );
+                END
+            """
+            conn.execute(text(create_sql))
+
+            existing_columns_query = f"""
+                SELECT COLUMN_NAME
+                FROM INFORMATION_SCHEMA.COLUMNS
+                WHERE TABLE_NAME = '{OUTPUT_TABLE}'
+            """
+            existing_columns = {
+                row[0] for row in conn.execute(text(existing_columns_query))
+            }
+
+            for column_name, column_type in table_columns.items():
+                if column_name in existing_columns:
+                    continue
+                alter_sql = (
+                    f"ALTER TABLE dbo.{quote_mssql_identifier(OUTPUT_TABLE)} "
+                    f"ADD {quote_mssql_identifier(column_name)} {column_type}"
+                )
+                conn.execute(text(alter_sql))
+    except Exception as e:
+        logger.warning("MSSQL ensure_output_table_schema_mssql warning: %s", e)
+
 
 
 @task(retries=3, retry_delay_seconds=30)
@@ -337,6 +449,32 @@ def write_postgres(latest_data: pd.DataFrame) -> int:
 
 
 @task(retries=3, retry_delay_seconds=30)
+def write_mssql(latest_data: pd.DataFrame) -> int:
+    """Append latest rows into the storage MSSQL table if enabled."""
+    if not is_mssql_enabled() or latest_data.empty:
+        return 0
+
+    log_task_retry("write_mssql")
+    try:
+        engine = mssql_engine()
+        if engine is None:
+            return 0
+        with engine.begin() as conn:
+            latest_data.to_sql(
+                OUTPUT_TABLE,
+                conn,
+                if_exists="append",
+                index=False,
+                method="multi",
+                chunksize=1000,
+            )
+        return len(latest_data)
+    except Exception as e:
+        logger.warning("Failed to write to MSSQL table %s: %s", OUTPUT_TABLE, e)
+        return 0
+
+
+@task(retries=3, retry_delay_seconds=30)
 def ensure_raw_table_schema(table_name: str) -> None:
     """Create the status or alarm storage table if it does not exist."""
     log_task_retry("ensure_raw_table_schema")
@@ -355,6 +493,39 @@ def ensure_raw_table_schema(table_name: str) -> None:
                 """
             )
         )
+
+
+@task(retries=3, retry_delay_seconds=30)
+def ensure_raw_table_schema_mssql(table_name: str) -> None:
+    """Create the status or alarm storage table in MSSQL if it does not exist."""
+    if not is_mssql_enabled():
+        return
+
+    log_task_retry("ensure_raw_table_schema_mssql")
+    try:
+        engine = mssql_engine()
+        if engine is None:
+            return
+        with engine.begin() as conn:
+            create_sql = f"""
+                IF NOT EXISTS (
+                    SELECT * FROM sys.tables t 
+                    JOIN sys.schemas s ON t.schema_id = s.schema_id 
+                    WHERE t.name = '{table_name}' AND s.name = 'dbo'
+                )
+                BEGIN
+                    CREATE TABLE dbo.{quote_mssql_identifier(table_name)} (
+                        created_at DATETIME2,
+                        process NVARCHAR(255),
+                        device NVARCHAR(255),
+                        status NVARCHAR(MAX),
+                        stored_at DATETIME2
+                    );
+                END
+            """
+            conn.execute(text(create_sql))
+    except Exception as e:
+        logger.warning("MSSQL ensure_raw_table_schema_mssql warning (%s): %s", table_name, e)
 
 
 @task(retries=3, retry_delay_seconds=30)
@@ -438,6 +609,35 @@ def write_postgres_raw(table_name: str, df: pd.DataFrame) -> int:
     return len(df)
 
 
+@task(retries=3, retry_delay_seconds=30)
+def write_mssql_raw(table_name: str, df: pd.DataFrame) -> int:
+    """Append raw logs into the storage MSSQL table if enabled."""
+    if not is_mssql_enabled() or df.empty:
+        return 0
+
+    log_task_retry("write_mssql_raw")
+    try:
+        df_copy = df.copy()
+        df_copy["stored_at"] = datetime.now(TZ_BANGKOK)
+
+        engine = mssql_engine()
+        if engine is None:
+            return 0
+        with engine.begin() as conn:
+            df_copy.to_sql(
+                table_name,
+                conn,
+                if_exists="append",
+                index=False,
+                method="multi",
+                chunksize=1000,
+            )
+        return len(df_copy)
+    except Exception as e:
+        logger.warning("Failed to write raw log to MSSQL table %s: %s", table_name, e)
+        return 0
+
+
 @flow(name="data_storage_pipeline", retries=0)
 def data_storage_pipeline() -> int:
     """Run the data storage top1 aggregation pipeline."""
@@ -445,6 +645,8 @@ def data_storage_pipeline() -> int:
 
     devices, columns = get_register_metadata()
     ensure_output_table_schema(columns)
+    if is_mssql_enabled():
+        ensure_output_table_schema_mssql(columns)
 
     end_time = datetime.now(TZ_BANGKOK)
     last_time = get_last_stored_time_end()
@@ -471,7 +673,10 @@ def data_storage_pipeline() -> int:
         end_time,
     )
     inserted_rows = write_postgres(latest_data)
-    logger.info("Inserted %s row(s) into %s", inserted_rows, OUTPUT_TABLE)
+    logger.info("Inserted %s row(s) into PostgreSQL %s", inserted_rows, OUTPUT_TABLE)
+    if is_mssql_enabled():
+        mssql_rows = write_mssql(latest_data)
+        logger.info("Inserted %s row(s) into MSSQL %s", mssql_rows, OUTPUT_TABLE)
     return inserted_rows
 
 
@@ -483,6 +688,8 @@ def status_storage_pipeline() -> int:
     lookback_minutes = 60
 
     ensure_raw_table_schema(table_name)
+    if is_mssql_enabled():
+        ensure_raw_table_schema_mssql(table_name)
     end_time = datetime.now(TZ_BANGKOK)
     last_time = get_last_created_at(table_name)
 
@@ -499,7 +706,10 @@ def status_storage_pipeline() -> int:
 
     raw_data = query_clickhouse_raw(ch_table, start_time, end_time)
     inserted_rows = write_postgres_raw(table_name, raw_data)
-    logger.info("Inserted %s raw status row(s) into %s", inserted_rows, table_name)
+    logger.info("Inserted %s raw status row(s) into PostgreSQL %s", inserted_rows, table_name)
+    if is_mssql_enabled():
+        mssql_rows = write_mssql_raw(table_name, raw_data)
+        logger.info("Inserted %s raw status row(s) into MSSQL %s", mssql_rows, table_name)
     return inserted_rows
 
 
@@ -511,6 +721,8 @@ def alarm_storage_pipeline() -> int:
     lookback_minutes = 60
 
     ensure_raw_table_schema(table_name)
+    if is_mssql_enabled():
+        ensure_raw_table_schema_mssql(table_name)
     end_time = datetime.now(TZ_BANGKOK)
     last_time = get_last_created_at(table_name)
 
@@ -527,8 +739,12 @@ def alarm_storage_pipeline() -> int:
 
     raw_data = query_clickhouse_raw(ch_table, start_time, end_time)
     inserted_rows = write_postgres_raw(table_name, raw_data)
-    logger.info("Inserted %s raw alarm row(s) into %s", inserted_rows, table_name)
+    logger.info("Inserted %s raw alarm row(s) into PostgreSQL %s", inserted_rows, table_name)
+    if is_mssql_enabled():
+        mssql_rows = write_mssql_raw(table_name, raw_data)
+        logger.info("Inserted %s raw alarm row(s) into MSSQL %s", mssql_rows, table_name)
     return inserted_rows
+
 
 
 @flow(name="clickhouse_clean_partition_pipeline", retries=0)

@@ -2,8 +2,7 @@ import logging
 import calendar
 from datetime import datetime, timedelta, timezone
 from typing import List, Any, Dict, Optional
-from fastapi import APIRouter, HTTPException, Path, Query, status, Request
-from limiter import limiter
+from fastapi import APIRouter, HTTPException, Path, Query, status
 from database import (
     format_result,
     get_ch_client,
@@ -187,9 +186,7 @@ def group_by_month_and_device(
 
 # 1. currently Endpoints
 @router.get("/currently/{process}", response_model=List[DataResponse])
-@limiter.limit("20/minute")
 def get_currently_process(
-    request: Request,
     process: str = Path(..., description="The process identifier"),
     devices: Optional[str] = Query(None, description="Optional comma-separated devices; omit for all devices."),
 ):
@@ -299,9 +296,7 @@ def get_currently_device(
 
 # 2. Daily Endpoints
 @router.get("/daily/{process}", response_model=List[DailyDataResponse])
-@limiter.limit("20/minute")
 def get_daily_process(
-    request: Request,
     process: str = Path(..., description="The process identifier"),
     devices: Optional[str] = Query(None, description="Optional comma-separated devices; omit for all devices."),
 ):
@@ -431,9 +426,7 @@ def get_daily_device(
 
 # 3. Monthly Endpoints
 @router.get("/monthly/{year}/{month}/{process}", response_model=List[MonthlyDataResponse])
-@limiter.limit("20/minute")
 def get_monthly_process(
-    request: Request,
     year: int = Path(..., description="The query year (e.g. 2026)", ge=2000),
     month: int = Path(..., description="The query month (1-12)", ge=1, le=12),
     process: str = Path(..., description="The process identifier"),
